@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>Тренажёр ЕГЭ</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+</head>
+<body>
+  <div id="app"></div>
+
+  <!-- Bottom Navigation -->
+  <nav id="bottomNav" class="bottom-nav">
+    <button class="nav-btn active" data-screen="home">
+      <span class="nav-icon">🏠</span>
+      <span class="nav-label">Главная</span>
+    </button>
+    <button class="nav-btn" data-screen="dictionary">
+      <span class="nav-icon">📖</span>
+      <span class="nav-label">Словарик</span>
+    </button>
+    <button class="nav-btn" data-screen="favorites">
+      <span class="nav-icon">⭐</span>
+      <span class="nav-label">Избранное</span>
+    </button>
+    <button class="nav-btn" data-screen="stats">
+      <span class="nav-icon">📊</span>
+      <span class="nav-label">Статистика</span>
+    </button>
+  </nav>
+
+  <script src="data.js"></script>
+  <script src="storage.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
