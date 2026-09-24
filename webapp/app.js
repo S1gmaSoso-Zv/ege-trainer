@@ -109,12 +109,30 @@ const App = {
         });
       }
 
-      // Запуск синхронизации с Telegram CloudStorage
-      Storage.initCloudSync(() => {
-        // Перерисовать экран при получении актуальных данных с облака
-        if (this.currentScreen === 'home' || this.currentScreen === 'stats' || this.currentScreen === 'favorites') {
+      // Запуск начальной синхронизации с Telegram CloudStorage
+      Storage.initCloudSync((hasChanges) => {
+        if (hasChanges && (this.currentScreen === 'home' || this.currentScreen === 'stats' || this.currentScreen === 'favorites')) {
           this.render();
         }
+      });
+
+      // Авто-синхронизация при разблокировке/возврате в приложение
+      document.addEventListener('visibilitychange', () => {
+        if (document.visibilityState === 'visible') {
+          Storage.initCloudSync((hasChanges) => {
+            if (hasChanges && (this.currentScreen === 'home' || this.currentScreen === 'stats' || this.currentScreen === 'favorites')) {
+              this.render();
+            }
+          });
+        }
+      });
+
+      window.addEventListener('focus', () => {
+        Storage.initCloudSync((hasChanges) => {
+          if (hasChanges && (this.currentScreen === 'home' || this.currentScreen === 'stats' || this.currentScreen === 'favorites')) {
+            this.render();
+          }
+        });
       });
     } catch (e) {
       console.log('Running in browser mode');
@@ -142,6 +160,15 @@ const App = {
 
     this.updateNav(screen);
     this.render();
+
+    // Тихая фоновая синхронизация при переходе на экраны со статистикой или избранным
+    if (screen === 'stats' || screen === 'favorites' || screen === 'home') {
+      Storage.initCloudSync((hasChanges) => {
+        if (hasChanges && this.currentScreen === screen) {
+          this.render();
+        }
+      });
+    }
   },
 
   goBack() {
