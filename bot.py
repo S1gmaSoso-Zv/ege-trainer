@@ -47,11 +47,7 @@ def get_inline_keyboard():
             [InlineKeyboardButton(
                 text="🦕 Открыть тренажёр ЕГЭ",
                 web_app=WebAppInfo(url=WEBAPP_URL)
-            )],
-            [
-                InlineKeyboardButton(text="📖 О курсе и банке слов", callback_data="about"),
-                InlineKeyboardButton(text="💡 Советы к ЕГЭ", callback_data="tips")
-            ]
+            )]
         ])
     return None
 
@@ -61,8 +57,7 @@ def get_reply_keyboard():
     if WEBAPP_URL:
         return ReplyKeyboardMarkup(
             keyboard=[
-                [KeyboardButton(text="🦕 Открыть тренажёр", web_app=WebAppInfo(url=WEBAPP_URL))],
-                [KeyboardButton(text="📊 Помощь и команды")]
+                [KeyboardButton(text="🦕 Открыть тренажёр", web_app=WebAppInfo(url=WEBAPP_URL))]
             ],
             resize_keyboard=True,
             is_persistent=True
@@ -77,7 +72,7 @@ async def cmd_start(message: types.Message):
         "👋 <b>Добро пожаловать в Тренажёр ЕГЭ по русскому языку!</b> 🦕\n\n"
         "Здесь собраны <b>все официальные слова</b> для подготовки к экзамену:\n\n"
         "📝 <b>Задание №9</b> — 537 словарных слов (все непроверяемые гласные корня со всеми формами)\n"
-        "🔤 <b>Задание №4</b> — 240 слов с нормативными ударениями из словаря ФИПИ и Умскул\n\n"
+        "🔤 <b>Задание №4</b> — 240 слов с нормативными ударениями из орфоэпического словника ФИПИ\n\n"
         "✨ <b>Возможности:</b>\n"
         "• Тренировки по отдельным буквам алфавита\n"
         "• Блиц-повтор ошибок и отработка сложных слов\n"
