@@ -9,6 +9,9 @@ const App = {
   currentScreen: 'home',
   screenParams: {},
   training: null,
+  blitz: null,
+  _blitzInterval: null,
+  egeSession: null,
   _searchTimeout: null,
   _nextQuestionTimer: null,
 
@@ -40,12 +43,27 @@ const App = {
       }
     });
 
-    // Клавиатура (цифры 1-4)
+    // Клавиатура (цифры 1-5, Enter)
     document.addEventListener('keydown', (e) => {
       if (this.currentScreen === 'training' && this.training && !this.training.answered) {
         const idx = parseInt(e.key) - 1;
         if (idx >= 0 && idx < (this.training.currentVariants || []).length) {
           this.checkAnswer(idx);
+        }
+      } else if (this.currentScreen === 'blitz' && this.blitz && !this.blitz.answered) {
+        if (e.key === '1' || e.key === '2') {
+          this.checkBlitzAnswer(parseInt(e.key) - 1);
+        }
+      } else if (this.currentScreen === 'task4_ege' && this.egeSession) {
+        const num = parseInt(e.key);
+        if (num >= 1 && num <= 5 && !this.egeSession.isChecked) {
+          this.toggleEGENumber(num);
+        } else if (e.key === 'Enter') {
+          if (!this.egeSession.isChecked) {
+            this.checkTask4EGE();
+          } else {
+            this.nextTask4EGE();
+          }
         }
       }
     });
@@ -103,6 +121,14 @@ const App = {
       this.handleQuitTraining();
       return;
     }
+    if (this.currentScreen === 'blitz') {
+      this.handleQuitBlitz();
+      return;
+    }
+    if (this.currentScreen === 'task4_ege') {
+      this.handleQuitEGE();
+      return;
+    }
 
     if (this.history.length > 0) {
       const prev = this.history.pop();
@@ -135,6 +161,9 @@ const App = {
       dictionary: () => this.renderDictionary(),
       favorites: () => this.renderFavorites(),
       stats: () => this.renderStats(),
+      blitz: () => this.renderBlitz(),
+      blitz_results: () => this.renderBlitzResults(),
+      task4_ege: () => this.renderTask4EGE(),
     };
 
     const renderer = renderers[this.currentScreen];
@@ -157,6 +186,28 @@ const App = {
     const variantBtn = e.target.closest('.variant-btn');
     if (variantBtn && !variantBtn.disabled) {
       this.checkAnswer(parseInt(variantBtn.dataset.variant));
+      return;
+    }
+
+    // 2a. Варианты ответа в Блице
+    const blitzOptBtn = e.target.closest('.blitz-opt-btn');
+    if (blitzOptBtn && !blitzOptBtn.disabled) {
+      this.checkBlitzAnswer(parseInt(blitzOptBtn.dataset.opt));
+      return;
+    }
+
+    // 2b. Переключатель режима Задания №4 (карточки / формат ЕГЭ)
+    const task4SubmodeBtn = e.target.closest('[data-task4-submode]');
+    if (task4SubmodeBtn) {
+      this.screenParams.subMode = task4SubmodeBtn.dataset.task4Submode;
+      this.render();
+      return;
+    }
+
+    // 2c. Выбор номера строки в формате ЕГЭ (1-5)
+    const egeNumBtn = e.target.closest('[data-ege-num]');
+    if (egeNumBtn) {
+      this.toggleEGENumber(parseInt(egeNumBtn.dataset.egeNum));
       return;
     }
 
@@ -307,6 +358,34 @@ const App = {
 
       case 'start-task4':
         this.startTask4();
+        break;
+
+      case 'start-blitz':
+        this.startBlitz();
+        break;
+
+      case 'quit-blitz':
+        this.handleQuitBlitz();
+        break;
+
+      case 'retry-blitz':
+        this.startBlitz();
+        break;
+
+      case 'start-task4-ege':
+        this.startTask4EGE();
+        break;
+
+      case 'check-task4-ege':
+        this.checkTask4EGE();
+        break;
+
+      case 'next-task4-ege':
+        this.nextTask4EGE();
+        break;
+
+      case 'quit-ege':
+        this.handleQuitEGE();
         break;
 
       case 'quit-training':
@@ -613,7 +692,8 @@ const App = {
       answers: [],
       answered: false,
       selectedVariant: null,
-      currentVariants: null
+      currentVariants: null,
+      combo: 0
     };
 
     this.prepareCurrentWord();
@@ -666,6 +746,11 @@ const App = {
 
     t.answered = true;
     t.selectedVariant = variantIndex;
+    if (isCorrect) {
+      t.combo = (t.combo || 0) + 1;
+    } else {
+      t.combo = 0;
+    }
 
     // Telegram Haptic Feedback
     try {
@@ -739,6 +824,9 @@ const App = {
   // ==================== ЭКРАН: ГЛАВНАЯ ====================
 
   renderHome() {
+    const stats = Storage.getStats();
+    const blitzRecord = stats.blitzHighScore || 0;
+
     return `
       <div class="home-hero">
         <div class="dino-container">${this.getDinoSVG()}</div>
@@ -757,7 +845,17 @@ const App = {
           <div class="mode-card-icon green">🔤</div>
           <div>
             <div class="mode-card-title">Задание №4</div>
-            <div class="mode-card-desc">Ударения · ${WORDS_TASK4.length} слов</div>
+            <div class="mode-card-desc">Ударения · Карточки и Формат ЕГЭ</div>
+          </div>
+        </button>
+        <button class="mode-card blitz-mode-card" data-action="start-blitz">
+          <div class="mode-card-icon amber">⚡</div>
+          <div style="flex:1;">
+            <div class="mode-card-title" style="display:flex;align-items:center;justify-content:space-between;">
+              <span>Блиц за 60 секунд</span>
+              <span class="blitz-badge-hot">🔥 ХИТ</span>
+            </div>
+            <div class="mode-card-desc">Тайм-атака · 3 ❤️ · Рекорд: <b>${blitzRecord}</b> слов</div>
           </div>
         </button>
       </div>
@@ -876,9 +974,10 @@ const App = {
   // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №4 ====================
 
   renderTask4Filter() {
+    const subMode = this.screenParams.subMode || 'words';
     const parts = [...new Set(WORDS_TASK4.map(w => w.partOfSpeech))];
     const selectedParts = this.screenParams.selectedParts || [];
-    const sessionLength = this.screenParams.sessionLength ?? 10;
+    const sessionLength = this.screenParams.sessionLength ?? (subMode === 'ege' ? 5 : 10);
     const filterType = this.screenParams.filterType || 'all';
 
     let filteredCount = WORDS_TASK4.length;
@@ -893,55 +992,89 @@ const App = {
         <h2 class="screen-title">Задание №4 — Ударения</h2>
       </div>
 
-      <div class="filter-section">
-        <div class="filter-label">Количество слов</div>
-        <div class="session-pills">
-          ${[10, 20, 30, 0].map(n => `
-            <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
-              ${n === 0 ? 'Все' : n}
-            </button>
-          `).join('')}
-        </div>
+      <!-- Переключатель режима: по словам vs Формат ЕГЭ -->
+      <div class="task4-submode-tabs">
+        <button class="task4-submode-tab ${subMode === 'words' ? 'active' : ''}" data-task4-submode="words">
+          🔤 Карточки слов
+        </button>
+        <button class="task4-submode-tab ${subMode === 'ege' ? 'active' : ''}" data-task4-submode="ege">
+          📋 Формат ЕГЭ (ФИПИ)
+        </button>
       </div>
 
-      <div class="filter-section">
-        <div class="filter-label">Фильтр по части речи</div>
-        <div class="filter-modes">
-          <button class="filter-mode ${filterType === 'all' ? 'active' : ''}" data-filter-type="all">
-            <div class="filter-mode-radio"></div>
-            <div>
-              <span class="filter-mode-text">Все части речи</span>
-              <div class="filter-mode-desc">Все слова из орфоэпического словника (${WORDS_TASK4.length} слов)</div>
-            </div>
-          </button>
-          <button class="filter-mode ${filterType === 'parts' ? 'active' : ''}" data-filter-type="parts">
-            <div class="filter-mode-radio"></div>
-            <div>
-              <span class="filter-mode-text">Выбрать части речи</span>
-              <div class="filter-mode-desc">Только глаголы, существительные или прилагательные</div>
-            </div>
-          </button>
+      ${subMode === 'ege' ? `
+        <div class="ege-info-box">
+          <div class="ege-info-title">📋 Реальный формат КИМ ЕГЭ</div>
+          <div class="ege-info-desc">
+            В каждом задании 5 пронумерованных строк. Вам нужно указать номера ответов, в которых <b>верно</b> (или <b>неверно</b>) выделено ударение.
+          </div>
         </div>
-      </div>
 
-      ${filterType === 'parts' ? `
         <div class="filter-section">
-          <div class="filter-label">Части речи</div>
-          <div class="filter-modes">
-            ${parts.map(p => `
-              <button class="filter-mode ${selectedParts.includes(p) ? 'active' : ''}" data-part="${p}">
-                <div class="filter-mode-radio"></div>
-                <span class="filter-mode-text">${p.charAt(0).toUpperCase() + p.slice(1)}</span>
+          <div class="filter-label">Количество заданий в тесте</div>
+          <div class="session-pills">
+            ${[5, 10, 15].map(n => `
+              <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+                ${n} заданий
               </button>
             `).join('')}
           </div>
         </div>
-      ` : ''}
 
-      <button class="start-btn" data-action="start-task4"
-        ${filterType === 'parts' && selectedParts.length === 0 ? 'disabled' : ''}>
-        Начать тренировку (${displayCount} слов) 🚀
-      </button>
+        <button class="start-btn mt-16" data-action="start-task4-ege">
+          Начать тест ЕГЭ (${sessionLength} заданий) 🚀
+        </button>
+      ` : `
+        <div class="filter-section">
+          <div class="filter-label">Количество слов</div>
+          <div class="session-pills">
+            ${[10, 20, 30, 0].map(n => `
+              <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+                ${n === 0 ? 'Все' : n}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Фильтр по части речи</div>
+          <div class="filter-modes">
+            <button class="filter-mode ${filterType === 'all' ? 'active' : ''}" data-filter-type="all">
+              <div class="filter-mode-radio"></div>
+              <div>
+                <span class="filter-mode-text">Все части речи</span>
+                <div class="filter-mode-desc">Все слова из орфоэпического словника (${WORDS_TASK4.length} слов)</div>
+              </div>
+            </button>
+            <button class="filter-mode ${filterType === 'parts' ? 'active' : ''}" data-filter-type="parts">
+              <div class="filter-mode-radio"></div>
+              <div>
+                <span class="filter-mode-text">Выбрать части речи</span>
+                <div class="filter-mode-desc">Только глаголы, существительные или прилагательные</div>
+              </div>
+            </button>
+          </div>
+        </div>
+
+        ${filterType === 'parts' ? `
+          <div class="filter-section">
+            <div class="filter-label">Части речи</div>
+            <div class="filter-modes">
+              ${parts.map(p => `
+                <button class="filter-mode ${selectedParts.includes(p) ? 'active' : ''}" data-part="${p}">
+                  <div class="filter-mode-radio"></div>
+                  <span class="filter-mode-text">${p.charAt(0).toUpperCase() + p.slice(1)}</span>
+                </button>
+              `).join('')}
+            </div>
+          </div>
+        ` : ''}
+
+        <button class="start-btn" data-action="start-task4"
+          ${filterType === 'parts' && selectedParts.length === 0 ? 'disabled' : ''}>
+          Начать тренировку (${displayCount} слов) 🚀
+        </button>
+      `}
     `;
   },
 
@@ -982,6 +1115,40 @@ const App = {
       `;
     }).join('');
 
+    const combo = t.combo || 0;
+    let mascotMood = 'happy';
+    let mascotText = 'Выбери правильный вариант 👇';
+
+    if (t.answered) {
+      const selected = variants[t.selectedVariant];
+      if (selected && selected.correct) {
+        if (combo >= 5) {
+          mascotMood = 'cool';
+          mascotText = `ОГОНЬ x${combo}! Ты настоящий профи! 😎🔥`;
+        } else if (combo >= 3) {
+          mascotMood = 'cool';
+          mascotText = `Комбо x${combo}! Отличная серия! ⚡`;
+        } else {
+          mascotMood = 'cheer';
+          mascotText = 'Верно! Отличный ответ! ✨';
+        }
+      } else {
+        mascotMood = 'sad';
+        mascotText = 'Ой, ошибка! Запомни верный ответ 💡';
+      }
+    } else {
+      if (combo >= 5) {
+        mascotMood = 'cool';
+        mascotText = `Держи серию x${combo}! Вперёд! 😎`;
+      } else if (combo >= 3) {
+        mascotMood = 'cool';
+        mascotText = `Комбо x${combo}! Не сбавляй темп! 🔥`;
+      } else if (combo >= 1) {
+        mascotMood = 'happy';
+        mascotText = 'Так держать! Внимание на следующее слово 🌱';
+      }
+    }
+
     return `
       <div class="training-header">
         <button class="training-quit-btn" data-action="quit-training" title="Прервать тренировку">✕ Выйти</button>
@@ -991,6 +1158,15 @@ const App = {
       <div class="training-progress">
         <div class="progress-bar">
           <div class="progress-fill" style="width: ${progress}%"></div>
+        </div>
+      </div>
+
+      <!-- Живой динозаврик с реакциями -->
+      <div class="mascot-bar ${combo >= 3 ? 'is-combo' : ''} ${t.answered ? (variants[t.selectedVariant]?.correct ? 'is-correct' : 'is-wrong') : ''}">
+        <div class="mascot-bar-avatar">${this.getDinoSVG(mascotMood, 'dino-svg-mini')}</div>
+        <div class="mascot-bar-content">
+          <div class="mascot-bar-text">${mascotText}</div>
+          ${combo >= 2 ? `<div class="combo-pill">${combo >= 5 ? '😎 x' + combo : '🔥 x' + combo}</div>` : ''}
         </div>
       </div>
 
@@ -1632,6 +1808,527 @@ const App = {
     `;
   },
 
+  // ==================== РЕЖИМ: БЛИЦ ЗА 60 СЕКУНД ====================
+
+  startBlitz() {
+    if (this._blitzInterval) {
+      clearInterval(this._blitzInterval);
+      this._blitzInterval = null;
+    }
+
+    // Собираем микс из заданий №9 и №4
+    const t9Shuffled = this.shuffleArray([...WORDS_TASK9]);
+    const t4Shuffled = this.shuffleArray([...WORDS_TASK4]);
+    const blitzQuestions = [];
+
+    const totalQuestions = 70;
+    for (let i = 0; i < totalQuestions; i++) {
+      if (i % 2 === 0 && t9Shuffled.length > 0) {
+        const w = t9Shuffled.pop();
+        const wrongLetter = (w.wrongLetters && w.wrongLetters[0]) || 'о';
+        const wrongWord = w.display.replace('_', wrongLetter);
+        const opts = this.shuffleArray([
+          { text: w.word, correct: true },
+          { text: wrongWord, correct: false }
+        ]);
+        blitzQuestions.push({
+          type: 'task9',
+          wordObj: w,
+          display: w.display,
+          options: opts
+        });
+      } else if (t4Shuffled.length > 0) {
+        const w = t4Shuffled.pop();
+        const wrongText = (w.wrong && w.wrong[0]) || w.correct.toLowerCase();
+        const opts = this.shuffleArray([
+          { text: w.correct, correct: true },
+          { text: wrongText, correct: false }
+        ]);
+        blitzQuestions.push({
+          type: 'task4',
+          wordObj: w,
+          display: w.word,
+          options: opts
+        });
+      }
+    }
+
+    this.blitz = {
+      timeLeft: 60,
+      lives: 3,
+      score: 0,
+      currentIndex: 0,
+      questions: blitzQuestions,
+      answers: [],
+      mistakes: [],
+      answered: false,
+      selectedOpt: null
+    };
+
+    this._blitzInterval = setInterval(() => {
+      if (!this.blitz) {
+        clearInterval(this._blitzInterval);
+        return;
+      }
+      this.blitz.timeLeft--;
+      const timerEl = document.getElementById('blitzTimer');
+      if (timerEl) {
+        timerEl.textContent = `⏱️ ${this.blitz.timeLeft}с`;
+        if (this.blitz.timeLeft <= 10) {
+          timerEl.classList.add('urgent');
+        }
+      }
+      if (this.blitz.timeLeft <= 0) {
+        this.finishBlitz('time');
+      }
+    }, 1000);
+
+    this.navigate('blitz');
+  },
+
+  checkBlitzAnswer(optIndex) {
+    const b = this.blitz;
+    if (!b || b.answered || b.currentIndex >= b.questions.length) return;
+
+    const q = b.questions[b.currentIndex];
+    const opt = q.options[optIndex];
+    if (!opt) return;
+
+    b.answered = true;
+    b.selectedOpt = optIndex;
+
+    const isCorrect = opt.correct;
+    if (isCorrect) {
+      b.score++;
+      try {
+        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('success');
+      } catch (e) {}
+    } else {
+      b.lives--;
+      b.mistakes.push({
+        word: q.type === 'task9' ? q.wordObj.word : q.wordObj.correct,
+        selected: opt.text,
+        wordId: q.wordObj.id,
+        taskType: q.type
+      });
+      try {
+        window.Telegram?.WebApp?.HapticFeedback?.notificationOccurred('error');
+      } catch (e) {}
+    }
+
+    this.render();
+
+    if (b.lives <= 0) {
+      setTimeout(() => this.finishBlitz('lives'), 450);
+      return;
+    }
+
+    setTimeout(() => {
+      if (!this.blitz) return;
+      b.currentIndex++;
+      b.answered = false;
+      b.selectedOpt = null;
+      if (b.currentIndex >= b.questions.length) {
+        this.finishBlitz('completed');
+      } else {
+        this.render();
+      }
+    }, 280);
+  },
+
+  finishBlitz(reason = 'time') {
+    if (this._blitzInterval) {
+      clearInterval(this._blitzInterval);
+      this._blitzInterval = null;
+    }
+
+    const b = this.blitz;
+    if (!b) return;
+
+    const score = b.score;
+    const mistakes = b.mistakes;
+    const { isNewRecord, highScore } = Storage.setBlitzHighScore(score);
+
+    this.blitz = null;
+    this.navigate('blitz_results', {
+      score,
+      isNewRecord,
+      highScore,
+      mistakes,
+      reason
+    });
+  },
+
+  handleQuitBlitz() {
+    if (this._blitzInterval) {
+      clearInterval(this._blitzInterval);
+      this._blitzInterval = null;
+    }
+    this.blitz = null;
+    this.navigate('home');
+  },
+
+  renderBlitz() {
+    const b = this.blitz;
+    if (!b || b.currentIndex >= b.questions.length) return '<p>Загрузка...</p>';
+
+    const q = b.questions[b.currentIndex];
+    const livesHearts = ['❤️', '❤️', '❤️'].map((heart, idx) => {
+      return idx < b.lives ? heart : '💔';
+    }).join(' ');
+
+    const mood = b.answered
+      ? (q.options[b.selectedOpt]?.correct ? 'cool' : 'sad')
+      : (b.score >= 5 ? 'cool' : 'happy');
+
+    const optionsHTML = q.options.map((opt, i) => {
+      let cls = 'blitz-opt-btn';
+      if (b.answered) {
+        if (opt.correct) cls += ' correct';
+        else if (i === b.selectedOpt) cls += ' wrong';
+      }
+      return `
+        <button class="${cls}" data-opt="${i}" ${b.answered ? 'disabled' : ''}>
+          ${this.escapeHTML(opt.text)}
+        </button>
+      `;
+    }).join('');
+
+    return `
+      <div class="blitz-header">
+        <button class="training-quit-btn" data-action="quit-blitz">✕ Выход</button>
+        <div class="blitz-timer-pill ${b.timeLeft <= 10 ? 'urgent' : ''}" id="blitzTimer">
+          ⏱️ ${b.timeLeft}с
+        </div>
+        <div class="blitz-lives-pill">${livesHearts}</div>
+      </div>
+
+      <div class="blitz-score-bar">
+        <div class="blitz-score-badge">Счёт: <b>${b.score}</b> 🏆</div>
+        <div class="blitz-mascot-avatar">${this.getDinoSVG(mood, 'dino-svg-mini')}</div>
+      </div>
+
+      <div class="blitz-card">
+        <div class="blitz-task-type">${q.type === 'task9' ? 'Задание №9 · Буквы' : 'Задание №4 · Ударения'}</div>
+        <div class="blitz-word-display">${this.escapeHTML(q.display)}</div>
+        <div class="blitz-hint">Выберите правильный вариант:</div>
+        <div class="blitz-options">
+          ${optionsHTML}
+        </div>
+      </div>
+    `;
+  },
+
+  renderBlitzResults() {
+    const p = this.screenParams;
+    const score = p.score || 0;
+    const highScore = p.highScore || score;
+    const isNewRecord = p.isNewRecord;
+    const mistakes = p.mistakes || [];
+
+    let title = 'Время вышло! ⏱️';
+    if (p.reason === 'lives') title = 'Закончились жизни! 💔';
+    else if (p.reason === 'completed') title = 'Все слова пройдены! 🚀';
+
+    return `
+      <div class="results-hero">
+        <div class="dino-container mb-12">
+          ${this.getDinoSVG(isNewRecord ? 'cool' : (score > 10 ? 'cheer' : 'happy'))}
+        </div>
+        <div class="results-score">${score}</div>
+        <div class="results-label">${title}</div>
+        ${isNewRecord ? `
+          <div class="blitz-new-record-badge">🎉 НОВЫЙ РЕКОРД! 🏆</div>
+        ` : `
+          <div class="results-percent">Рекорд: ${highScore} слов</div>
+        `}
+      </div>
+
+      ${mistakes.length > 0 ? `
+        <div class="results-list">
+          <div class="results-list-title">Ошибки в блице (${mistakes.length})</div>
+          ${mistakes.map(m => {
+            const isFav = Storage.isFavorite(m.wordId);
+            return `
+              <div class="result-item">
+                <div>
+                  <span class="result-item-word result-item-correct">${this.escapeHTML(m.word)}</span>
+                  <span class="result-item-wrong">${this.escapeHTML(m.selected)}</span>
+                </div>
+                <button class="result-item-fav ${isFav ? 'active' : ''}"
+                        data-action="toggle-fav" data-word-id="${m.wordId}" data-task="${m.taskType}">
+                  ${isFav ? '⭐' : '☆'}
+                </button>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      ` : ''}
+
+      <div class="results-actions">
+        <button class="btn-primary" style="background:#E65100;" data-action="retry-blitz">
+          Сыграть ещё раз ⚡
+        </button>
+        <button class="btn-secondary" data-action="home">На главную</button>
+      </div>
+    `;
+  },
+
+  // ==================== РЕЖИМ: ЗАДАНИЕ №4 В СТИЛЕ ЕГЭ (ФИПИ) ====================
+
+  startTask4EGE() {
+    const sessionLength = this.screenParams.sessionLength || 5;
+    const questions = [];
+    for (let i = 0; i < sessionLength; i++) {
+      questions.push(this.generateTask4EGEQuestion());
+    }
+
+    this.egeSession = {
+      questions,
+      currentIndex: 0,
+      answers: [],
+      selectedNumbers: [],
+      isChecked: false
+    };
+
+    this.navigate('task4_ege');
+  },
+
+  generateTask4EGEQuestion() {
+    const shuffled = this.shuffleArray([...WORDS_TASK4]);
+    const words = shuffled.slice(0, 5);
+
+    // 70% вероятность условия «верно», 30% «неверно»
+    const isTargetCorrect = Math.random() < 0.7;
+    const condition = isTargetCorrect ? 'верно' : 'НЕВЕРНО';
+
+    // В КИМах ФИПИ количество ответов всегда 2, 3 или 4
+    const possibleCounts = [2, 3, 4];
+    const targetCount = possibleCounts[Math.floor(Math.random() * possibleCounts.length)];
+
+    const matchIndices = new Set(this.shuffleArray([0, 1, 2, 3, 4]).slice(0, targetCount));
+
+    const lines = words.map((w, idx) => {
+      const shouldMatch = matchIndices.has(idx);
+      const isLineCorrectStress = isTargetCorrect ? shouldMatch : !shouldMatch;
+
+      let displayedWord;
+      if (isLineCorrectStress) {
+        displayedWord = w.correct;
+      } else {
+        const wrongList = w.wrong && w.wrong.length > 0 ? w.wrong : [w.correct.toLowerCase()];
+        displayedWord = wrongList[Math.floor(Math.random() * wrongList.length)];
+      }
+
+      return {
+        wordObj: w,
+        lineNum: idx + 1,
+        displayedWord,
+        hasCorrectStress: isLineCorrectStress,
+        matchesCondition: shouldMatch
+      };
+    });
+
+    const correctNumbers = lines
+      .filter(l => l.matchesCondition)
+      .map(l => l.lineNum)
+      .sort((a, b) => a - b);
+
+    return {
+      condition,
+      isTargetCorrect,
+      lines,
+      correctAnswer: correctNumbers.join(''),
+      correctNumbers
+    };
+  },
+
+  toggleEGENumber(num) {
+    const s = this.egeSession;
+    if (!s || s.isChecked) return;
+
+    const idx = s.selectedNumbers.indexOf(num);
+    if (idx === -1) {
+      s.selectedNumbers.push(num);
+    } else {
+      s.selectedNumbers.splice(idx, 1);
+    }
+    s.selectedNumbers.sort((a, b) => a - b);
+    this.render();
+  },
+
+  checkTask4EGE() {
+    const s = this.egeSession;
+    if (!s || s.isChecked || s.selectedNumbers.length === 0) return;
+
+    const q = s.questions[s.currentIndex];
+    const userAns = s.selectedNumbers.join('');
+    const isCorrect = userAns === q.correctAnswer;
+
+    s.isChecked = true;
+    s.answers.push({
+      question: q,
+      userAns,
+      isCorrect,
+      correctAns: q.correctAnswer
+    });
+
+    // Учитываем ответы в статистике проблемных слов
+    q.lines.forEach(line => {
+      const isUserRightOnThisLine = (s.selectedNumbers.includes(line.lineNum) === line.matchesCondition);
+      Storage.recordAnswer(line.wordObj.id, isUserRightOnThisLine);
+    });
+
+    try {
+      const tg = window.Telegram?.WebApp;
+      if (tg?.HapticFeedback) {
+        tg.HapticFeedback.notificationOccurred(isCorrect ? 'success' : 'error');
+      }
+    } catch (e) {}
+
+    this.render();
+  },
+
+  nextTask4EGE() {
+    const s = this.egeSession;
+    if (!s) return;
+
+    s.currentIndex++;
+    s.selectedNumbers = [];
+    s.isChecked = false;
+
+    if (s.currentIndex >= s.questions.length) {
+      this.finishTask4EGE();
+    } else {
+      this.render();
+    }
+  },
+
+  finishTask4EGE() {
+    const s = this.egeSession;
+    if (!s) return;
+
+    const correctCount = s.answers.filter(a => a.isCorrect).length;
+    const total = s.answers.length;
+    const mistakes = s.answers.filter(a => !a.isCorrect);
+
+    Storage.addSession({
+      taskType: 'task4',
+      total,
+      correct: correctCount,
+      wrong: total - correctCount,
+      mistakes: []
+    });
+
+    this.egeSession = null;
+    this.navigate('results', {
+      taskType: 'task4',
+      total,
+      correct: correctCount,
+      answers: s.answers,
+      mistakes: mistakes.map((m, i) => ({
+        wordId: `ege_${i}`,
+        word: `Задание с ответом ${m.correctAns}`,
+        selected: `Ваш ответ: ${m.userAns || '—'}`
+      }))
+    });
+  },
+
+  handleQuitEGE() {
+    this.egeSession = null;
+    this.navigate('task4filter');
+  },
+
+  renderTask4EGE() {
+    const s = this.egeSession;
+    if (!s || s.currentIndex >= s.questions.length) return '<p>Загрузка...</p>';
+
+    const q = s.questions[s.currentIndex];
+    const total = s.questions.length;
+    const idx = s.currentIndex;
+    const selectedNums = s.selectedNumbers || [];
+    const isChecked = s.isChecked;
+    const isSuccess = isChecked && (selectedNums.join('') === q.correctAnswer);
+
+    return `
+      <div class="training-header">
+        <button class="training-quit-btn" data-action="quit-ege">✕ Выйти</button>
+        <span class="progress-text">Задание ${idx + 1} из ${total}</span>
+      </div>
+
+      <div class="ege-card">
+        <div class="ege-badge-kim">КИМ ЕГЭ · Задание №4</div>
+        <div class="ege-instruction">
+          Укажите варианты ответов, в которых <b>${q.condition.toUpperCase()}</b> выделена буква, обозначающая ударный гласный звук. Запишите номера этих ответов.
+        </div>
+
+        <div class="ege-lines-list">
+          ${q.lines.map(line => {
+            let rowCls = 'ege-line-row';
+            if (isChecked) {
+              rowCls += line.matchesCondition ? ' is-target' : ' not-target';
+            }
+            const isFav = Storage.isFavorite(line.wordObj.id);
+            return `
+              <div class="${rowCls}">
+                <div class="ege-line-left">
+                  <span class="ege-line-num">${line.lineNum})</span>
+                  <span class="ege-line-word">${line.displayedWord}</span>
+                </div>
+                ${isChecked ? `
+                  <div class="ege-line-right">
+                    <span class="ege-verdict-pill ${line.hasCorrectStress ? 'v-ok' : 'v-err'}">
+                      ${line.hasCorrectStress ? 'верно' : 'ошибка: ' + line.wordObj.correct}
+                    </span>
+                    <button class="dict-word-fav ${isFav ? 'active' : ''}"
+                            data-action="toggle-fav" data-word-id="${line.wordObj.id}" data-task="task4"
+                            title="В избранное">
+                      ${isFav ? '⭐' : '☆'}
+                    </button>
+                  </div>
+                ` : ''}
+              </div>
+            `;
+          }).join('')}
+        </div>
+
+        <div class="ege-answer-bar">
+          <span class="ege-answer-label">Ответ:</span>
+          <div class="ege-answer-display">
+            ${selectedNums.length > 0
+              ? selectedNums.map(n => `<span class="ege-digit-box">${n}</span>`).join('')
+              : '<span class="ege-digit-empty">выберите цифры ниже</span>'}
+          </div>
+        </div>
+
+        ${!isChecked ? `
+          <div class="ege-keypad">
+            ${[1, 2, 3, 4, 5].map(n => `
+              <button class="ege-key-btn ${selectedNums.includes(n) ? 'selected' : ''}" data-ege-num="${n}">
+                ${n}
+              </button>
+            `).join('')}
+          </div>
+
+          <button class="start-btn mt-16" data-action="check-task4-ege" ${selectedNums.length === 0 ? 'disabled' : ''}>
+            Ответить (${selectedNums.length > 0 ? selectedNums.join('') : 'выберите цифры'}) ✍️
+          </button>
+        ` : `
+          <div class="ege-result-banner ${isSuccess ? 'success' : 'failure'}">
+            <div class="ege-result-title">${isSuccess ? '🎉 Верно! 1 балл!' : '❌ Неверно'}</div>
+            <div class="ege-result-text">
+              Правильный ответ: <b>${q.correctAnswer}</b>. Ваш ответ: <b>${selectedNums.join('') || '—'}</b>
+            </div>
+          </div>
+
+          <button class="start-btn mt-16" data-action="next-task4-ege">
+            ${idx + 1 < total ? 'Следующее задание →' : 'Завершить тест 📊'}
+          </button>
+        `}
+      </div>
+    `;
+  },
+
   // ==================== ДИАЛОГИ ====================
 
   showConfirmDialog(title, text, onConfirm) {
@@ -1658,7 +2355,7 @@ const App = {
 
   // ==================== ДИНОЗАВРИК ====================
 
-  getDinoSVG(mood = 'happy') {
+  getDinoSVG(mood = 'happy', sizeClass = 'dino-svg') {
     const body = '#4CAF50';
     const belly = '#C8E6C9';
     const eye = '#1F2937';
@@ -1666,92 +2363,119 @@ const App = {
     const blush = '#FF8A80';
     const foot = '#43A047';
 
+    // 1. Грустный динозаврик (ошибка / пустое избранное)
     if (mood === 'sad') {
       return `
-        <svg class="dino-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <!-- Шипы на спине -->
+        <svg class="${sizeClass}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
           <path d="M 45 22 Q 48 11, 53 20 Z" fill="${spike}"/>
           <path d="M 55 18 Q 60 7, 65 18 Z" fill="${spike}"/>
           <path d="M 67 22 Q 72 12, 76 22 Z" fill="${spike}"/>
-
-          <!-- Хвостик (поникший) -->
           <path d="M 84 80 Q 98 84, 108 88 Q 104 96, 88 92 Q 82 90, 80 84 Z" fill="${body}"/>
-
-          <!-- Ножки -->
           <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
           <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
-
-          <!-- Тело -->
           <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
           <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
-
-          <!-- Голова -->
           <circle cx="60" cy="42" r="23" fill="${body}"/>
-
           <!-- Грустные бровки -->
           <path d="M 47 30 L 53 32" stroke="${eye}" stroke-width="1.8" stroke-linecap="round"/>
           <path d="M 73 30 L 67 32" stroke="${eye}" stroke-width="1.8" stroke-linecap="round"/>
-
-          <!-- Глазки (слегка печальные с бликами) -->
+          <!-- Глазки со слезинкой -->
           <ellipse cx="50" cy="38" rx="4.5" ry="4" fill="${eye}"/>
           <ellipse cx="70" cy="38" rx="4.5" ry="4" fill="${eye}"/>
           <circle cx="49" cy="36.5" r="1.6" fill="white"/>
           <circle cx="69" cy="36.5" r="1.6" fill="white"/>
-
-          <!-- Слезинка -->
           <path d="M 75 42 Q 77 47, 75 49 Q 73 47, 75 42 Z" fill="#64B5F6"/>
-
-          <!-- Щёчки -->
           <circle cx="42" cy="44" r="3.5" fill="${blush}" opacity="0.35"/>
           <circle cx="78" cy="44" r="3.5" fill="${blush}" opacity="0.35"/>
-
           <!-- Поникший ротик -->
           <path d="M 53 48 Q 60 43, 67 48" stroke="${eye}" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-          <!-- Лапки -->
           <ellipse cx="46" cy="72" rx="6" ry="5" fill="${body}" transform="rotate(-10 46 72)"/>
           <ellipse cx="74" cy="72" rx="6" ry="5" fill="${body}" transform="rotate(10 74 72)"/>
         </svg>
       `;
     }
 
+    // 2. Крутой динозаврик в солнцезащитных очках (Комбо 3+ / 5+ подряд)
+    if (mood === 'cool') {
+      return `
+        <svg class="${sizeClass}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 45 20 Q 49 8, 54 18 Z" fill="${spike}"/>
+          <path d="M 55 16 Q 60 4, 65 16 Z" fill="${spike}"/>
+          <path d="M 66 20 Q 71 8, 75 20 Z" fill="${spike}"/>
+          <path d="M 85 75 C 99 71, 109 63, 112 56 C 112 68, 103 86, 85 87 Z" fill="${body}"/>
+          <path d="M 99 66 Q 103 60, 107 65 Z" fill="${spike}"/>
+          <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+          <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+          <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
+          <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
+          <circle cx="60" cy="42" r="23" fill="${body}"/>
+          <!-- Солнцезащитные очки 😎 -->
+          <rect x="40" y="32" width="18" height="13" rx="3.5" fill="#1E293B"/>
+          <rect x="62" y="32" width="18" height="13" rx="3.5" fill="#1E293B"/>
+          <line x1="58" y1="38" x2="62" y2="38" stroke="#1E293B" stroke-width="2.5"/>
+          <line x1="42" y1="34" x2="48" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" stroke-linecap="round"/>
+          <line x1="64" y1="34" x2="70" y2="42" stroke="rgba(255,255,255,0.5)" stroke-width="1.6" stroke-linecap="round"/>
+          <circle cx="41" cy="46" r="3.5" fill="${blush}" opacity="0.45"/>
+          <circle cx="79" cy="46" r="3.5" fill="${blush}" opacity="0.45"/>
+          <!-- Уверенная улыбка -->
+          <path d="M 52 47 Q 60 55, 69 47" stroke="${eye}" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+          <!-- Лапки победные -->
+          <ellipse cx="46" cy="70" rx="6" ry="5" fill="${body}" transform="rotate(-20 46 70)"/>
+          <ellipse cx="74" cy="70" rx="6" ry="5" fill="${body}" transform="rotate(20 74 70)"/>
+        </svg>
+      `;
+    }
+
+    // 3. Ликующий динозаврик (правильный ответ)
+    if (mood === 'cheer') {
+      return `
+        <svg class="${sizeClass}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+          <path d="M 45 20 Q 49 8, 54 18 Z" fill="${spike}"/>
+          <path d="M 55 16 Q 60 4, 65 16 Z" fill="${spike}"/>
+          <path d="M 66 20 Q 71 8, 75 20 Z" fill="${spike}"/>
+          <path d="M 85 75 C 99 71, 109 63, 112 56 C 112 68, 103 86, 85 87 Z" fill="${body}"/>
+          <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+          <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+          <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
+          <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
+          <circle cx="60" cy="42" r="23" fill="${body}"/>
+          <!-- Глазки-дуги от счастья ^ ^ -->
+          <path d="M 45 39 Q 50 32, 55 39" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <path d="M 65 39 Q 70 32, 75 39" stroke="${eye}" stroke-width="2.6" fill="none" stroke-linecap="round"/>
+          <circle cx="42" cy="44" r="4.5" fill="${blush}" opacity="0.55"/>
+          <circle cx="78" cy="44" r="4.5" fill="${blush}" opacity="0.55"/>
+          <!-- Открытая радостная улыбка с язычком -->
+          <path d="M 52 45 Q 60 55, 68 45 Z" fill="${eye}"/>
+          <path d="M 55 49 Q 60 46, 65 49" stroke="${blush}" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <ellipse cx="46" cy="68" rx="6" ry="5" fill="${body}" transform="rotate(-30 46 68)"/>
+          <ellipse cx="74" cy="68" rx="6" ry="5" fill="${body}" transform="rotate(30 74 68)"/>
+        </svg>
+      `;
+    }
+
+    // 4. Обычный милый динозаврик с книжкой
     return `
-      <svg class="dino-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <!-- Шипы на спине (аккуратные и симметричные) -->
+      <svg class="${sizeClass}" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
         <path d="M 45 20 Q 49 8, 54 18 Z" fill="${spike}"/>
         <path d="M 55 16 Q 60 4, 65 16 Z" fill="${spike}"/>
         <path d="M 66 20 Q 71 8, 75 20 Z" fill="${spike}"/>
-
-        <!-- Задорный хвостик -->
         <path d="M 85 75 C 99 71, 109 63, 112 56 C 112 68, 103 86, 85 87 Z" fill="${body}"/>
         <path d="M 99 66 Q 103 60, 107 65 Z" fill="${spike}"/>
-
-        <!-- Ножки с пальчиками -->
         <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
         <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
-
-        <!-- Тело и мягкий животик -->
         <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
         <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
-
-        <!-- Голова -->
         <circle cx="60" cy="42" r="23" fill="${body}"/>
-
-        <!-- Глазки (выразительные, с двойными бликами) -->
+        <!-- Глазки с двойными бликами -->
         <circle cx="50" cy="38" r="4.8" fill="${eye}"/>
         <circle cx="70" cy="38" r="4.8" fill="${eye}"/>
         <circle cx="48.5" cy="36.5" r="1.8" fill="white"/>
         <circle cx="68.5" cy="36.5" r="1.8" fill="white"/>
         <circle cx="51.5" cy="39.5" r="0.9" fill="white"/>
         <circle cx="71.5" cy="39.5" r="0.9" fill="white"/>
-
-        <!-- Нежные щёчки -->
         <circle cx="42" cy="44" r="4" fill="${blush}" opacity="0.45"/>
         <circle cx="78" cy="44" r="4" fill="${blush}" opacity="0.45"/>
-
-        <!-- Милая улыбка -->
         <path d="M 53 45 Q 60 52, 67 45" stroke="${eye}" stroke-width="2" fill="none" stroke-linecap="round"/>
-
         <!-- Книжка со словарём в лапках -->
         <rect x="52" y="65" width="16" height="13" rx="2" fill="${spike}"/>
         <line x1="60" y1="65" x2="60" y2="78" stroke="${belly}" stroke-width="1"/>
@@ -1761,8 +2485,6 @@ const App = {
         <line x1="62" y1="68" x2="66" y2="68" stroke="#E8F5E9" stroke-width="0.9"/>
         <line x1="62" y1="71" x2="66" y2="71" stroke="#E8F5E9" stroke-width="0.9"/>
         <line x1="62" y1="74" x2="65" y2="74" stroke="#E8F5E9" stroke-width="0.9"/>
-
-        <!-- Лапки, держащие книжку -->
         <ellipse cx="48" cy="72" rx="5.5" ry="4.5" fill="${body}" transform="rotate(15 48 72)"/>
         <ellipse cx="72" cy="72" rx="5.5" ry="4.5" fill="${body}" transform="rotate(-15 72 72)"/>
       </svg>

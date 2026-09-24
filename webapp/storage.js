@@ -172,8 +172,25 @@ const Storage = {
       overallPercent,
       totalSessions: sessions.length,
       lastSessions: sessions.slice(0, 10),
-      problemWords: this.getProblematicWords()
+      problemWords: this.getProblematicWords(),
+      blitzHighScore: Number(data.blitzHighScore) || 0
     };
+  },
+
+  getBlitzHighScore() {
+    const data = this._getStatsData();
+    return Number(data.blitzHighScore) || 0;
+  },
+
+  setBlitzHighScore(score) {
+    const data = this._getStatsData();
+    const current = Number(data.blitzHighScore) || 0;
+    const isNewRecord = score > current;
+    if (isNewRecord) {
+      data.blitzHighScore = score;
+      this._saveStatsData(data);
+    }
+    return { isNewRecord, highScore: Math.max(current, score) };
   },
 
   /**

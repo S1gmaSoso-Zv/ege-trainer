@@ -1829,3 +1829,621 @@ body.tg-dark .speak-btn {
 .mt-16 { margin-top: 16px; }
 .mb-16 { margin-bottom: 16px; }
 .hidden { display: none !important; }
+
+/* ============================================
+   Live Mascot Reaction Bar
+   ============================================ */
+
+.mascot-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 16px;
+  transition: all var(--transition);
+}
+
+.mascot-bar.is-correct {
+  border-color: var(--green-400);
+  background: var(--green-50);
+}
+
+body.tg-dark .mascot-bar.is-correct {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: var(--green-500);
+}
+
+.mascot-bar.is-wrong {
+  border-color: var(--red-400);
+  background: var(--red-50);
+}
+
+body.tg-dark .mascot-bar.is-wrong {
+  background: rgba(229, 57, 53, 0.15);
+  border-color: var(--red-500);
+}
+
+.mascot-bar.is-combo {
+  border-color: #FFA000;
+  box-shadow: 0 2px 10px rgba(255, 160, 0, 0.15);
+}
+
+.mascot-bar-avatar {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.dino-svg-mini {
+  width: 44px;
+  height: 44px;
+}
+
+.mascot-bar-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.mascot-bar-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-primary);
+  line-height: 1.35;
+}
+
+.combo-pill {
+  flex-shrink: 0;
+  background: linear-gradient(135deg, #FF6F00, #FFA000);
+  color: #FFFFFF;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 9px;
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(255, 111, 0, 0.25);
+  animation: pulse-combo 0.6s ease-in-out infinite alternate;
+}
+
+@keyframes pulse-combo {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+/* ============================================
+   Task 4 Submode Switcher (Cards vs EGE)
+   ============================================ */
+
+.task4-submode-tabs {
+  display: flex;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: 4px;
+  gap: 4px;
+  margin-bottom: 16px;
+}
+
+.task4-submode-tab {
+  flex: 1;
+  padding: 10px 8px;
+  font-size: 13px;
+  font-weight: 600;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font);
+}
+
+.task4-submode-tab.active {
+  background: var(--bg-card);
+  color: var(--green-700);
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+body.tg-dark .task4-submode-tab.active {
+  color: var(--green-400);
+}
+
+.ege-info-box {
+  background: var(--green-50);
+  border: 1px solid var(--green-200);
+  border-radius: var(--radius-md);
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+body.tg-dark .ege-info-box {
+  background: rgba(76, 175, 80, 0.12);
+  border-color: rgba(76, 175, 80, 0.28);
+}
+
+.ege-info-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-800);
+  margin-bottom: 4px;
+}
+
+body.tg-dark .ege-info-title {
+  color: var(--green-400);
+}
+
+.ege-info-desc {
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.45;
+}
+
+/* ============================================
+   Blitz Mode (60s Time Attack)
+   ============================================ */
+
+.mode-card-icon.amber {
+  background: #FFF3E0;
+}
+
+body.tg-dark .mode-card-icon.amber {
+  background: rgba(255, 152, 0, 0.15);
+}
+
+.blitz-mode-card {
+  border-color: #FFA726;
+}
+
+.blitz-mode-card:hover {
+  border-color: #FF9800;
+}
+
+.blitz-badge-hot {
+  font-size: 10px;
+  font-weight: 700;
+  color: #FFFFFF;
+  background: linear-gradient(135deg, #FF5722, #FF9800);
+  padding: 2px 7px;
+  border-radius: 10px;
+  letter-spacing: 0.5px;
+}
+
+.blitz-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.blitz-timer-pill {
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: 20px;
+  padding: 6px 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: all 0.2s ease;
+}
+
+.blitz-timer-pill.urgent {
+  background: var(--red-50);
+  border-color: var(--red-400);
+  color: var(--red-500);
+  animation: timer-beat 0.6s infinite alternate;
+}
+
+@keyframes timer-beat {
+  from { transform: scale(1); }
+  to { transform: scale(1.06); }
+}
+
+.blitz-lives-pill {
+  font-size: 16px;
+  letter-spacing: 2px;
+}
+
+.blitz-score-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 8px 14px;
+  margin-bottom: 14px;
+}
+
+.blitz-score-badge {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.blitz-mascot-avatar {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.blitz-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 24px 18px;
+  text-align: center;
+  box-shadow: 0 2px 12px var(--shadow);
+  margin-bottom: 16px;
+}
+
+.blitz-task-type {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #FF6F00;
+  background: #FFF3E0;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-bottom: 16px;
+}
+
+body.tg-dark .blitz-task-type {
+  background: rgba(255, 111, 0, 0.18);
+  color: #FFA726;
+}
+
+.blitz-word-display {
+  font-size: 30px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 12px;
+  letter-spacing: 0.5px;
+}
+
+.blitz-hint {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  margin-bottom: 20px;
+}
+
+.blitz-options {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blitz-opt-btn {
+  width: 100%;
+  padding: 14px 18px;
+  font-size: 17px;
+  font-weight: 600;
+  border-radius: var(--radius-md);
+  border: 2px solid var(--border);
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font);
+  text-align: center;
+}
+
+.blitz-opt-btn:hover:not(:disabled) {
+  border-color: #FFA000;
+  background: var(--bg-card);
+}
+
+.blitz-opt-btn:active:not(:disabled) {
+  transform: scale(0.98);
+}
+
+.blitz-opt-btn.correct {
+  border-color: var(--green-500);
+  background: var(--green-50);
+  color: var(--green-800);
+}
+
+body.tg-dark .blitz-opt-btn.correct {
+  background: rgba(76, 175, 80, 0.2);
+  color: var(--green-400);
+}
+
+.blitz-opt-btn.wrong {
+  border-color: var(--red-500);
+  background: var(--red-50);
+  color: var(--red-500);
+}
+
+body.tg-dark .blitz-opt-btn.wrong {
+  background: rgba(229, 57, 53, 0.2);
+}
+
+.blitz-new-record-badge {
+  display: inline-block;
+  margin-top: 8px;
+  background: linear-gradient(135deg, #FF6F00, #FFA000);
+  color: #FFFFFF;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 20px;
+  box-shadow: 0 3px 8px rgba(255, 111, 0, 0.3);
+  animation: pulse-combo 0.8s ease-in-out infinite alternate;
+}
+
+/* ============================================
+   EGE KIM Format (Task 4)
+   ============================================ */
+
+.ege-card {
+  background: var(--bg-card);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 18px 16px;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 10px var(--shadow);
+}
+
+.ege-badge-kim {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--green-700);
+  background: var(--green-50);
+  padding: 4px 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+body.tg-dark .ege-badge-kim {
+  background: rgba(76, 175, 80, 0.15);
+  color: var(--green-400);
+}
+
+.ege-instruction {
+  font-size: 14px;
+  line-height: 1.45;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+}
+
+.ege-instruction b {
+  color: var(--green-700);
+}
+
+body.tg-dark .ege-instruction b {
+  color: var(--green-400);
+}
+
+.ege-lines-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.ege-line-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: all var(--transition);
+}
+
+.ege-line-row.is-target {
+  border-color: var(--green-500);
+  background: var(--green-50);
+}
+
+body.tg-dark .ege-line-row.is-target {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: var(--green-500);
+}
+
+.ege-line-row.not-target {
+  opacity: 0.75;
+}
+
+.ege-line-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ege-line-num {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text-tertiary);
+  min-width: 20px;
+}
+
+.ege-line-word {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  letter-spacing: 0.5px;
+}
+
+.ege-line-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ege-verdict-pill {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 8px;
+}
+
+.ege-verdict-pill.v-ok {
+  background: var(--green-100);
+  color: var(--green-900);
+}
+
+body.tg-dark .ege-verdict-pill.v-ok {
+  background: rgba(76, 175, 80, 0.25);
+  color: var(--green-200);
+}
+
+.ege-verdict-pill.v-err {
+  background: var(--red-50);
+  color: var(--red-500);
+}
+
+body.tg-dark .ege-verdict-pill.v-err {
+  background: rgba(229, 57, 53, 0.2);
+  color: var(--red-400);
+}
+
+.ege-answer-bar {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: 14px;
+}
+
+.ege-answer-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.ege-answer-display {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+}
+
+.ege-digit-box {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--green-700);
+  color: #FFFFFF;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: var(--radius-sm);
+  box-shadow: 0 1px 3px var(--shadow);
+}
+
+.ege-digit-empty {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  font-style: italic;
+}
+
+.ege-keypad {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.ege-key-btn {
+  aspect-ratio: 1;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-family: var(--font);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ege-key-btn:hover {
+  border-color: var(--green-500);
+}
+
+.ege-key-btn:active {
+  transform: scale(0.95);
+}
+
+.ege-key-btn.selected {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: #FFFFFF;
+  box-shadow: 0 2px 8px rgba(46, 125, 50, 0.3);
+}
+
+.ege-result-banner {
+  padding: 14px 16px;
+  border-radius: var(--radius-md);
+  margin-bottom: 12px;
+  text-align: center;
+}
+
+.ege-result-banner.success {
+  background: var(--green-50);
+  border: 1.5px solid var(--green-400);
+}
+
+body.tg-dark .ege-result-banner.success {
+  background: rgba(76, 175, 80, 0.15);
+  border-color: var(--green-500);
+}
+
+.ege-result-banner.failure {
+  background: var(--red-50);
+  border: 1.5px solid var(--red-400);
+}
+
+body.tg-dark .ege-result-banner.failure {
+  background: rgba(229, 57, 53, 0.15);
+  border-color: var(--red-500);
+}
+
+.ege-result-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.ege-result-banner.success .ege-result-title {
+  color: var(--green-800);
+}
+
+body.tg-dark .ege-result-banner.success .ege-result-title {
+  color: var(--green-400);
+}
+
+.ege-result-banner.failure .ege-result-title {
+  color: var(--red-500);
+}
+
+.ege-result-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
