@@ -416,20 +416,30 @@ const App = {
         this.startProblemWordsTraining(dataset.filter || this.screenParams.problemFilter || 'all');
         break;
 
-      case 'toggle-problem-expand':
-        this.screenParams.problemsExpanded = !(this.screenParams.problemsExpanded ?? (Storage.getStats().problemWords?.length <= 3));
+      case 'toggle-problem-expand': {
+        const count = (Storage.getStats().problemWords?.length) || 0;
+        const current = this.screenParams.problemsExpanded !== undefined
+          ? this.screenParams.problemsExpanded
+          : (count <= 3);
+        this.screenParams.problemsExpanded = !current;
         this.render();
         break;
+      }
 
       case 'set-problem-filter':
         this.screenParams.problemFilter = dataset.filter;
         this.render();
         break;
 
-      case 'toggle-results-mistakes':
-        this.screenParams.mistakesExpanded = !(this.screenParams.mistakesExpanded ?? (this.screenParams.mistakes?.length <= 4));
+      case 'toggle-results-mistakes': {
+        const count = (this.screenParams.mistakes && this.screenParams.mistakes.length) || 0;
+        const current = this.screenParams.mistakesExpanded !== undefined
+          ? this.screenParams.mistakesExpanded
+          : (count <= 3);
+        this.screenParams.mistakesExpanded = !current;
         this.render();
         break;
+      }
 
       case 'retry-mistakes': {
         const p = this.screenParams;
@@ -1203,19 +1213,15 @@ const App = {
     const mistakesCount = (p.mistakes && p.mistakes.length) || 0;
     const isMistakesExpanded = p.mistakesExpanded !== undefined
       ? p.mistakesExpanded
-      : (mistakesCount <= 4);
+      : (mistakesCount <= 3);
     const visibleMistakes = isMistakesExpanded ? (p.mistakes || []) : (p.mistakes || []).slice(0, 3);
 
     const mistakesHTML = mistakesCount > 0 ? `
       <div class="results-list">
-        <div class="stat-section-header-toggle" data-action="toggle-results-mistakes" style="margin-top:0;">
+        <div class="stat-section-header" data-action="toggle-results-mistakes" style="margin-top:0;cursor:pointer;">
           <div class="stat-section-title-wrap">
             <span class="results-list-title" style="margin-bottom:0;">Ошибки</span>
             <span class="stat-section-badge" style="background:var(--red-50);color:var(--red-500);border-color:var(--red-400);">${mistakesCount}</span>
-          </div>
-          <div class="stat-section-toggle-indicator" style="color:var(--red-500);">
-            <span>${isMistakesExpanded ? 'Свернуть' : 'Все ' + mistakesCount}</span>
-            <span class="toggle-arrow ${isMistakesExpanded ? 'expanded' : ''}">▼</span>
           </div>
         </div>
         ${visibleMistakes.map(m => {
@@ -1233,9 +1239,9 @@ const App = {
             </div>
           `;
         }).join('')}
-        ${(!isMistakesExpanded && mistakesCount > 3) ? `
+        ${mistakesCount > 3 ? `
           <button class="collapse-hint-btn" data-action="toggle-results-mistakes">
-            Показать все ${mistakesCount} ошибок ▼
+            ${isMistakesExpanded ? 'Свернуть список ошибок ▲' : `Показать все ${mistakesCount} ошибок ▼`}
           </button>
         ` : ''}
       </div>
@@ -1684,14 +1690,10 @@ const App = {
 
       problemContent = `
         <div class="stat-section-card">
-          <div class="stat-section-header-toggle" data-action="toggle-problem-expand" role="button" tabindex="0">
+          <div class="stat-section-header" data-action="toggle-problem-expand" role="button" tabindex="0" style="cursor:pointer;">
             <div class="stat-section-title-wrap">
               <span class="stat-section-title">Сложные слова</span>
               <span class="stat-section-badge">${allProblemWords.length}</span>
-            </div>
-            <div class="stat-section-toggle-indicator">
-              <span>${isExpanded ? 'Скрыть' : 'Раскрыть'}</span>
-              <span class="toggle-arrow ${isExpanded ? 'expanded' : ''}">▼</span>
             </div>
           </div>
 
@@ -1722,7 +1724,7 @@ const App = {
             </div>
 
             <button class="collapse-hint-btn" data-action="toggle-problem-expand">
-              Свернуть список ▲
+              Свернуть список слов ▲
             </button>
           ` : `
             <button class="collapse-hint-btn" style="margin-top:0;" data-action="toggle-problem-expand">
