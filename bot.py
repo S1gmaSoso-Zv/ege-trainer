@@ -148,10 +148,38 @@ async def default_handler(message: types.Message):
     )
 
 
+async def start_health_server():
+    """Запуск легкого HTTP-сервера для совместимости с Render/Koyeb Web Service"""
+    port_str = os.getenv("PORT")
+    if not port_str:
+        return
+    try:
+        port = int(port_str)
+        from aiohttp import web
+
+        async def handle_ping(request):
+            return web.Response(text="EGE Trainer Bot is running! 🦕")
+
+        app = web.Application()
+        app.router.add_get("/", handle_ping)
+        app.router.add_get("/health", handle_ping)
+
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, "0.0.0.0", port)
+        await site.start()
+        logger.info(f"🌐 Health-сервер успешно запущен на порту {port}")
+    except Exception as e:
+        logger.warning(f"Не удалось запустить health-сервер на порту {port_str}: {e}")
+
+
 async def main():
     if not BOT_TOKEN or BOT_TOKEN == "dummy_token":
         logger.error("BOT_TOKEN не задан! Создайте бота через @BotFather и укажите токен в .env файле.")
         return
+
+    # Запуск HTTP health сервера для Render (если задан PORT)
+    await start_health_server()
 
     # Установка кнопки меню (Web App)
     if WEBAPP_URL:
@@ -175,3 +203,4 @@ if __name__ == "__main__":
         print("Запустите бота с валидным BOT_TOKEN в .env файле.")
     else:
         asyncio.run(main())
+
