@@ -334,7 +334,22 @@ const App = {
         break;
 
       case 'train-problem-words':
-        this.startProblemWordsTraining();
+        this.startProblemWordsTraining(dataset.filter || this.screenParams.problemFilter || 'all');
+        break;
+
+      case 'toggle-problem-expand':
+        this.screenParams.problemsExpanded = !(this.screenParams.problemsExpanded ?? (Storage.getStats().problemWords?.length <= 3));
+        this.render();
+        break;
+
+      case 'set-problem-filter':
+        this.screenParams.problemFilter = dataset.filter;
+        this.render();
+        break;
+
+      case 'toggle-results-mistakes':
+        this.screenParams.mistakesExpanded = !(this.screenParams.mistakesExpanded ?? (this.screenParams.mistakes?.length <= 4));
+        this.render();
         break;
 
       case 'retry-mistakes': {
@@ -506,14 +521,34 @@ const App = {
     overlay.onclick = (e) => { if (e.target === overlay) overlay.remove(); };
   },
 
-  startProblemWordsTraining() {
+  startProblemWordsTraining(filter = 'all') {
     const stats = Storage.getStats();
-    const problemWords = (stats.problemWords || [])
+    let problemWords = (stats.problemWords || [])
       .map(pw => WORDS_TASK9.find(w => w.id === pw.id) || WORDS_TASK4.find(w => w.id === pw.id))
       .filter(Boolean);
 
     if (problemWords.length === 0) {
       alert('У вас пока нет сложных слов для тренировки! 🎉');
+      return;
+    }
+
+    if (filter === 'task9') {
+      const task9Words = problemWords.filter(w => w.id.startsWith('t9_'));
+      if (task9Words.length === 0) {
+        alert('В Задании №9 нет сложных слов! 🎉');
+        return;
+      }
+      this.startTraining('task9', this.shuffleArray(task9Words));
+      return;
+    }
+
+    if (filter === 'task4') {
+      const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
+      if (task4Words.length === 0) {
+        alert('В Задании №4 нет сложных слов! 🎉');
+        return;
+      }
+      this.startTraining('task4', this.shuffleArray(task4Words));
       return;
     }
 
@@ -989,10 +1024,25 @@ const App = {
     else if (percent < 70) emoji = '💪';
     else if (percent < 90) emoji = '👏';
 
-    const mistakesHTML = (p.mistakes && p.mistakes.length > 0) ? `
+    const mistakesCount = (p.mistakes && p.mistakes.length) || 0;
+    const isMistakesExpanded = p.mistakesExpanded !== undefined
+      ? p.mistakesExpanded
+      : (mistakesCount <= 4);
+    const visibleMistakes = isMistakesExpanded ? (p.mistakes || []) : (p.mistakes || []).slice(0, 3);
+
+    const mistakesHTML = mistakesCount > 0 ? `
       <div class="results-list">
-        <div class="results-list-title">Ошибки (${p.mistakes.length})</div>
-        ${p.mistakes.map(m => {
+        <div class="stat-section-header-toggle" data-action="toggle-results-mistakes" style="margin-top:0;">
+          <div class="stat-section-title-wrap">
+            <span class="results-list-title" style="margin-bottom:0;">Ошибки</span>
+            <span class="stat-section-badge" style="background:var(--red-50);color:var(--red-500);border-color:var(--red-400);">${mistakesCount}</span>
+          </div>
+          <div class="stat-section-toggle-indicator" style="color:var(--red-500);">
+            <span>${isMistakesExpanded ? 'Свернуть' : 'Все ' + mistakesCount}</span>
+            <span class="toggle-arrow ${isMistakesExpanded ? 'expanded' : ''}">▼</span>
+          </div>
+        </div>
+        ${visibleMistakes.map(m => {
           const isFav = Storage.isFavorite(m.wordId);
           return `
             <div class="result-item">
@@ -1007,6 +1057,11 @@ const App = {
             </div>
           `;
         }).join('')}
+        ${(!isMistakesExpanded && mistakesCount > 3) ? `
+          <button class="collapse-hint-btn" data-action="toggle-results-mistakes">
+            Показать все ${mistakesCount} ошибок ▼
+          </button>
+        ` : ''}
       </div>
     ` : '';
 
@@ -1353,7 +1408,7 @@ const App = {
     const stats = Storage.getStats();
 
     // Фильтруем проблемные слова, проверяя их существование в текущей базе
-    const validProblemWords = (stats.problemWords || [])
+    const allProblemWords = (stats.problemWords || [])
       .map(pw => {
         const word = WORDS_TASK9.find(w => w.id === pw.id) || WORDS_TASK4.find(w => w.id === pw.id);
         if (!word) return null;
@@ -1370,6 +1425,18 @@ const App = {
         };
       })
       .filter(Boolean);
+
+    const task9ProblemWords = allProblemWords.filter(w => w.isTask9);
+    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9);
+
+    const currentFilter = this.screenParams.problemFilter || 'all';
+    const isExpanded = this.screenParams.problemsExpanded !== undefined
+      ? this.screenParams.problemsExpanded
+      : (allProblemWords.length <= 3);
+
+    let displayWords = allProblemWords;
+    if (currentFilter === 'task9') displayWords = task9ProblemWords;
+    else if (currentFilter === 'task4') displayWords = task4ProblemWords;
 
     // HTML сессий
     const sessionsHTML = (stats.lastSessions && stats.lastSessions.length > 0) ?
@@ -1412,8 +1479,8 @@ const App = {
 
     // HTML проблемных слов
     let problemContent = '';
-    if (validProblemWords.length > 0) {
-      const wordsListHTML = validProblemWords.map(pw => {
+    if (allProblemWords.length > 0) {
+      const wordsListHTML = displayWords.map(pw => {
         const isFav = Storage.isFavorite(pw.id);
         const errorPercent = Math.round(pw.errorRate * 100);
         const taskTag = pw.isTask9 ? '№9' : '№4';
@@ -1437,14 +1504,63 @@ const App = {
         `;
       }).join('');
 
+      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task4' ? ' (№4)' : '');
+
       problemContent = `
-        <button class="start-btn mb-16" data-action="train-problem-words">
-          Отработать сложные слова (${validProblemWords.length}) 🎯
-        </button>
-        ${wordsListHTML}
+        <div class="stat-section-card">
+          <div class="stat-section-header-toggle" data-action="toggle-problem-expand" role="button" tabindex="0">
+            <div class="stat-section-title-wrap">
+              <span class="stat-section-title">Сложные слова</span>
+              <span class="stat-section-badge">${allProblemWords.length}</span>
+            </div>
+            <div class="stat-section-toggle-indicator">
+              <span>${isExpanded ? 'Скрыть' : 'Раскрыть'}</span>
+              <span class="toggle-arrow ${isExpanded ? 'expanded' : ''}">▼</span>
+            </div>
+          </div>
+
+          <button class="start-btn mb-12" data-action="train-problem-words" data-filter="${currentFilter}"
+                  ${displayWords.length === 0 ? 'disabled' : ''}>
+            Отработать сложные слова${filterTag} (${displayWords.length}) 🎯
+          </button>
+
+          ${isExpanded ? `
+            <!-- Фильтр по заданиям -->
+            <div class="problem-filter-pills">
+              <button class="problem-pill ${currentFilter === 'all' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="all">
+                Все (${allProblemWords.length})
+              </button>
+              <button class="problem-pill ${currentFilter === 'task9' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="task9">
+                📝 №9 (${task9ProblemWords.length})
+              </button>
+              <button class="problem-pill ${currentFilter === 'task4' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="task4">
+                🔤 №4 (${task4ProblemWords.length})
+              </button>
+            </div>
+
+            <div class="problem-words-list">
+              ${displayWords.length > 0 ? wordsListHTML : '<p class="empty-filter-hint">В этом разделе сложных слов нет 🎉</p>'}
+            </div>
+
+            <button class="collapse-hint-btn" data-action="toggle-problem-expand">
+              Свернуть список ▲
+            </button>
+          ` : `
+            <button class="collapse-hint-btn" style="margin-top:0;" data-action="toggle-problem-expand">
+              Развернуть список слов (${allProblemWords.length}) ▼
+            </button>
+          `}
+        </div>
       `;
     } else {
       problemContent = `
+        <div class="stat-section-header">
+          <div class="stat-section-title">Сложные слова</div>
+          <span class="stat-section-badge">0</span>
+        </div>
         <div class="empty-state-mini">
           <div style="font-size: 26px; margin-bottom: 6px;">🎉</div>
           <p class="empty-state-desc">Отлично! Сложных слов пока нет. Тренируйтесь регулярно, чтобы закрепить материал!</p>
@@ -1503,10 +1619,6 @@ const App = {
       </div>
 
       <!-- Проблемные слова -->
-      <div class="stat-section-header">
-        <div class="stat-section-title">Сложные слова</div>
-        <span class="stat-section-badge">${validProblemWords.length}</span>
-      </div>
       ${problemContent}
 
       <!-- История сессий -->

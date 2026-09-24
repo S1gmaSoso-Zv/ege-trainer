@@ -1284,6 +1284,31 @@ body.tg-dark .dict-filter-tag {
   margin: 16px 0 10px;
 }
 
+.stat-section-card {
+  margin-bottom: 8px;
+}
+
+.stat-section-header-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 16px 0 10px;
+  cursor: pointer;
+  user-select: none;
+  padding: 4px 0;
+  transition: opacity 0.2s ease;
+}
+
+.stat-section-header-toggle:hover {
+  opacity: 0.85;
+}
+
+.stat-section-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .stat-section-title {
   font-size: 13px;
   font-weight: 700;
@@ -1300,6 +1325,102 @@ body.tg-dark .dict-filter-tag {
   padding: 2px 8px;
   border-radius: 12px;
   border: 1px solid var(--border);
+}
+
+.stat-section-toggle-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--green-700);
+}
+
+body.tg-dark .stat-section-toggle-indicator {
+  color: var(--green-400);
+}
+
+.toggle-arrow {
+  display: inline-block;
+  font-size: 10px;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.toggle-arrow.expanded {
+  transform: rotate(180deg);
+}
+
+.problem-filter-pills {
+  display: flex;
+  gap: 6px;
+  margin: 8px 0 12px;
+  flex-wrap: wrap;
+}
+
+.problem-pill {
+  padding: 6px 12px;
+  border-radius: 100px;
+  border: 1.5px solid var(--border);
+  background: var(--bg-card);
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: var(--transition);
+  font-family: var(--font);
+}
+
+.problem-pill.active {
+  background: var(--green-700);
+  border-color: var(--green-700);
+  color: #FFFFFF;
+}
+
+.problem-pill:hover:not(.active) {
+  border-color: var(--green-400);
+  color: var(--text-primary);
+}
+
+.collapse-hint-btn {
+  width: 100%;
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px dashed var(--border);
+  border-radius: var(--radius-md);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  cursor: pointer;
+  margin-top: 8px;
+  margin-bottom: 12px;
+  transition: var(--transition);
+  font-family: var(--font);
+  text-align: center;
+}
+
+.collapse-hint-btn:hover {
+  background: var(--bg-card);
+  color: var(--text-primary);
+  border-color: var(--green-500);
+}
+
+.empty-filter-hint {
+  font-size: 13px;
+  color: var(--text-tertiary);
+  text-align: center;
+  padding: 18px 0;
+}
+
+.mb-12 {
+  margin-bottom: 12px;
+}
+
+.mb-16 {
+  margin-bottom: 16px;
+}
+
+.mt-16 {
+  margin-top: 16px;
 }
 
 .stat-problem-card {
