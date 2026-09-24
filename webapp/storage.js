@@ -40,6 +40,7 @@ const Storage = {
   _saveFavoritesData(data) {
     try {
       localStorage.setItem(this._getFavKey(), JSON.stringify(data));
+      this._syncFavsToCloud(data);
     } catch (e) {
       console.error('Storage save error:', e);
     }
@@ -93,6 +94,7 @@ const Storage = {
   _saveStatsData(data) {
     try {
       localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
+      this._syncStatsToCloud(data);
     } catch (e) {
       console.error('Stats save error:', e);
     }
@@ -226,6 +228,10 @@ const Storage = {
     try {
       localStorage.removeItem(this._getStatsKey());
       localStorage.removeItem('ege_stats');
+      const cs = window.Telegram?.WebApp?.CloudStorage;
+      if (cs) {
+        cs.removeItems?.(['ege_cloud_stats'], () => {});
+      }
     } catch (e) {
       console.error('Reset stats error:', e);
     }
@@ -240,8 +246,139 @@ const Storage = {
       localStorage.removeItem('ege_stats');
       localStorage.removeItem(this._getFavKey());
       localStorage.removeItem('ege_favorites');
+      const cs = window.Telegram?.WebApp?.CloudStorage;
+      if (cs) {
+        cs.removeItems?.(['ege_cloud_stats', 'ege_cloud_favs'], () => {});
+      }
     } catch (e) {
       console.error('Reset all error:', e);
+    }
+  },
+
+  // ==================== СИНХРОНИЗАЦИЯ УСТРОЙСТВ (TELEGRAM CLOUD STORAGE) ====================
+
+  _syncFavsToCloud(data) {
+    try {
+      const cs = window.Telegram?.WebApp?.CloudStorage;
+      if (!cs) return;
+      const payload = JSON.stringify({
+        task9: data.task9 || [],
+        task4: data.task4 || [],
+        updatedAt: Date.now()
+      });
+      cs.setItem('ege_cloud_favs', payload, (err) => {
+        if (err) console.warn('CloudStorage favs sync error:', err);
+      });
+    } catch (e) {
+      console.warn('Cloud sync error:', e);
+    }
+  },
+
+  _syncStatsToCloud(data) {
+    try {
+      const cs = window.Telegram?.WebApp?.CloudStorage;
+      if (!cs) return;
+      // Чтобы не превысить лимит 4096 байт, сохраняем последние 15 сессий
+      const compactSessions = (data.sessions || []).slice(0, 15);
+      const payload = JSON.stringify({
+        blitzHighScore: Number(data.blitzHighScore) || 0,
+        sessions: compactSessions,
+        answers: data.answers || {},
+        updatedAt: Date.now()
+      });
+      cs.setItem('ege_cloud_stats', payload, (err) => {
+        if (err) console.warn('CloudStorage stats sync error:', err);
+      });
+    } catch (e) {
+      console.warn('Cloud sync error:', e);
+    }
+  },
+
+  initCloudSync(onSyncCallback) {
+    try {
+      const cs = window.Telegram?.WebApp?.CloudStorage;
+      if (!cs) return;
+
+      cs.getItems(['ege_cloud_stats', 'ege_cloud_favs'], (err, values) => {
+        if (err || !values) return;
+        let hasChanges = false;
+
+        // 1. Синхронизация избранного
+        if (values.ege_cloud_favs) {
+          try {
+            const cloudFavs = JSON.parse(values.ege_cloud_favs);
+            const localFavs = this._getFavoritesData();
+            const mergedT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
+            const mergedT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
+
+            if (mergedT9.length !== (localFavs.task9 || []).length || mergedT4.length !== (localFavs.task4 || []).length) {
+              const updated = { task9: mergedT9, task4: mergedT4 };
+              localStorage.setItem(this._getFavKey(), JSON.stringify(updated));
+              hasChanges = true;
+            }
+          } catch (e) {
+            console.warn('Error parsing cloud favs:', e);
+          }
+        }
+
+        // 2. Синхронизация статистики
+        if (values.ege_cloud_stats) {
+          try {
+            const cloudStats = JSON.parse(values.ege_cloud_stats);
+            const localStats = this._getStatsData();
+
+            const cloudRecord = Number(cloudStats.blitzHighScore) || 0;
+            const localRecord = Number(localStats.blitzHighScore) || 0;
+            const newRecord = Math.max(cloudRecord, localRecord);
+
+            // Слияние сессий по уникальной дате
+            const sessionMap = new Map();
+            (localStats.sessions || []).forEach(s => { if (s && s.date) sessionMap.set(s.date, s); });
+            (cloudStats.sessions || []).forEach(s => { if (s && s.date && !sessionMap.has(s.date)) sessionMap.set(s.date, s); });
+            const mergedSessions = Array.from(sessionMap.values())
+              .sort((a, b) => new Date(b.date) - new Date(a.date))
+              .slice(0, 50);
+
+            // Слияние ответов (для проблемных слов)
+            const mergedAnswers = { ...(localStats.answers || {}) };
+            if (cloudStats.answers) {
+              for (const [id, a] of Object.entries(cloudStats.answers)) {
+                if (!mergedAnswers[id]) {
+                  mergedAnswers[id] = a;
+                } else {
+                  mergedAnswers[id] = {
+                    correct: Math.max(mergedAnswers[id].correct || 0, a.correct || 0),
+                    wrong: Math.max(mergedAnswers[id].wrong || 0, a.wrong || 0)
+                  };
+                }
+              }
+            }
+
+            const isDifferent = newRecord !== localRecord ||
+              mergedSessions.length !== (localStats.sessions || []).length ||
+              Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length;
+
+            if (isDifferent) {
+              const updatedStats = {
+                ...localStats,
+                blitzHighScore: newRecord,
+                sessions: mergedSessions,
+                answers: mergedAnswers
+              };
+              localStorage.setItem(this._getStatsKey(), JSON.stringify(updatedStats));
+              hasChanges = true;
+            }
+          } catch (e) {
+            console.warn('Error parsing cloud stats:', e);
+          }
+        }
+
+        if (hasChanges && typeof onSyncCallback === 'function') {
+          onSyncCallback();
+        }
+      });
+    } catch (e) {
+      console.warn('Cloud sync initialization error:', e);
     }
   }
 };

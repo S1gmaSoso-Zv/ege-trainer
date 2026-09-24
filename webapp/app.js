@@ -73,21 +73,49 @@ const App = {
 
   initTelegram() {
     try {
+      const applyTheme = () => {
+        const tg = window.Telegram?.WebApp;
+        const isDark = (tg?.colorScheme === 'dark') ||
+          (!tg?.colorScheme && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches);
+        if (isDark) {
+          document.body.classList.add('tg-dark');
+        } else {
+          document.body.classList.remove('tg-dark');
+        }
+      };
+
+      applyTheme();
+
+      if (window.matchMedia) {
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', applyTheme);
+      }
+
       const tg = window.Telegram?.WebApp;
       if (tg) {
         tg.ready();
         tg.expand();
-        if (tg.colorScheme === 'dark') {
-          document.body.classList.add('tg-dark');
-        }
+        tg.onEvent?.('themeChanged', applyTheme);
+
         tg.BackButton.onClick(() => {
           if (this.currentScreen === 'training') {
             this.handleQuitTraining();
+          } else if (this.currentScreen === 'blitz') {
+            this.handleQuitBlitz();
+          } else if (this.currentScreen === 'task4_ege') {
+            this.handleQuitEGE();
           } else {
             this.goBack();
           }
         });
       }
+
+      // Запуск синхронизации с Telegram CloudStorage
+      Storage.initCloudSync(() => {
+        // Перерисовать экран при получении актуальных данных с облака
+        if (this.currentScreen === 'home' || this.currentScreen === 'stats' || this.currentScreen === 'favorites') {
+          this.render();
+        }
+      });
     } catch (e) {
       console.log('Running in browser mode');
     }
@@ -860,11 +888,8 @@ const App = {
         </button>
         <button class="mode-card blitz-mode-card" data-action="start-blitz">
           <div class="mode-card-icon amber">⚡</div>
-          <div style="flex:1;">
-            <div class="mode-card-title" style="display:flex;align-items:center;justify-content:space-between;">
-              <span>Блиц за 60 секунд</span>
-              <span class="blitz-badge-hot">🔥 ХИТ</span>
-            </div>
+          <div>
+            <div class="mode-card-title">Блиц за 60 секунд</div>
             <div class="mode-card-desc">Тайм-атака · 3 ❤️ · Рекорд: <b>${blitzRecord}</b> слов</div>
           </div>
         </button>

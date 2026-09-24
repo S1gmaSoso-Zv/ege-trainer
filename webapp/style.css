@@ -43,6 +43,18 @@
   --active-card-desc: #2E7D32;
   --hint-bg: #E8F5E9;
   --hint-text: #1B5E20;
+
+  --status-correct-bg: #E8F5E9;
+  --status-correct-border: #81C784;
+  --status-correct-text: #1B5E20;
+  --status-correct-pill: #C8E6C9;
+  --status-correct-pill-text: #1B5E20;
+
+  --status-wrong-bg: #FFEBEE;
+  --status-wrong-border: #E53935;
+  --status-wrong-text: #C62828;
+  --status-wrong-pill: #FFCDD2;
+  --status-wrong-pill-text: #B71C1C;
 }
 
 /* Dark mode */
@@ -63,6 +75,18 @@
     --active-card-desc: #A5D6A7;
     --hint-bg: rgba(76, 175, 80, 0.15);
     --hint-text: #C8E6C9;
+
+    --status-correct-bg: rgba(76, 175, 80, 0.2);
+    --status-correct-border: #4CAF50;
+    --status-correct-text: #A5D6A7;
+    --status-correct-pill: rgba(76, 175, 80, 0.28);
+    --status-correct-pill-text: #C8E6C9;
+
+    --status-wrong-bg: rgba(229, 57, 53, 0.2);
+    --status-wrong-border: #EF5350;
+    --status-wrong-text: #FFCDD2;
+    --status-wrong-pill: rgba(229, 57, 53, 0.28);
+    --status-wrong-pill-text: #FFCDD2;
   }
 }
 
@@ -83,6 +107,18 @@ body.tg-dark {
   --active-card-desc: #A5D6A7;
   --hint-bg: rgba(76, 175, 80, 0.15);
   --hint-text: #C8E6C9;
+
+  --status-correct-bg: rgba(76, 175, 80, 0.2);
+  --status-correct-border: #4CAF50;
+  --status-correct-text: #A5D6A7;
+  --status-correct-pill: rgba(76, 175, 80, 0.28);
+  --status-correct-pill-text: #C8E6C9;
+
+  --status-wrong-bg: rgba(229, 57, 53, 0.2);
+  --status-wrong-border: #EF5350;
+  --status-wrong-text: #FFCDD2;
+  --status-wrong-pill: rgba(229, 57, 53, 0.28);
+  --status-wrong-pill-text: #FFCDD2;
 }
 
 /* ============================================
@@ -1847,23 +1883,22 @@ body.tg-dark .speak-btn {
 }
 
 .mascot-bar.is-correct {
-  border-color: var(--green-400);
-  background: var(--green-50);
+  border-color: var(--status-correct-border);
+  background: var(--status-correct-bg);
 }
 
-body.tg-dark .mascot-bar.is-correct {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: var(--green-500);
+.mascot-bar.is-correct .mascot-bar-text {
+  color: var(--status-correct-text);
 }
 
 .mascot-bar.is-wrong {
-  border-color: var(--red-400);
-  background: var(--red-50);
+  border-color: var(--status-wrong-border);
+  background: var(--status-wrong-bg);
 }
 
-body.tg-dark .mascot-bar.is-wrong {
-  background: rgba(229, 57, 53, 0.15);
-  border-color: var(--red-500);
+.mascot-bar.is-wrong .mascot-bar-text {
+  color: var(--status-wrong-text);
+  font-weight: 600;
 }
 
 .mascot-bar.is-combo {
@@ -1955,27 +1990,18 @@ body.tg-dark .task4-submode-tab.active {
 }
 
 .ege-info-box {
-  background: var(--green-50);
-  border: 1px solid var(--green-200);
+  background: var(--status-correct-bg);
+  border: 1px solid var(--status-correct-border);
   border-radius: var(--radius-md);
   padding: 14px 16px;
   margin-bottom: 16px;
 }
 
-body.tg-dark .ege-info-box {
-  background: rgba(76, 175, 80, 0.12);
-  border-color: rgba(76, 175, 80, 0.28);
-}
-
 .ege-info-title {
   font-size: 14px;
   font-weight: 700;
-  color: var(--green-800);
+  color: var(--status-correct-text);
   margin-bottom: 4px;
-}
-
-body.tg-dark .ege-info-title {
-  color: var(--green-400);
 }
 
 .ege-info-desc {
@@ -2004,16 +2030,6 @@ body.tg-dark .mode-card-icon.amber {
   border-color: #FF9800;
 }
 
-.blitz-badge-hot {
-  font-size: 10px;
-  font-weight: 700;
-  color: #FFFFFF;
-  background: linear-gradient(135deg, #FF5722, #FF9800);
-  padding: 2px 7px;
-  border-radius: 10px;
-  letter-spacing: 0.5px;
-}
-
 .blitz-header {
   display: flex;
   align-items: center;
@@ -2036,9 +2052,9 @@ body.tg-dark .mode-card-icon.amber {
 }
 
 .blitz-timer-pill.urgent {
-  background: var(--red-50);
-  border-color: var(--red-400);
-  color: var(--red-500);
+  background: var(--status-wrong-bg);
+  border-color: var(--status-wrong-border);
+  color: var(--status-wrong-text);
   animation: timer-beat 0.6s infinite alternate;
 }
 
@@ -2150,24 +2166,17 @@ body.tg-dark .blitz-task-type {
 }
 
 .blitz-opt-btn.correct {
-  border-color: var(--green-500);
-  background: var(--green-50);
-  color: var(--green-800);
-}
-
-body.tg-dark .blitz-opt-btn.correct {
-  background: rgba(76, 175, 80, 0.2);
-  color: var(--green-400);
+  border-color: var(--status-correct-border);
+  background: var(--status-correct-bg);
+  color: var(--status-correct-text);
+  font-weight: 700;
 }
 
 .blitz-opt-btn.wrong {
-  border-color: var(--red-500);
-  background: var(--red-50);
-  color: var(--red-500);
-}
-
-body.tg-dark .blitz-opt-btn.wrong {
-  background: rgba(229, 57, 53, 0.2);
+  border-color: var(--status-wrong-border);
+  background: var(--status-wrong-bg);
+  color: var(--status-wrong-text);
+  font-weight: 700;
 }
 
 .blitz-new-record-badge {
@@ -2202,16 +2211,12 @@ body.tg-dark .blitz-opt-btn.wrong {
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--green-700);
-  background: var(--green-50);
+  color: var(--status-correct-text);
+  background: var(--status-correct-bg);
+  border: 1px solid var(--status-correct-border);
   padding: 4px 10px;
   border-radius: 10px;
   margin-bottom: 10px;
-}
-
-body.tg-dark .ege-badge-kim {
-  background: rgba(76, 175, 80, 0.15);
-  color: var(--green-400);
 }
 
 .ege-instruction {
@@ -2224,11 +2229,7 @@ body.tg-dark .ege-badge-kim {
 }
 
 .ege-instruction b {
-  color: var(--green-700);
-}
-
-body.tg-dark .ege-instruction b {
-  color: var(--green-400);
+  color: var(--status-correct-text);
 }
 
 .ege-lines-list {
@@ -2250,17 +2251,17 @@ body.tg-dark .ege-instruction b {
 }
 
 .ege-line-row.is-target {
-  border-color: var(--green-500);
-  background: var(--green-50);
+  border-color: var(--status-correct-border);
+  background: var(--status-correct-bg);
 }
 
-body.tg-dark .ege-line-row.is-target {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: var(--green-500);
+.ege-line-row.is-target .ege-line-word {
+  color: var(--text-primary);
+  font-weight: 700;
 }
 
 .ege-line-row.not-target {
-  opacity: 0.75;
+  opacity: 0.65;
 }
 
 .ege-line-left {
@@ -2297,23 +2298,13 @@ body.tg-dark .ege-line-row.is-target {
 }
 
 .ege-verdict-pill.v-ok {
-  background: var(--green-100);
-  color: var(--green-900);
-}
-
-body.tg-dark .ege-verdict-pill.v-ok {
-  background: rgba(76, 175, 80, 0.25);
-  color: var(--green-200);
+  background: var(--status-correct-pill);
+  color: var(--status-correct-pill-text);
 }
 
 .ege-verdict-pill.v-err {
-  background: var(--red-50);
-  color: var(--red-500);
-}
-
-body.tg-dark .ege-verdict-pill.v-err {
-  background: rgba(229, 57, 53, 0.2);
-  color: var(--red-400);
+  background: var(--status-wrong-pill);
+  color: var(--status-wrong-pill-text);
 }
 
 .ege-answer-bar {
@@ -2405,45 +2396,24 @@ body.tg-dark .ege-verdict-pill.v-err {
 }
 
 .ege-result-banner.success {
-  background: var(--green-50);
-  border: 1.5px solid var(--green-400);
-}
-
-body.tg-dark .ege-result-banner.success {
-  background: rgba(76, 175, 80, 0.15);
-  border-color: var(--green-500);
-}
-
-.ege-result-banner.failure {
-  background: var(--red-50);
-  border: 1.5px solid var(--red-400);
-}
-
-body.tg-dark .ege-result-banner.failure {
-  background: rgba(229, 57, 53, 0.15);
-  border-color: var(--red-500);
-}
-
-.ege-result-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 4px;
+  background: var(--status-correct-bg);
+  border: 1.5px solid var(--status-correct-border);
 }
 
 .ege-result-banner.success .ege-result-title {
-  color: var(--green-800);
+  color: var(--status-correct-text);
 }
 
-body.tg-dark .ege-result-banner.success .ege-result-title {
-  color: var(--green-400);
+.ege-result-banner.failure {
+  background: var(--status-wrong-bg);
+  border: 1.5px solid var(--status-wrong-border);
 }
 
 .ege-result-banner.failure .ege-result-title {
-  color: var(--red-500);
+  color: var(--status-wrong-text);
 }
 
-.ege-result-text {
-  font-size: 13px;
-  color: var(--text-secondary);
+.ege-result-banner.failure .ege-result-text {
+  color: var(--text-primary);
 }
 
