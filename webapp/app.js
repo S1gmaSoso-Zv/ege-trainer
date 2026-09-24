@@ -607,9 +607,13 @@ const App = {
   },
 
   generateTask4Variants(word) {
+    let wrongVariants = [...(word.wrong || [])];
+    if (wrongVariants.length > 2) {
+      wrongVariants = this.shuffleArray(wrongVariants).slice(0, 2);
+    }
     const variants = [
       { text: word.correct, correct: true },
-      ...word.wrong.map(w => ({ text: w, correct: false }))
+      ...wrongVariants.map(w => ({ text: w, correct: false }))
     ];
     return this.shuffleArray(variants);
   },
@@ -1540,51 +1544,115 @@ const App = {
 
   // ==================== ДИНОЗАВРИК ====================
 
+  // ==================== ДИНОЗАВРИК ====================
+
   getDinoSVG(mood = 'happy') {
-    const body = '#4CAF50', belly = '#A5D6A7', eye = '#1A1A1A', spike = '#388E3C';
+    const body = '#4CAF50';
+    const belly = '#C8E6C9';
+    const eye = '#1F2937';
+    const spike = '#2E7D32';
+    const blush = '#FF8A80';
+    const foot = '#43A047';
 
     if (mood === 'sad') {
       return `
         <svg class="dino-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-          <ellipse cx="55" cy="72" rx="30" ry="28" fill="${body}"/>
-          <ellipse cx="55" cy="78" rx="18" ry="18" fill="${belly}"/>
-          <circle cx="55" cy="38" r="22" fill="${body}"/>
-          <circle cx="47" cy="34" r="4" fill="white"/><circle cx="63" cy="34" r="4" fill="white"/>
-          <circle cx="48" cy="35" r="2" fill="${eye}"/><circle cx="64" cy="35" r="2" fill="${eye}"/>
-          <path d="M 46 46 Q 55 42, 64 46" stroke="${eye}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-          <polygon points="40,18 44,8 48,18" fill="${spike}"/>
-          <polygon points="48,14 53,4 58,14" fill="${spike}"/>
-          <polygon points="56,18 61,8 66,18" fill="${spike}"/>
-          <ellipse cx="38" cy="95" rx="8" ry="5" fill="${body}"/>
-          <ellipse cx="72" cy="95" rx="8" ry="5" fill="${body}"/>
-          <ellipse cx="30" cy="68" rx="5" ry="8" fill="${body}" transform="rotate(-15 30 68)"/>
-          <ellipse cx="80" cy="68" rx="5" ry="8" fill="${body}" transform="rotate(15 80 68)"/>
-          <path d="M 82 82 Q 100 75, 105 85 Q 108 90, 102 92" stroke="${body}" stroke-width="8" fill="none" stroke-linecap="round"/>
+          <!-- Шипы на спине -->
+          <path d="M 45 22 Q 48 11, 53 20 Z" fill="${spike}"/>
+          <path d="M 55 18 Q 60 7, 65 18 Z" fill="${spike}"/>
+          <path d="M 67 22 Q 72 12, 76 22 Z" fill="${spike}"/>
+
+          <!-- Хвостик (поникший) -->
+          <path d="M 84 80 Q 98 84, 108 88 Q 104 96, 88 92 Q 82 90, 80 84 Z" fill="${body}"/>
+
+          <!-- Ножки -->
+          <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+          <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+
+          <!-- Тело -->
+          <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
+          <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
+
+          <!-- Голова -->
+          <circle cx="60" cy="42" r="23" fill="${body}"/>
+
+          <!-- Грустные бровки -->
+          <path d="M 47 30 L 53 32" stroke="${eye}" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M 73 30 L 67 32" stroke="${eye}" stroke-width="1.8" stroke-linecap="round"/>
+
+          <!-- Глазки (слегка печальные с бликами) -->
+          <ellipse cx="50" cy="38" rx="4.5" ry="4" fill="${eye}"/>
+          <ellipse cx="70" cy="38" rx="4.5" ry="4" fill="${eye}"/>
+          <circle cx="49" cy="36.5" r="1.6" fill="white"/>
+          <circle cx="69" cy="36.5" r="1.6" fill="white"/>
+
+          <!-- Слезинка -->
+          <path d="M 75 42 Q 77 47, 75 49 Q 73 47, 75 42 Z" fill="#64B5F6"/>
+
+          <!-- Щёчки -->
+          <circle cx="42" cy="44" r="3.5" fill="${blush}" opacity="0.35"/>
+          <circle cx="78" cy="44" r="3.5" fill="${blush}" opacity="0.35"/>
+
+          <!-- Поникший ротик -->
+          <path d="M 53 48 Q 60 43, 67 48" stroke="${eye}" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Лапки -->
+          <ellipse cx="46" cy="72" rx="6" ry="5" fill="${body}" transform="rotate(-10 46 72)"/>
+          <ellipse cx="74" cy="72" rx="6" ry="5" fill="${body}" transform="rotate(10 74 72)"/>
         </svg>
       `;
     }
 
     return `
       <svg class="dino-svg" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
-        <ellipse cx="55" cy="72" rx="30" ry="28" fill="${body}"/>
-        <ellipse cx="55" cy="78" rx="18" ry="18" fill="${belly}"/>
-        <circle cx="55" cy="38" r="22" fill="${body}"/>
-        <circle cx="47" cy="34" r="4.5" fill="white"/><circle cx="63" cy="34" r="4.5" fill="white"/>
-        <circle cx="48" cy="33" r="2.5" fill="${eye}"/><circle cx="64" cy="33" r="2.5" fill="${eye}"/>
-        <circle cx="49" cy="32" r="1" fill="white"/><circle cx="65" cy="32" r="1" fill="white"/>
-        <path d="M 46 43 Q 55 50, 64 43" stroke="${eye}" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-        <circle cx="40" cy="42" r="3" fill="#FF8A80" opacity="0.4"/>
-        <circle cx="70" cy="42" r="3" fill="#FF8A80" opacity="0.4"/>
-        <polygon points="40,18 44,6 48,18" fill="${spike}"/>
-        <polygon points="48,13 53,1 58,13" fill="${spike}"/>
-        <polygon points="56,18 61,6 66,18" fill="${spike}"/>
-        <ellipse cx="38" cy="95" rx="8" ry="5" fill="${body}"/>
-        <ellipse cx="72" cy="95" rx="8" ry="5" fill="${body}"/>
-        <ellipse cx="30" cy="66" rx="5" ry="8" fill="${body}" transform="rotate(-20 30 66)"/>
-        <ellipse cx="80" cy="66" rx="5" ry="8" fill="${body}" transform="rotate(20 80 66)"/>
-        <rect x="28" y="58" width="12" height="9" rx="1" fill="#2E7D32" transform="rotate(-10 34 62)"/>
-        <line x1="34" y1="58" x2="34" y2="67" stroke="${belly}" stroke-width="0.5" transform="rotate(-10 34 62)"/>
-        <path d="M 82 82 Q 100 70, 108 80 Q 112 88, 106 92" stroke="${body}" stroke-width="8" fill="none" stroke-linecap="round"/>
+        <!-- Шипы на спине (аккуратные и симметричные) -->
+        <path d="M 45 20 Q 49 8, 54 18 Z" fill="${spike}"/>
+        <path d="M 55 16 Q 60 4, 65 16 Z" fill="${spike}"/>
+        <path d="M 66 20 Q 71 8, 75 20 Z" fill="${spike}"/>
+
+        <!-- Задорный хвостик -->
+        <path d="M 85 75 C 99 71, 109 63, 112 56 C 112 68, 103 86, 85 87 Z" fill="${body}"/>
+        <path d="M 99 66 Q 103 60, 107 65 Z" fill="${spike}"/>
+
+        <!-- Ножки с пальчиками -->
+        <ellipse cx="44" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+        <ellipse cx="76" cy="99" rx="10" ry="5.5" fill="${foot}"/>
+
+        <!-- Тело и мягкий животик -->
+        <ellipse cx="60" cy="76" rx="31" ry="27" fill="${body}"/>
+        <ellipse cx="60" cy="80" rx="19" ry="18" fill="${belly}"/>
+
+        <!-- Голова -->
+        <circle cx="60" cy="42" r="23" fill="${body}"/>
+
+        <!-- Глазки (выразительные, с двойными бликами) -->
+        <circle cx="50" cy="38" r="4.8" fill="${eye}"/>
+        <circle cx="70" cy="38" r="4.8" fill="${eye}"/>
+        <circle cx="48.5" cy="36.5" r="1.8" fill="white"/>
+        <circle cx="68.5" cy="36.5" r="1.8" fill="white"/>
+        <circle cx="51.5" cy="39.5" r="0.9" fill="white"/>
+        <circle cx="71.5" cy="39.5" r="0.9" fill="white"/>
+
+        <!-- Нежные щёчки -->
+        <circle cx="42" cy="44" r="4" fill="${blush}" opacity="0.45"/>
+        <circle cx="78" cy="44" r="4" fill="${blush}" opacity="0.45"/>
+
+        <!-- Милая улыбка -->
+        <path d="M 53 45 Q 60 52, 67 45" stroke="${eye}" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+        <!-- Книжка со словарём в лапках -->
+        <rect x="52" y="65" width="16" height="13" rx="2" fill="${spike}"/>
+        <line x1="60" y1="65" x2="60" y2="78" stroke="${belly}" stroke-width="1"/>
+        <line x1="54" y1="68" x2="58" y2="68" stroke="#E8F5E9" stroke-width="0.9"/>
+        <line x1="54" y1="71" x2="58" y2="71" stroke="#E8F5E9" stroke-width="0.9"/>
+        <line x1="54" y1="74" x2="57" y2="74" stroke="#E8F5E9" stroke-width="0.9"/>
+        <line x1="62" y1="68" x2="66" y2="68" stroke="#E8F5E9" stroke-width="0.9"/>
+        <line x1="62" y1="71" x2="66" y2="71" stroke="#E8F5E9" stroke-width="0.9"/>
+        <line x1="62" y1="74" x2="65" y2="74" stroke="#E8F5E9" stroke-width="0.9"/>
+
+        <!-- Лапки, держащие книжку -->
+        <ellipse cx="48" cy="72" rx="5.5" ry="4.5" fill="${body}" transform="rotate(15 48 72)"/>
+        <ellipse cx="72" cy="72" rx="5.5" ry="4.5" fill="${body}" transform="rotate(-15 72 72)"/>
       </svg>
     `;
   },

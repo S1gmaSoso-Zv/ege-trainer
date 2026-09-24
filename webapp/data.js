@@ -108,34 +108,34 @@ const WORDS_TASK9 = [
   {
     "id": "t9_010",
     "word": "аккомпанемент",
-    "display": "аккомпа_емент",
-    "correctLetter": "н",
+    "display": "акк_мпанемент",
+    "correctLetter": "о",
     "wrongLetters": [
-      "о"
+      "а"
     ],
-    "tag": "н",
+    "tag": "о",
     "firstLetter": "а"
   },
   {
     "id": "t9_011",
     "word": "аккомпанировать",
-    "display": "аккомпа_ировать",
-    "correctLetter": "н",
+    "display": "акк_мпанировать",
+    "correctLetter": "о",
     "wrongLetters": [
-      "о"
+      "а"
     ],
-    "tag": "н",
+    "tag": "о",
     "firstLetter": "а"
   },
   {
     "id": "t9_012",
     "word": "аккомпаниатор",
-    "display": "аккомпа_иатор",
-    "correctLetter": "н",
+    "display": "акк_мпаниатор",
+    "correctLetter": "о",
     "wrongLetters": [
-      "о"
+      "а"
     ],
-    "tag": "н",
+    "tag": "о",
     "firstLetter": "а"
   },
   {
@@ -317,23 +317,23 @@ const WORDS_TASK9 = [
   {
     "id": "t9_029",
     "word": "аттракцион",
-    "display": "атт_акцион",
-    "correctLetter": "р",
+    "display": "аттр_кцион",
+    "correctLetter": "а",
     "wrongLetters": [
       "о"
     ],
-    "tag": "р",
+    "tag": "а",
     "firstLetter": "а"
   },
   {
     "id": "t9_030",
     "word": "аукцион",
-    "display": "аук_ион",
-    "correctLetter": "ц",
+    "display": "аукц_он",
+    "correctLetter": "и",
     "wrongLetters": [
       "е"
     ],
-    "tag": "ц",
+    "tag": "и",
     "firstLetter": "а"
   },
   {
@@ -581,12 +581,12 @@ const WORDS_TASK9 = [
   {
     "id": "t9_053",
     "word": "бюллетень",
-    "display": "бюлле_ень",
-    "correctLetter": "т",
+    "display": "бюлл_тень",
+    "correctLetter": "е",
     "wrongLetters": [
       "и"
     ],
-    "tag": "т",
+    "tag": "е",
     "firstLetter": "б"
   },
   {
@@ -1758,12 +1758,12 @@ const WORDS_TASK9 = [
   {
     "id": "t9_160",
     "word": "иждивенец",
-    "display": "ижди_енец",
-    "correctLetter": "в",
+    "display": "ижд_венец",
+    "correctLetter": "и",
     "wrongLetters": [
       "е"
     ],
-    "tag": "в",
+    "tag": "и",
     "firstLetter": "и"
   },
   {
@@ -1824,34 +1824,34 @@ const WORDS_TASK9 = [
   {
     "id": "t9_166",
     "word": "инженер",
-    "display": "ин_енер",
-    "correctLetter": "ж",
+    "display": "инж_нер",
+    "correctLetter": "е",
     "wrongLetters": [
       "и"
     ],
-    "tag": "ж",
+    "tag": "е",
     "firstLetter": "и"
   },
   {
     "id": "t9_167",
     "word": "инженерный",
-    "display": "ин_енерный",
-    "correctLetter": "ж",
+    "display": "инж_нерный",
+    "correctLetter": "е",
     "wrongLetters": [
       "и"
     ],
-    "tag": "ж",
+    "tag": "е",
     "firstLetter": "и"
   },
   {
     "id": "t9_168",
     "word": "инженерский",
-    "display": "ин_енерский",
-    "correctLetter": "ж",
+    "display": "инж_нерский",
+    "correctLetter": "е",
     "wrongLetters": [
       "и"
     ],
-    "tag": "ж",
+    "tag": "е",
     "firstLetter": "и"
   },
   {
@@ -3111,12 +3111,12 @@ const WORDS_TASK9 = [
   {
     "id": "t9_283",
     "word": "недосягаемый",
-    "display": "недо_ягаемый",
-    "correctLetter": "с",
+    "display": "недос_гаемый",
+    "correctLetter": "я",
     "wrongLetters": [
-      "а"
+      "е"
     ],
-    "tag": "с",
+    "tag": "я",
     "firstLetter": "н"
   },
   {
@@ -3177,12 +3177,12 @@ const WORDS_TASK9 = [
   {
     "id": "t9_289",
     "word": "обнаружить",
-    "display": "об_аружить",
-    "correctLetter": "н",
+    "display": "обн_ружить",
+    "correctLetter": "а",
     "wrongLetters": [
       "о"
     ],
-    "tag": "н",
+    "tag": "а",
     "firstLetter": "о"
   },
   {
@@ -3950,7 +3950,7 @@ const WORDS_TASK9 = [
     "display": "пр_вило",
     "correctLetter": "а",
     "wrongLetters": [
-      "е"
+      "о"
     ],
     "tag": "а",
     "firstLetter": "п"
@@ -3961,7 +3961,7 @@ const WORDS_TASK9 = [
     "display": "пр_вильный",
     "correctLetter": "а",
     "wrongLetters": [
-      "е"
+      "о"
     ],
     "tag": "а",
     "firstLetter": "п"
@@ -4926,34 +4926,34 @@ const WORDS_TASK9 = [
   {
     "id": "t9_448",
     "word": "суверенитет",
-    "display": "с_веренитет",
-    "correctLetter": "у",
+    "display": "сув_ренитет",
+    "correctLetter": "е",
     "wrongLetters": [
-      "о"
+      "и"
     ],
-    "tag": "у",
+    "tag": "е",
     "firstLetter": "с"
   },
   {
     "id": "t9_449",
     "word": "суверенный",
-    "display": "с_веренный",
-    "correctLetter": "у",
+    "display": "сув_ренный",
+    "correctLetter": "е",
     "wrongLetters": [
-      "о"
+      "и"
     ],
-    "tag": "у",
+    "tag": "е",
     "firstLetter": "с"
   },
   {
     "id": "t9_450",
     "word": "сувенир",
-    "display": "с_венир",
-    "correctLetter": "у",
+    "display": "сув_нир",
+    "correctLetter": "е",
     "wrongLetters": [
-      "о"
+      "и"
     ],
-    "tag": "у",
+    "tag": "е",
     "firstLetter": "с"
   },
   {
@@ -5765,7 +5765,7 @@ const WORDS_TASK9 = [
     "display": "_кономический",
     "correctLetter": "э",
     "wrongLetters": [
-      "а"
+      "е"
     ],
     "tag": "э",
     "firstLetter": "э"
@@ -5776,7 +5776,7 @@ const WORDS_TASK9 = [
     "display": "_кономичный",
     "correctLetter": "э",
     "wrongLetters": [
-      "а"
+      "е"
     ],
     "tag": "э",
     "firstLetter": "э"
@@ -5872,34 +5872,34 @@ const WORDS_TASK9 = [
   {
     "id": "t9_534",
     "word": "энциклопедия",
-    "display": "энци_лопедия",
-    "correctLetter": "к",
+    "display": "энцикл_педия",
+    "correctLetter": "о",
     "wrongLetters": [
-      "е"
+      "а"
     ],
-    "tag": "к",
+    "tag": "о",
     "firstLetter": "э"
   },
   {
     "id": "t9_535",
     "word": "энциклопедист",
-    "display": "энци_лопедист",
-    "correctLetter": "к",
+    "display": "энцикл_педист",
+    "correctLetter": "о",
     "wrongLetters": [
-      "е"
+      "а"
     ],
-    "tag": "к",
+    "tag": "о",
     "firstLetter": "э"
   },
   {
     "id": "t9_536",
     "word": "энциклопедический",
-    "display": "энци_лопедический",
-    "correctLetter": "к",
+    "display": "энцикл_педический",
+    "correctLetter": "о",
     "wrongLetters": [
-      "е"
+      "а"
     ],
-    "tag": "к",
+    "tag": "о",
     "firstLetter": "э"
   },
   {
@@ -5921,9 +5921,6 @@ const WORDS_TASK4 = [
     "word": "аэропорты",
     "correct": "аэропОрты",
     "wrong": [
-      "Аэропорты",
-      "аЭропорты",
-      "аэрОпорты",
       "аэропортЫ"
     ],
     "partOfSpeech": "существительное",
@@ -5978,9 +5975,8 @@ const WORDS_TASK4 = [
     "word": "бухгалтеров",
     "correct": "бухгАлтеров",
     "wrong": [
-      "бУхгалтеров",
-      "бухгалтЕров",
-      "бухгалтерОв"
+      "бухгалтерОв",
+      "бУхгалтеров"
     ],
     "partOfSpeech": "деепричастие",
     "firstLetter": "б"
@@ -5990,8 +5986,8 @@ const WORDS_TASK4 = [
     "word": "бухгалтер",
     "correct": "бухгАлтер",
     "wrong": [
-      "бУхгалтер",
-      "бухгалтЕр"
+      "бухгалтЕр",
+      "бУхгалтер"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "б"
@@ -6021,13 +6017,8 @@ const WORDS_TASK4 = [
     "word": "вероисповедание",
     "correct": "вероисповЕдание",
     "wrong": [
-      "вЕроисповедание",
-      "верОисповедание",
-      "вероИсповедание",
-      "вероиспОведание",
       "вероисповедАние",
-      "вероисповеданИе",
-      "вероисповеданиЕ"
+      "вероиспОведание"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "в"
@@ -6037,8 +6028,6 @@ const WORDS_TASK4 = [
     "word": "водопровод",
     "correct": "водопровОд",
     "wrong": [
-      "вОдопровод",
-      "водОпровод",
       "водопрОвод"
     ],
     "partOfSpeech": "существительное",
@@ -6156,8 +6145,6 @@ const WORDS_TASK4 = [
     "word": "газопровод",
     "correct": "газопровОд",
     "wrong": [
-      "гАзопровод",
-      "газОпровод",
       "газопрОвод"
     ],
     "partOfSpeech": "существительное",
@@ -6221,7 +6208,6 @@ const WORDS_TASK4 = [
     "word": "диспансер",
     "correct": "диспансЕр",
     "wrong": [
-      "дИспансер",
       "диспАнсер"
     ],
     "partOfSpeech": "существительное",
@@ -6234,8 +6220,7 @@ const WORDS_TASK4 = [
     "wrong": [
       "дОговорённость",
       "догОворённость",
-      "договОрённость",
-      "договорённОсть"
+      "договОрённость"
     ],
     "partOfSpeech": "глагол",
     "firstLetter": "д"
@@ -6390,8 +6375,7 @@ const WORDS_TASK4 = [
     "word": "жалюзи",
     "correct": "жалюзИ",
     "wrong": [
-      "жАлюзи",
-      "жалЮзи"
+      "жАлюзи"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "ж"
@@ -6510,8 +6494,7 @@ const WORDS_TASK4 = [
     "wrong": [
       "зАпломбировать",
       "заплОмбировать",
-      "запломбИровать",
-      "запломбирОвать"
+      "запломбИровать"
     ],
     "partOfSpeech": "глагол",
     "firstLetter": "з"
@@ -6664,7 +6647,6 @@ const WORDS_TASK4 = [
     "word": "каталог",
     "correct": "каталОг",
     "wrong": [
-      "кАталог",
       "катАлог"
     ],
     "partOfSpeech": "существительное",
@@ -6757,9 +6739,7 @@ const WORDS_TASK4 = [
     "word": "красивее",
     "correct": "красИвее",
     "wrong": [
-      "крАсивее",
-      "красивЕе",
-      "красивеЕ"
+      "красивЕе"
     ],
     "partOfSpeech": "прилагательное",
     "firstLetter": "к"
@@ -6781,8 +6761,7 @@ const WORDS_TASK4 = [
     "word": "кухонный",
     "correct": "кУхонный",
     "wrong": [
-      "кухОнный",
-      "кухоннЫй"
+      "кухОнный"
     ],
     "partOfSpeech": "причастие",
     "firstLetter": "к"
@@ -6858,8 +6837,7 @@ const WORDS_TASK4 = [
     "wrong": [
       "крОвоточащий",
       "кровОточащий",
-      "кровотОчащий",
-      "кровоточащИй"
+      "кровотОчащий"
     ],
     "partOfSpeech": "причастие",
     "firstLetter": "к"
@@ -7003,10 +6981,7 @@ const WORDS_TASK4 = [
     "word": "намерение",
     "correct": "намЕрение",
     "wrong": [
-      "нАмерение",
-      "намерЕние",
-      "намеренИе",
-      "намерениЕ"
+      "намерЕние"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "н"
@@ -7068,8 +7043,6 @@ const WORDS_TASK4 = [
     "word": "нефтепровод",
     "correct": "нефтепровОд",
     "wrong": [
-      "нЕфтепровод",
-      "нефтЕпровод",
       "нефтепрОвод"
     ],
     "partOfSpeech": "существительное",
@@ -7080,8 +7053,7 @@ const WORDS_TASK4 = [
     "word": "новостей",
     "correct": "новостЕй",
     "wrong": [
-      "нОвостей",
-      "новОстей"
+      "нОвостей"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "н"
@@ -7384,9 +7356,7 @@ const WORDS_TASK4 = [
     "word": "отрочество",
     "correct": "Отрочество",
     "wrong": [
-      "отрОчество",
-      "отрочЕство",
-      "отрочествО"
+      "отрОчество"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "о"
@@ -7396,8 +7366,7 @@ const WORDS_TASK4 = [
     "word": "оптовый",
     "correct": "оптОвый",
     "wrong": [
-      "Оптовый",
-      "оптовЫй"
+      "Оптовый"
     ],
     "partOfSpeech": "прилагательное",
     "firstLetter": "о"
@@ -7418,7 +7387,6 @@ const WORDS_TASK4 = [
     "word": "облегчить",
     "correct": "облегчИть",
     "wrong": [
-      "Облегчить",
       "облЕгчить"
     ],
     "partOfSpeech": "глагол",
@@ -7429,7 +7397,6 @@ const WORDS_TASK4 = [
     "word": "облегчит",
     "correct": "облегчИт",
     "wrong": [
-      "Облегчит",
       "облЕгчит"
     ],
     "partOfSpeech": "глагол",
@@ -7609,7 +7576,6 @@ const WORDS_TASK4 = [
     "word": "осведомиться",
     "correct": "освЕдомиться",
     "wrong": [
-      "Осведомиться",
       "осведОмиться",
       "осведомИться",
       "осведомитьсЯ"
@@ -7622,7 +7588,6 @@ const WORDS_TASK4 = [
     "word": "осведомится",
     "correct": "освЕдомится",
     "wrong": [
-      "Осведомится",
       "осведОмится",
       "осведомИтся",
       "осведомитсЯ"
@@ -7771,7 +7736,6 @@ const WORDS_TASK4 = [
     "word": "поручни",
     "correct": "пОручни",
     "wrong": [
-      "порУчни",
       "поручнИ"
     ],
     "partOfSpeech": "существительное",
@@ -7782,9 +7746,7 @@ const WORDS_TASK4 = [
     "word": "приданое",
     "correct": "придАное",
     "wrong": [
-      "прИданое",
-      "приданОе",
-      "приданоЕ"
+      "прИданое"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "п"
@@ -7898,7 +7860,6 @@ const WORDS_TASK4 = [
     "word": "позвонит",
     "correct": "позвонИт",
     "wrong": [
-      "пОзвонит",
       "позвОнит"
     ],
     "partOfSpeech": "глагол",
@@ -8222,10 +8183,7 @@ const WORDS_TASK4 = [
     "wrong": [
       "сОсредоточение",
       "сосрЕдоточение",
-      "сосредОточение",
-      "сосредоточЕние",
-      "сосредоточенИе",
-      "сосредоточениЕ"
+      "сосредОточение"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "с"
@@ -8255,8 +8213,7 @@ const WORDS_TASK4 = [
     "word": "статуя",
     "correct": "стАтуя",
     "wrong": [
-      "статУя",
-      "статуЯ"
+      "статУя"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "с"
@@ -8381,8 +8338,7 @@ const WORDS_TASK4 = [
     "word": "таможня",
     "correct": "тамОжня",
     "wrong": [
-      "тАможня",
-      "таможнЯ"
+      "тАможня"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "т"
@@ -8477,8 +8433,7 @@ const WORDS_TASK4 = [
     "word": "цепочка",
     "correct": "цепОчка",
     "wrong": [
-      "цЕпочка",
-      "цепочкА"
+      "цЕпочка"
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "ц"
