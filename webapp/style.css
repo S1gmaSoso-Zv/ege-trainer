@@ -1216,6 +1216,62 @@ body.tg-dark .dict-filter-tag {
    Statistics Screen
    ============================================ */
 
+.stat-sync-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  padding: 10px 14px;
+  margin-bottom: 12px;
+  box-shadow: 0 1px 4px var(--shadow);
+}
+
+.stat-sync-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.stat-sync-icon {
+  font-size: 20px;
+}
+
+.stat-sync-title {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.stat-sync-sub {
+  font-size: 11px;
+  color: var(--text-tertiary);
+}
+
+.stat-sync-btn {
+  background: var(--green-50);
+  color: var(--green-800);
+  border: 1px solid var(--green-200);
+  border-radius: var(--radius-sm);
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.stat-sync-btn:active {
+  transform: scale(0.96);
+}
+
+body.tg-dark .stat-sync-btn {
+  background: rgba(76, 175, 80, 0.2);
+  color: #A5D6A7;
+  border-color: rgba(76, 175, 80, 0.4);
+}
+
 .stat-summary-card {
   display: flex;
   align-items: center;

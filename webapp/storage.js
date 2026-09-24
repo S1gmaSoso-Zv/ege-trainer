@@ -257,92 +257,242 @@ const Storage = {
 
   // ==================== СИНХРОНИЗАЦИЯ УСТРОЙСТВ (TELEGRAM CLOUD STORAGE) ====================
 
+  /**
+   * Сжатие статистики для облака (лимит Telegram CloudStorage строго 4096 символов на ключ)
+   */
+  _compressStatsForCloud(data) {
+    if (!data) return '';
+    // Оставляем последние 15 сессий в ультра-компактном виде (без тяжелых массивов ошибок)
+    const compactSessions = (data.sessions || []).slice(0, 15).map(s => ({
+      t: s.taskType || s.t || 'task9',
+      tot: Number(s.total ?? s.tot) || 0,
+      c: Number(s.correct ?? s.c) || 0,
+      w: Number(s.wrong ?? s.w) || 0,
+      d: s.date || s.d
+    }));
+
+    // Компактные ответы: только слова с активностью, в виде [correct, wrong]
+    const compactAnswers = {};
+    for (const [id, a] of Object.entries(data.answers || {})) {
+      if (!a) continue;
+      const c = Array.isArray(a) ? (a[0] || 0) : (Number(a.correct) || 0);
+      const w = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
+      if (c > 0 || w > 0) {
+        compactAnswers[id] = [c, w];
+      }
+    }
+
+    return JSON.stringify({
+      h: Number(data.blitzHighScore) || 0,
+      s: compactSessions,
+      a: compactAnswers,
+      u: Date.now()
+    });
+  },
+
+  /**
+   * Распаковка статистики из облака с обратной совместимостью
+   */
+  _decompressStatsFromCloud(raw) {
+    if (!raw) return null;
+    try {
+      const parsed = JSON.parse(raw);
+      const blitzHighScore = Number(parsed.h ?? parsed.blitzHighScore) || 0;
+      const sessions = (parsed.s || parsed.sessions || []).map(s => ({
+        taskType: s.taskType || s.t || 'task9',
+        total: Number(s.total ?? s.tot) || 0,
+        correct: Number(s.correct ?? s.c) || 0,
+        wrong: Number(s.wrong ?? s.w) || 0,
+        date: s.date || s.d || new Date().toISOString()
+      }));
+
+      const rawAnswers = parsed.a || parsed.answers || {};
+      const answers = {};
+      for (const [id, a] of Object.entries(rawAnswers)) {
+        if (Array.isArray(a)) {
+          answers[id] = { correct: a[0] || 0, wrong: a[1] || 0 };
+        } else if (a && typeof a === 'object') {
+          answers[id] = { correct: Number(a.correct) || 0, wrong: Number(a.wrong) || 0 };
+        }
+      }
+
+      return {
+        blitzHighScore,
+        sessions,
+        answers,
+        updatedAt: parsed.u || parsed.updatedAt || 0
+      };
+    } catch (e) {
+      console.warn('Decompress cloud stats error:', e);
+      return null;
+    }
+  },
+
   _syncFavsToCloud(data) {
     try {
       const cs = window.Telegram?.WebApp?.CloudStorage;
-      if (!cs) return;
+      if (!cs || typeof cs.setItem !== 'function') return;
       const payload = JSON.stringify({
         task9: data.task9 || [],
         task4: data.task4 || [],
         updatedAt: Date.now()
       });
+      if (payload.length > 4000) {
+        console.warn('Favs payload exceeds Telegram limit');
+        return;
+      }
       cs.setItem('ege_cloud_favs', payload, (err) => {
         if (err) console.warn('CloudStorage favs sync error:', err);
       });
     } catch (e) {
-      console.warn('Cloud sync error:', e);
+      console.warn('Cloud sync favs error:', e);
     }
   },
 
   _syncStatsToCloud(data) {
     try {
       const cs = window.Telegram?.WebApp?.CloudStorage;
-      if (!cs) return;
-      // Чтобы не превысить лимит 4096 байт, сохраняем последние 15 сессий
-      const compactSessions = (data.sessions || []).slice(0, 15);
-      const payload = JSON.stringify({
-        blitzHighScore: Number(data.blitzHighScore) || 0,
-        sessions: compactSessions,
-        answers: data.answers || {},
-        updatedAt: Date.now()
-      });
+      if (!cs || typeof cs.setItem !== 'function') return;
+      const payload = this._compressStatsForCloud(data);
+      if (!payload || payload.length > 4000) {
+        console.warn('Stats payload exceeds Telegram limit');
+        return;
+      }
       cs.setItem('ege_cloud_stats', payload, (err) => {
         if (err) console.warn('CloudStorage stats sync error:', err);
       });
     } catch (e) {
-      console.warn('Cloud sync error:', e);
+      console.warn('Cloud sync stats error:', e);
     }
   },
 
+  /**
+   * Универсальное чтение ключей из CloudStorage с поддержкой getItem и getItems
+   */
+  _readCloudData(callback) {
+    const cs = window.Telegram?.WebApp?.CloudStorage;
+    if (!cs) {
+      callback(null);
+      return;
+    }
+
+    if (typeof cs.getItems === 'function') {
+      try {
+        cs.getItems(['ege_cloud_stats', 'ege_cloud_favs'], (err, values) => {
+          if (!err && values) {
+            callback(values);
+          } else {
+            this._readCloudDataFallback(callback);
+          }
+        });
+        return;
+      } catch {
+        // Fallback
+      }
+    }
+    this._readCloudDataFallback(callback);
+  },
+
+  _readCloudDataFallback(callback) {
+    const cs = window.Telegram?.WebApp?.CloudStorage;
+    if (!cs || typeof cs.getItem !== 'function') {
+      callback(null);
+      return;
+    }
+
+    try {
+      cs.getItem('ege_cloud_stats', (err1, valStats) => {
+        cs.getItem('ege_cloud_favs', (err2, valFavs) => {
+          callback({
+            ege_cloud_stats: valStats || '',
+            ege_cloud_favs: valFavs || ''
+          });
+        });
+      });
+    } catch {
+      callback(null);
+    }
+  },
+
+  /**
+   * Полная двусторонняя синхронизация (Pull + Merge + Push)
+   */
   initCloudSync(onSyncCallback) {
     try {
       const cs = window.Telegram?.WebApp?.CloudStorage;
-      if (!cs) return;
+      if (!cs) {
+        if (typeof onSyncCallback === 'function') onSyncCallback(false, false);
+        return;
+      }
 
-      cs.getItems(['ege_cloud_stats', 'ege_cloud_favs'], (err, values) => {
-        if (err || !values) return;
-        let hasChanges = false;
+      this._readCloudData((values) => {
+        if (!values) {
+          if (typeof onSyncCallback === 'function') onSyncCallback(false, false);
+          return;
+        }
 
-        // 1. Синхронизация избранного
+        let hasLocalChanges = false;
+        let shouldPushStatsToCloud = false;
+        let shouldPushFavsToCloud = false;
+
+        const localFavs = this._getFavoritesData();
+        const localStats = this._getStatsData();
+
+        // 1. СИНХРОНИЗАЦИЯ ИЗБРАННОГО
+        let mergedFavs = {
+          task9: [...(localFavs.task9 || [])],
+          task4: [...(localFavs.task4 || [])]
+        };
+
         if (values.ege_cloud_favs) {
           try {
             const cloudFavs = JSON.parse(values.ege_cloud_favs);
-            const localFavs = this._getFavoritesData();
-            const mergedT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
-            const mergedT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
+            const unionT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
+            const unionT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
 
-            if (mergedT9.length !== (localFavs.task9 || []).length || mergedT4.length !== (localFavs.task4 || []).length) {
-              const updated = { task9: mergedT9, task4: mergedT4 };
-              localStorage.setItem(this._getFavKey(), JSON.stringify(updated));
-              hasChanges = true;
+            if (unionT9.length !== (localFavs.task9 || []).length || unionT4.length !== (localFavs.task4 || []).length) {
+              mergedFavs = { task9: unionT9, task4: unionT4 };
+              localStorage.setItem(this._getFavKey(), JSON.stringify(mergedFavs));
+              hasLocalChanges = true;
+            }
+
+            if (unionT9.length !== (cloudFavs.task9 || []).length || unionT4.length !== (cloudFavs.task4 || []).length) {
+              shouldPushFavsToCloud = true;
             }
           } catch (e) {
             console.warn('Error parsing cloud favs:', e);
           }
+        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task4 || []).length > 0) {
+          // В облаке ещё пусто, а локально есть избранное -> выгружаем в облако
+          shouldPushFavsToCloud = true;
         }
 
-        // 2. Синхронизация статистики
+        if (shouldPushFavsToCloud) {
+          this._syncFavsToCloud(mergedFavs);
+        }
+
+        // 2. СИНХРОНИЗАЦИЯ СТАТИСТИКИ
+        let mergedStats = { ...localStats };
+
         if (values.ege_cloud_stats) {
           try {
-            const cloudStats = JSON.parse(values.ege_cloud_stats);
-            const localStats = this._getStatsData();
+            const cloudStats = this._decompressStatsFromCloud(values.ege_cloud_stats);
+            if (cloudStats) {
+              const cloudRecord = Number(cloudStats.blitzHighScore) || 0;
+              const localRecord = Number(localStats.blitzHighScore) || 0;
+              const newRecord = Math.max(cloudRecord, localRecord);
 
-            const cloudRecord = Number(cloudStats.blitzHighScore) || 0;
-            const localRecord = Number(localStats.blitzHighScore) || 0;
-            const newRecord = Math.max(cloudRecord, localRecord);
+              // Слияние сессий по дате
+              const sessionMap = new Map();
+              (localStats.sessions || []).forEach(s => { if (s && s.date) sessionMap.set(s.date, s); });
+              (cloudStats.sessions || []).forEach(s => { if (s && s.date && !sessionMap.has(s.date)) sessionMap.set(s.date, s); });
+              const mergedSessions = Array.from(sessionMap.values())
+                .sort((a, b) => new Date(b.date) - new Date(a.date))
+                .slice(0, 50);
 
-            // Слияние сессий по уникальной дате
-            const sessionMap = new Map();
-            (localStats.sessions || []).forEach(s => { if (s && s.date) sessionMap.set(s.date, s); });
-            (cloudStats.sessions || []).forEach(s => { if (s && s.date && !sessionMap.has(s.date)) sessionMap.set(s.date, s); });
-            const mergedSessions = Array.from(sessionMap.values())
-              .sort((a, b) => new Date(b.date) - new Date(a.date))
-              .slice(0, 50);
-
-            // Слияние ответов (для проблемных слов)
-            const mergedAnswers = { ...(localStats.answers || {}) };
-            if (cloudStats.answers) {
-              for (const [id, a] of Object.entries(cloudStats.answers)) {
+              // Слияние ответов
+              const mergedAnswers = { ...(localStats.answers || {}) };
+              for (const [id, a] of Object.entries(cloudStats.answers || {})) {
                 if (!mergedAnswers[id]) {
                   mergedAnswers[id] = a;
                 } else {
@@ -352,33 +502,54 @@ const Storage = {
                   };
                 }
               }
-            }
 
-            const isDifferent = newRecord !== localRecord ||
-              mergedSessions.length !== (localStats.sessions || []).length ||
-              Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length;
+              const isLocalDifferent = newRecord !== localRecord ||
+                mergedSessions.length !== (localStats.sessions || []).length ||
+                Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length;
 
-            if (isDifferent) {
-              const updatedStats = {
-                ...localStats,
-                blitzHighScore: newRecord,
-                sessions: mergedSessions,
-                answers: mergedAnswers
-              };
-              localStorage.setItem(this._getStatsKey(), JSON.stringify(updatedStats));
-              hasChanges = true;
+              if (isLocalDifferent) {
+                mergedStats = {
+                  ...localStats,
+                  blitzHighScore: newRecord,
+                  sessions: mergedSessions,
+                  answers: mergedAnswers
+                };
+                localStorage.setItem(this._getStatsKey(), JSON.stringify(mergedStats));
+                hasLocalChanges = true;
+              }
+
+              const isCloudBehind = newRecord > cloudRecord ||
+                mergedSessions.length > (cloudStats.sessions || []).length ||
+                Object.keys(mergedAnswers).length > Object.keys(cloudStats.answers || {}).length;
+
+              if (isCloudBehind) {
+                shouldPushStatsToCloud = true;
+              }
             }
           } catch (e) {
-            console.warn('Error parsing cloud stats:', e);
+            console.warn('Error syncing cloud stats:', e);
+          }
+        } else {
+          // В облаке ещё пусто, а локально статистика есть -> сразу отправляем в облако
+          const hasAnyLocalStats = (localStats.sessions || []).length > 0 ||
+            Object.keys(localStats.answers || {}).length > 0 ||
+            (Number(localStats.blitzHighScore) || 0) > 0;
+          if (hasAnyLocalStats) {
+            shouldPushStatsToCloud = true;
           }
         }
 
-        if (hasChanges && typeof onSyncCallback === 'function') {
-          onSyncCallback();
+        if (shouldPushStatsToCloud) {
+          this._syncStatsToCloud(mergedStats);
+        }
+
+        if (typeof onSyncCallback === 'function') {
+          onSyncCallback(hasLocalChanges, true);
         }
       });
     } catch (e) {
-      console.warn('Cloud sync initialization error:', e);
+      console.warn('Cloud sync error:', e);
+      if (typeof onSyncCallback === 'function') onSyncCallback(false, false);
     }
   }
 };

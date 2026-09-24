@@ -481,6 +481,38 @@ const App = {
         break;
       }
 
+      case 'force-sync': {
+        const btn = document.querySelector('[data-action="force-sync"]');
+        if (btn) {
+          btn.textContent = 'Обновление...';
+          btn.disabled = true;
+        }
+        Storage.initCloudSync((hasChanges, isSuccess) => {
+          if (btn) {
+            btn.textContent = 'Обновить 🔄';
+            btn.disabled = false;
+          }
+          if (this.currentScreen === 'stats' || this.currentScreen === 'home') {
+            this.render();
+          }
+          try {
+            const tg = window.Telegram?.WebApp;
+            if (tg?.showPopup) {
+              tg.showPopup({
+                title: isSuccess ? '☁️ Синхронизация' : '⚠️ Внимание',
+                message: isSuccess
+                  ? 'Данные успешно синхронизированы между устройствами через Telegram Cloud!'
+                  : 'Облачное хранилище пока недоступно или не ответило.',
+                buttons: [{ type: 'ok', text: 'Отлично' }]
+              });
+            } else {
+              alert(isSuccess ? 'Данные синхронизированы с Telegram Cloud!' : 'Облако пока недоступно');
+            }
+          } catch (e) {}
+        });
+        break;
+      }
+
       case 'reset-stats':
         this.showConfirmDialog(
           'Сбросить статистику?',
@@ -1774,6 +1806,18 @@ const App = {
     return `
       <div class="screen-header">
         <h2 class="screen-title">📊 Статистика и прогресс</h2>
+      </div>
+
+      <!-- Синхронизация между устройствами -->
+      <div class="stat-sync-card">
+        <div class="stat-sync-info">
+          <span class="stat-sync-icon">☁️</span>
+          <div>
+            <div class="stat-sync-title">Синхронизация аккаунта</div>
+            <div class="stat-sync-sub">Telegram CloudStorage</div>
+          </div>
+        </div>
+        <button class="stat-sync-btn" data-action="force-sync">Обновить 🔄</button>
       </div>
 
       <!-- Главная сводка -->
