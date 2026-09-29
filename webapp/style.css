@@ -1324,6 +1324,10 @@ body.tg-dark .stat-sync-btn {
   box-shadow: 0 1px 4px var(--shadow);
 }
 
+.stat-card.full-width {
+  grid-column: 1 / -1;
+}
+
 .stat-card-top {
   display: flex;
   justify-content: space-between;

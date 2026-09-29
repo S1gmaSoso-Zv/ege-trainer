@@ -122,26 +122,71 @@ const Storage = {
     } catch {}
   },
 
+  _ensureCumulative(data) {
+    if (!data) return;
+    if (!data.cumulative) {
+      data.cumulative = {
+        t9: { total: 0, correct: 0, count: 0 },
+        t4: { total: 0, correct: 0, count: 0 },
+        blitz: { total: 0, correct: 0, count: 0 }
+      };
+    }
+    if (!data.cumulative.t9) data.cumulative.t9 = { total: 0, correct: 0, count: 0 };
+    if (!data.cumulative.t4) data.cumulative.t4 = { total: 0, correct: 0, count: 0 };
+    if (!data.cumulative.blitz) data.cumulative.blitz = { total: 0, correct: 0, count: 0 };
+
+    let s9Tot = 0, s9Cor = 0, s9Cnt = 0;
+    let s4Tot = 0, s4Cor = 0, s4Cnt = 0;
+    let blzTot = 0, blzCor = 0, blzCnt = 0;
+
+    (data.sessions || []).forEach(s => {
+      const tot = Number(s.total) || 0;
+      const cor = Number(s.correct) || 0;
+      if (s.taskType === 'task9') {
+        s9Tot += tot; s9Cor += cor; s9Cnt++;
+      } else if (s.taskType === 'task4' || s.taskType === 'task4_ege') {
+        s4Tot += tot; s4Cor += cor; s4Cnt++;
+      } else if (s.taskType === 'blitz') {
+        blzTot += tot; blzCor += cor; blzCnt++;
+      }
+    });
+
+    data.cumulative.t9.total = Math.max(Number(data.cumulative.t9.total) || 0, s9Tot);
+    data.cumulative.t9.correct = Math.max(Number(data.cumulative.t9.correct) || 0, s9Cor);
+    data.cumulative.t9.count = Math.max(Number(data.cumulative.t9.count) || 0, s9Cnt);
+
+    data.cumulative.t4.total = Math.max(Number(data.cumulative.t4.total) || 0, s4Tot);
+    data.cumulative.t4.correct = Math.max(Number(data.cumulative.t4.correct) || 0, s4Cor);
+    data.cumulative.t4.count = Math.max(Number(data.cumulative.t4.count) || 0, s4Cnt);
+
+    data.cumulative.blitz.total = Math.max(Number(data.cumulative.blitz.total) || 0, blzTot);
+    data.cumulative.blitz.correct = Math.max(Number(data.cumulative.blitz.correct) || 0, blzCor);
+    data.cumulative.blitz.count = Math.max(Number(data.cumulative.blitz.count) || 0, blzCnt);
+  },
+
   _getStatsData() {
     try {
       this._migrateLocalData();
       const key = this._getStatsKey();
       let raw = localStorage.getItem(key);
       const data = JSON.parse(raw || '{}');
-      if (!data.cumulative) {
-        data.cumulative = {
-          t9: { total: 0, correct: 0, count: 0 },
-          t4: { total: 0, correct: 0, count: 0 }
-        };
-      }
+      this._ensureCumulative(data);
       return data;
     } catch {
-      return { cumulative: { t9: { total: 0, correct: 0, count: 0 }, t4: { total: 0, correct: 0, count: 0 } } };
+      const fallback = {
+        cumulative: {
+          t9: { total: 0, correct: 0, count: 0 },
+          t4: { total: 0, correct: 0, count: 0 },
+          blitz: { total: 0, correct: 0, count: 0 }
+        }
+      };
+      return fallback;
     }
   },
 
   _saveStatsData(data) {
     try {
+      this._ensureCumulative(data);
       localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
       this._syncStatsToCloud(data);
     } catch (e) {
@@ -150,18 +195,13 @@ const Storage = {
   },
 
   /**
-   * Записать результат сессии
+   * Записать результат сессии (Task 9, Task 4, Task 4 EGE, Blitz)
    * @param {Object} session - { taskType, total, correct, wrong, date, mistakes[] }
    */
   addSession(session) {
     const data = this._getStatsData();
     if (!data.sessions) data.sessions = [];
-    if (!data.cumulative) {
-      data.cumulative = {
-        t9: { total: 0, correct: 0, count: 0 },
-        t4: { total: 0, correct: 0, count: 0 }
-      };
-    }
+    this._ensureCumulative(data);
 
     session.date = new Date().toISOString();
     data.sessions.unshift(session);
@@ -171,18 +211,28 @@ const Storage = {
     }
 
     // Обновляем пожизненные кумулятивные счётчики
-    const tKey = session.taskType === 'task4' ? 't4' : 't9';
-    data.cumulative[tKey].total = (data.cumulative[tKey].total || 0) + (Number(session.total) || 0);
-    data.cumulative[tKey].correct = (data.cumulative[tKey].correct || 0) + (Number(session.correct) || 0);
-    data.cumulative[tKey].count = (data.cumulative[tKey].count || 0) + 1;
+    let tKey = 't9';
+    if (session.taskType === 'task4' || session.taskType === 'task4_ege') {
+      tKey = 't4';
+    } else if (session.taskType === 'blitz') {
+      tKey = 'blitz';
+    }
+
+    const sTotal = Number(session.total) || 0;
+    const sCorrect = Math.min(Number(session.correct) || 0, sTotal);
+
+    data.cumulative[tKey].total = (Number(data.cumulative[tKey].total) || 0) + sTotal;
+    data.cumulative[tKey].correct = (Number(data.cumulative[tKey].correct) || 0) + sCorrect;
+    data.cumulative[tKey].count = (Number(data.cumulative[tKey].count) || 0) + 1;
 
     this._saveStatsData(data);
   },
 
   /**
-   * Записать ответ (для проблемных слов)
+   * Записать ответ по конкретному слову (для выявления сложных слов)
    */
   recordAnswer(wordId, isCorrect) {
+    if (!wordId) return;
     const data = this._getStatsData();
     if (!data.answers) data.answers = {};
 
@@ -192,31 +242,35 @@ const Storage = {
 
     if (isCorrect) {
       data.answers[wordId].correct++;
+      // Если слово ранее было с ошибкой, успешный ответ снижает тяжесть ошибки
+      if (data.answers[wordId].wrong > 0) {
+        data.answers[wordId].wrong = Math.max(0, data.answers[wordId].wrong - 1);
+      }
     } else {
       data.answers[wordId].wrong++;
     }
 
-    // Сохраняем локально, синхронизация с облаком происходит при окончании сессии
     try {
       localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
     } catch {}
   },
 
   /**
-   * Получить общую статистику
+   * Получить общую статистику с точным расчётом всех метрик
    */
   getStats() {
     const data = this._getStatsData();
     const sessions = data.sessions || [];
 
     const task9Sessions = sessions.filter(s => s.taskType === 'task9');
-    const task4Sessions = sessions.filter(s => s.taskType === 'task4');
+    const task4Sessions = sessions.filter(s => s.taskType === 'task4' || s.taskType === 'task4_ege');
+    const blitzSessions = sessions.filter(s => s.taskType === 'blitz');
 
-    const calcStats = (list, cum) => {
+    const calcMetric = (cum, list) => {
       const sessTotal = (list || []).reduce((sum, s) => sum + (Number(s.total) || 0), 0);
       const sessCorrect = (list || []).reduce((sum, s) => sum + (Number(s.correct) || 0), 0);
       const total = Math.max(sessTotal, Number(cum?.total) || 0);
-      const correct = Math.max(sessCorrect, Number(cum?.correct) || 0);
+      const correct = Math.min(total, Math.max(sessCorrect, Number(cum?.correct) || 0));
       const count = Math.max((list || []).length, Number(cum?.count) || 0);
 
       return {
@@ -227,20 +281,24 @@ const Storage = {
       };
     };
 
-    const s9 = calcStats(task9Sessions, data.cumulative?.t9);
-    const s4 = calcStats(task4Sessions, data.cumulative?.t4);
-    const totalPracticed = s9.total + s4.total;
-    const totalCorrect = s9.correct + s4.correct;
+    const s9 = calcMetric(data.cumulative?.t9, task9Sessions);
+    const s4 = calcMetric(data.cumulative?.t4, task4Sessions);
+    const blz = calcMetric(data.cumulative?.blitz, blitzSessions);
+
+    const totalPracticed = s9.total + s4.total + blz.total;
+    const totalCorrect = s9.correct + s4.correct + blz.correct;
     const overallPercent = totalPracticed > 0 ? Math.round((totalCorrect / totalPracticed) * 100) : 0;
+    const totalSessions = s9.sessionsCount + s4.sessionsCount + blz.sessionsCount;
 
     return {
       task9: s9,
       task4: s4,
+      blitz: blz,
       totalPracticed,
       totalCorrect,
       overallPercent,
-      totalSessions: s9.sessionsCount + s4.sessionsCount,
-      lastSessions: sessions.slice(0, 10),
+      totalSessions,
+      lastSessions: sessions.slice(0, 15),
       problemWords: this.getProblematicWords(),
       blitzHighScore: Number(data.blitzHighScore) || 0
     };
@@ -263,14 +321,20 @@ const Storage = {
   },
 
   /**
-   * Получить самые проблемные слова (топ-15)
+   * Получить самые проблемные слова (с ошибками, не освоенные до конца)
    */
   getProblematicWords() {
     const data = this._getStatsData();
     const answers = data.answers || {};
 
     return Object.entries(answers)
-      .filter(([, a]) => a && Number(a.wrong) > 0)
+      .filter(([, a]) => {
+        if (!a) return false;
+        const wrong = Number(a.wrong) || 0;
+        const correct = Number(a.correct) || 0;
+        // Слово в списке, пока есть неисправленные ошибки
+        return wrong > 0 && correct < (wrong * 2);
+      })
       .map(([id, a]) => {
         const correct = Number(a.correct) || 0;
         const wrong = Number(a.wrong) || 0;
@@ -285,7 +349,7 @@ const Storage = {
         };
       })
       .sort((a, b) => (b.wrong * 2 + b.errorRate * 3) - (a.wrong * 2 + a.errorRate * 3))
-      .slice(0, 15);
+      .slice(0, 20);
   },
 
   /**
@@ -329,7 +393,7 @@ const Storage = {
    */
   _compressStatsForCloud(data) {
     if (!data) return '';
-    // Оставляем последние 15 сессий в ультра-компактном виде (без тяжелых массивов ошибок)
+    // Оставляем последние 15 сессий в компактном виде
     const compactSessions = (data.sessions || []).slice(0, 15).map(s => ({
       t: s.taskType || s.t || 'task9',
       tot: Number(s.total ?? s.tot) || 0,
@@ -338,20 +402,35 @@ const Storage = {
       d: s.date || s.d
     }));
 
-    // Компактные ответы: только слова с активностью, в виде [correct, wrong]
+    // Компактные ответы: сохраняем ТОЛЬКО проблемные слова с ошибками (до 35 слов)
+    // Это гарантирует размер < 1.8 КБ (с запасом укладывается в 4 КБ Telegram)
     const compactAnswers = {};
-    for (const [id, a] of Object.entries(data.answers || {})) {
-      if (!a) continue;
+    const problemEntries = Object.entries(data.answers || {})
+      .filter(([, a]) => {
+        if (!a) return false;
+        const w = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
+        return w > 0;
+      })
+      .sort(([, a], [, b]) => {
+        const wa = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
+        const wb = Array.isArray(b) ? (b[1] || 0) : (Number(b.wrong) || 0);
+        return wb - wa;
+      })
+      .slice(0, 35);
+
+    for (const [id, a] of problemEntries) {
       const c = Array.isArray(a) ? (a[0] || 0) : (Number(a.correct) || 0);
       const w = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
-      if (c > 0 || w > 0) {
-        compactAnswers[id] = [c, w];
-      }
+      compactAnswers[id] = [c, w];
     }
 
     return JSON.stringify({
       h: Number(data.blitzHighScore) || 0,
-      cum: data.cumulative || { t9: { total: 0, correct: 0, count: 0 }, t4: { total: 0, correct: 0, count: 0 } },
+      cum: data.cumulative || {
+        t9: { total: 0, correct: 0, count: 0 },
+        t4: { total: 0, correct: 0, count: 0 },
+        blitz: { total: 0, correct: 0, count: 0 }
+      },
       s: compactSessions,
       a: compactAnswers,
       u: Date.now()
@@ -366,9 +445,10 @@ const Storage = {
     try {
       const parsed = JSON.parse(raw);
       const blitzHighScore = Number(parsed.h ?? parsed.blitzHighScore) || 0;
-      const cumulative = parsed.cum || {
-        t9: { total: 0, correct: 0, count: 0 },
-        t4: { total: 0, correct: 0, count: 0 }
+      const cumulative = {
+        t9: parsed.cum?.t9 || { total: 0, correct: 0, count: 0 },
+        t4: parsed.cum?.t4 || { total: 0, correct: 0, count: 0 },
+        blitz: parsed.cum?.blitz || { total: 0, correct: 0, count: 0 }
       };
       const sessions = (parsed.s || parsed.sessions || []).map(s => ({
         taskType: s.taskType || s.t || 'task9',
@@ -577,8 +657,16 @@ const Storage = {
               }
 
               // Слияние пожизненных счётчиков
-              const cloudCum = cloudStats.cumulative || { t9: { total: 0, correct: 0, count: 0 }, t4: { total: 0, correct: 0, count: 0 } };
-              const localCum = localStats.cumulative || { t9: { total: 0, correct: 0, count: 0 }, t4: { total: 0, correct: 0, count: 0 } };
+              const cloudCum = cloudStats.cumulative || {
+                t9: { total: 0, correct: 0, count: 0 },
+                t4: { total: 0, correct: 0, count: 0 },
+                blitz: { total: 0, correct: 0, count: 0 }
+              };
+              const localCum = localStats.cumulative || {
+                t9: { total: 0, correct: 0, count: 0 },
+                t4: { total: 0, correct: 0, count: 0 },
+                blitz: { total: 0, correct: 0, count: 0 }
+              };
 
               const mergedCum = {
                 t9: {
@@ -590,6 +678,11 @@ const Storage = {
                   total: Math.max(Number(localCum.t4?.total) || 0, Number(cloudCum.t4?.total) || 0),
                   correct: Math.max(Number(localCum.t4?.correct) || 0, Number(cloudCum.t4?.correct) || 0),
                   count: Math.max(Number(localCum.t4?.count) || 0, Number(cloudCum.t4?.count) || 0)
+                },
+                blitz: {
+                  total: Math.max(Number(localCum.blitz?.total) || 0, Number(cloudCum.blitz?.total) || 0),
+                  correct: Math.max(Number(localCum.blitz?.correct) || 0, Number(cloudCum.blitz?.correct) || 0),
+                  count: Math.max(Number(localCum.blitz?.count) || 0, Number(cloudCum.blitz?.count) || 0)
                 }
               };
 
@@ -597,7 +690,8 @@ const Storage = {
                 mergedSessions.length !== (localStats.sessions || []).length ||
                 Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length ||
                 mergedCum.t9.total !== (localCum.t9?.total || 0) ||
-                mergedCum.t4.total !== (localCum.t4?.total || 0);
+                mergedCum.t4.total !== (localCum.t4?.total || 0) ||
+                mergedCum.blitz.total !== (localCum.blitz?.total || 0);
 
               if (isLocalDifferent) {
                 mergedStats = {
@@ -615,7 +709,8 @@ const Storage = {
                 mergedSessions.length > (cloudStats.sessions || []).length ||
                 Object.keys(mergedAnswers).length > Object.keys(cloudStats.answers || {}).length ||
                 mergedCum.t9.total > (cloudCum.t9?.total || 0) ||
-                mergedCum.t4.total > (cloudCum.t4?.total || 0);
+                mergedCum.t4.total > (cloudCum.t4?.total || 0) ||
+                mergedCum.blitz.total > (cloudCum.blitz?.total || 0);
 
               if (isCloudBehind) {
                 shouldPushStatsToCloud = true;

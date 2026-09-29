@@ -588,6 +588,18 @@ const App = {
       };
       overlay.querySelector('#btnExitHome').onclick = () => {
         overlay.remove();
+        if (t.answers.length > 0) {
+          const correct = t.answers.filter(a => a.correct).length;
+          const total = t.answers.length;
+          const mistakes = t.answers.filter(a => !a.correct);
+          Storage.addSession({
+            taskType: t.taskType,
+            total,
+            correct,
+            wrong: total - correct,
+            mistakes: mistakes.map(m => m.wordId)
+          });
+        }
         this.training = null;
         this.navigate('home');
       };
@@ -1717,9 +1729,19 @@ const App = {
           }
         } catch (e) {}
 
-        const isTask9 = s.taskType === 'task9';
-        const label = isTask9 ? '№9 Словарные слова' : '№4 Ударения';
-        const icon = isTask9 ? '📝' : '🔤';
+        let label = '№4 Ударения';
+        let icon = '🔤';
+        if (s.taskType === 'task9') {
+          label = '№9 Словарные слова';
+          icon = '📝';
+        } else if (s.taskType === 'task4_ege') {
+          label = '№4 Формат ЕГЭ';
+          icon = '📋';
+        } else if (s.taskType === 'blitz') {
+          label = 'Блиц за 60 сек';
+          icon = '⚡';
+        }
+
         const total = Number(s.total) || 0;
         const correct = Number(s.correct) || 0;
         const percent = total > 0 ? Math.round((correct / total) * 100) : 0;
@@ -1890,6 +1912,18 @@ const App = {
             <span>(${stats.task4.correct}/${stats.task4.total})</span>
           </div>
         </div>
+
+        <div class="stat-card full-width">
+          <div class="stat-card-top">
+            <span class="stat-card-badge">Блиц за 60 секунд</span>
+            <span class="stat-card-icon">⚡</span>
+          </div>
+          <div class="stat-card-value">${stats.blitzHighScore} <span class="stat-card-unit">рекорд слов</span></div>
+          <div class="stat-card-meta">
+            <span>Игр сыграно: <b>${stats.blitz.sessionsCount}</b></span>
+            <span>Ответов: <b>${stats.blitz.total}</b> (точность <b>${stats.blitz.percent}%</b>)</span>
+          </div>
+        </div>
       </div>
 
       <!-- Проблемные слова -->
@@ -2014,6 +2048,11 @@ const App = {
       } catch (e) {}
     }
 
+    // Учитываем слово в статистике ответов и сложных слов
+    if (q.wordObj && q.wordObj.id) {
+      Storage.recordAnswer(q.wordObj.id, isCorrect);
+    }
+
     this.render();
 
     if (b.lives <= 0) {
@@ -2045,7 +2084,19 @@ const App = {
 
     const score = b.score;
     const mistakes = b.mistakes;
+    const totalAnswered = score + mistakes.length;
     const { isNewRecord, highScore } = Storage.setBlitzHighScore(score);
+
+    // Сохраняем сессию блица в общую статистику
+    if (totalAnswered > 0) {
+      Storage.addSession({
+        taskType: 'blitz',
+        total: totalAnswered,
+        correct: score,
+        wrong: mistakes.length,
+        mistakes: mistakes.map(m => m.wordId)
+      });
+    }
 
     this.blitz = null;
     this.navigate('blitz_results', {
@@ -2310,12 +2361,28 @@ const App = {
     const total = s.answers.length;
     const mistakes = s.answers.filter(a => !a.isCorrect);
 
+    const failedWords = [];
+    mistakes.forEach(m => {
+      if (m.question && m.question.lines) {
+        m.question.lines.forEach(line => {
+          const userSelected = (m.userAns || '').includes(String(line.lineNum));
+          if (userSelected !== line.matchesCondition && line.wordObj) {
+            failedWords.push({
+              wordId: line.wordObj.id,
+              word: line.wordObj.correct,
+              selected: userSelected ? 'Ошибочно отмечено' : 'Пропущено'
+            });
+          }
+        });
+      }
+    });
+
     Storage.addSession({
-      taskType: 'task4',
+      taskType: 'task4_ege',
       total,
       correct: correctCount,
       wrong: total - correctCount,
-      mistakes: []
+      mistakes: failedWords.map(m => m.wordId)
     });
 
     this.egeSession = null;
@@ -2324,9 +2391,9 @@ const App = {
       total,
       correct: correctCount,
       answers: s.answers,
-      mistakes: mistakes.map((m, i) => ({
+      mistakes: failedWords.length > 0 ? failedWords : mistakes.map((m, i) => ({
         wordId: `ege_${i}`,
-        word: `Задание с ответом ${m.correctAns}`,
+        word: `Задание №4 с ответом ${m.correctAns}`,
         selected: `Ваш ответ: ${m.userAns || '—'}`
       }))
     });
