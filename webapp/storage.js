@@ -103,12 +103,16 @@ const Storage = {
 
               currentStats.answers = currentStats.answers || {};
               for (const [id, a] of Object.entries(parsed.answers || {})) {
+                if (!id || id.startsWith('ege_')) continue;
+                const leg = this._getAnswerCounts(a);
                 if (!currentStats.answers[id]) {
-                  currentStats.answers[id] = a;
+                  currentStats.answers[id] = { correct: leg.correct, wrong: leg.wrong, streak: 0 };
                 } else {
+                  const cur = this._getAnswerCounts(currentStats.answers[id]);
                   currentStats.answers[id] = {
-                    correct: Math.max(currentStats.answers[id].correct || 0, a.correct || 0),
-                    wrong: Math.max(currentStats.answers[id].wrong || 0, a.wrong || 0)
+                    correct: Math.max(cur.correct, leg.correct),
+                    wrong: Math.max(cur.wrong, leg.wrong),
+                    streak: 0
                   };
                 }
               }
@@ -120,6 +124,57 @@ const Storage = {
         localStorage.setItem(statsKey, JSON.stringify(currentStats));
       }
     } catch {}
+  },
+
+  _getAnswerCounts(a) {
+    if (!a) return { correct: 0, wrong: 0, streak: 0 };
+    if (Array.isArray(a)) {
+      return {
+        correct: Number(a[0]) || 0,
+        wrong: Number(a[1]) || 0,
+        streak: Number(a[2]) || 0
+      };
+    }
+    return {
+      correct: Number(a.correct ?? a.c) || 0,
+      wrong: Number(a.wrong ?? a.w) || 0,
+      streak: Number(a.streak ?? a.s) || 0
+    };
+  },
+
+  _normalizeAnswers(rawAnswers, sessions = []) {
+    const normalized = {};
+
+    // 1. Нормализуем существующие ответы в памяти
+    if (rawAnswers && typeof rawAnswers === 'object') {
+      for (const [id, a] of Object.entries(rawAnswers)) {
+        if (!id || id === 'null' || id === 'undefined' || id.startsWith('ege_')) continue;
+        const counts = this._getAnswerCounts(a);
+        normalized[id] = {
+          correct: Math.max(0, counts.correct),
+          wrong: Math.max(0, counts.wrong),
+          streak: Math.max(0, counts.streak)
+        };
+      }
+    }
+
+    // 2. Восстанавливаем ошибки из истории сессий (если ответы не были сохранены)
+    if (Array.isArray(sessions)) {
+      sessions.forEach(s => {
+        if (s && Array.isArray(s.mistakes)) {
+          s.mistakes.forEach(m => {
+            const wordId = typeof m === 'string' ? m : (m?.wordId || m?.id);
+            if (wordId && typeof wordId === 'string' && !wordId.startsWith('ege_')) {
+              if (normalized[wordId] === undefined) {
+                normalized[wordId] = { correct: 0, wrong: 1, streak: 0 };
+              }
+            }
+          });
+        }
+      });
+    }
+
+    return normalized;
   },
 
   _ensureCumulative(data) {
@@ -171,6 +226,7 @@ const Storage = {
       let raw = localStorage.getItem(key);
       const data = JSON.parse(raw || '{}');
       this._ensureCumulative(data);
+      data.answers = this._normalizeAnswers(data.answers, data.sessions);
       return data;
     } catch {
       const fallback = {
@@ -178,7 +234,9 @@ const Storage = {
           t9: { total: 0, correct: 0, count: 0 },
           t4: { total: 0, correct: 0, count: 0 },
           blitz: { total: 0, correct: 0, count: 0 }
-        }
+        },
+        sessions: [],
+        answers: {}
       };
       return fallback;
     }
@@ -187,6 +245,9 @@ const Storage = {
   _saveStatsData(data) {
     try {
       this._ensureCumulative(data);
+      if (data.answers) {
+        data.answers = this._normalizeAnswers(data.answers, data.sessions);
+      }
       localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
       this._syncStatsToCloud(data);
     } catch (e) {
@@ -225,6 +286,21 @@ const Storage = {
     data.cumulative[tKey].correct = (Number(data.cumulative[tKey].correct) || 0) + sCorrect;
     data.cumulative[tKey].count = (Number(data.cumulative[tKey].count) || 0) + 1;
 
+    // Гарантируем регистрацию ошибок в data.answers
+    if (Array.isArray(session.mistakes)) {
+      if (!data.answers) data.answers = {};
+      session.mistakes.forEach(m => {
+        const wordId = typeof m === 'string' ? m : (m?.wordId || m?.id);
+        if (wordId && typeof wordId === 'string' && !wordId.startsWith('ege_')) {
+          if (!data.answers[wordId]) {
+            data.answers[wordId] = { correct: 0, wrong: 1, streak: 0 };
+          } else if (data.answers[wordId].wrong === 0 && data.answers[wordId].correct === 0) {
+            data.answers[wordId].wrong = 1;
+          }
+        }
+      });
+    }
+
     this._saveStatsData(data);
   },
 
@@ -232,27 +308,33 @@ const Storage = {
    * Записать ответ по конкретному слову (для выявления сложных слов)
    */
   recordAnswer(wordId, isCorrect) {
-    if (!wordId) return;
+    if (!wordId || typeof wordId !== 'string' || wordId.startsWith('ege_')) return;
     const data = this._getStatsData();
     if (!data.answers) data.answers = {};
 
-    if (!data.answers[wordId]) {
-      data.answers[wordId] = { correct: 0, wrong: 0 };
-    }
+    const entry = this._getAnswerCounts(data.answers[wordId]);
 
     if (isCorrect) {
-      data.answers[wordId].correct++;
-      // Если слово ранее было с ошибкой, успешный ответ снижает тяжесть ошибки
-      if (data.answers[wordId].wrong > 0) {
-        data.answers[wordId].wrong = Math.max(0, data.answers[wordId].wrong - 1);
+      entry.correct++;
+      // Если по слову числится ошибка, верный ответ уменьшает её счетчик
+      if (entry.wrong > 0) {
+        entry.wrong = Math.max(0, entry.wrong - 1);
       }
     } else {
-      data.answers[wordId].wrong++;
+      entry.wrong++;
     }
+
+    data.answers[wordId] = {
+      correct: entry.correct,
+      wrong: entry.wrong,
+      streak: 0
+    };
 
     try {
       localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
-    } catch {}
+    } catch (e) {
+      console.error('recordAnswer save error:', e);
+    }
   },
 
   /**
@@ -328,16 +410,15 @@ const Storage = {
     const answers = data.answers || {};
 
     return Object.entries(answers)
-      .filter(([, a]) => {
-        if (!a) return false;
-        const wrong = Number(a.wrong) || 0;
-        const correct = Number(a.correct) || 0;
-        // Слово в списке, пока есть неисправленные ошибки
-        return wrong > 0 && correct < (wrong * 2);
+      .filter(([id, a]) => {
+        if (!a || !id || id.startsWith('ege_')) return false;
+        const counts = this._getAnswerCounts(a);
+        return counts.wrong > 0;
       })
       .map(([id, a]) => {
-        const correct = Number(a.correct) || 0;
-        const wrong = Number(a.wrong) || 0;
+        const counts = this._getAnswerCounts(a);
+        const correct = counts.correct;
+        const wrong = counts.wrong;
         const total = correct + wrong;
         const errorRate = total > 0 ? (wrong / total) : 1;
         return {
@@ -349,7 +430,7 @@ const Storage = {
         };
       })
       .sort((a, b) => (b.wrong * 2 + b.errorRate * 3) - (a.wrong * 2 + a.errorRate * 3))
-      .slice(0, 20);
+      .slice(0, 30);
   },
 
   /**
@@ -406,22 +487,21 @@ const Storage = {
     // Это гарантирует размер < 1.8 КБ (с запасом укладывается в 4 КБ Telegram)
     const compactAnswers = {};
     const problemEntries = Object.entries(data.answers || {})
-      .filter(([, a]) => {
-        if (!a) return false;
-        const w = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
-        return w > 0;
+      .filter(([id, a]) => {
+        if (!a || !id || id.startsWith('ege_')) return false;
+        const counts = this._getAnswerCounts(a);
+        return counts.wrong > 0;
       })
       .sort(([, a], [, b]) => {
-        const wa = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
-        const wb = Array.isArray(b) ? (b[1] || 0) : (Number(b.wrong) || 0);
+        const wa = this._getAnswerCounts(a).wrong;
+        const wb = this._getAnswerCounts(b).wrong;
         return wb - wa;
       })
       .slice(0, 35);
 
     for (const [id, a] of problemEntries) {
-      const c = Array.isArray(a) ? (a[0] || 0) : (Number(a.correct) || 0);
-      const w = Array.isArray(a) ? (a[1] || 0) : (Number(a.wrong) || 0);
-      compactAnswers[id] = [c, w];
+      const counts = this._getAnswerCounts(a);
+      compactAnswers[id] = [counts.correct, counts.wrong];
     }
 
     return JSON.stringify({
@@ -461,11 +541,9 @@ const Storage = {
       const rawAnswers = parsed.a || parsed.answers || {};
       const answers = {};
       for (const [id, a] of Object.entries(rawAnswers)) {
-        if (Array.isArray(a)) {
-          answers[id] = { correct: a[0] || 0, wrong: a[1] || 0 };
-        } else if (a && typeof a === 'object') {
-          answers[id] = { correct: Number(a.correct) || 0, wrong: Number(a.wrong) || 0 };
-        }
+        if (!id || id.startsWith('ege_')) continue;
+        const counts = this._getAnswerCounts(a);
+        answers[id] = { correct: counts.correct, wrong: counts.wrong, streak: 0 };
       }
 
       return {
@@ -646,12 +724,16 @@ const Storage = {
               // Слияние ответов
               const mergedAnswers = { ...(localStats.answers || {}) };
               for (const [id, a] of Object.entries(cloudStats.answers || {})) {
+                if (!id || id.startsWith('ege_')) continue;
+                const cld = this._getAnswerCounts(a);
                 if (!mergedAnswers[id]) {
-                  mergedAnswers[id] = a;
+                  mergedAnswers[id] = { correct: cld.correct, wrong: cld.wrong, streak: 0 };
                 } else {
+                  const cur = this._getAnswerCounts(mergedAnswers[id]);
                   mergedAnswers[id] = {
-                    correct: Math.max(mergedAnswers[id].correct || 0, a.correct || 0),
-                    wrong: Math.max(mergedAnswers[id].wrong || 0, a.wrong || 0)
+                    correct: Math.max(cur.correct, cld.correct),
+                    wrong: Math.max(cur.wrong, cld.wrong),
+                    streak: 0
                   };
                 }
               }

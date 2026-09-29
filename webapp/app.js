@@ -2113,6 +2113,22 @@ const App = {
       clearInterval(this._blitzInterval);
       this._blitzInterval = null;
     }
+    const b = this.blitz;
+    if (b) {
+      const score = b.score || 0;
+      const mistakes = b.mistakes || [];
+      const totalAnswered = score + mistakes.length;
+      if (totalAnswered > 0) {
+        Storage.setBlitzHighScore(score);
+        Storage.addSession({
+          taskType: 'blitz',
+          total: totalAnswered,
+          correct: score,
+          wrong: mistakes.length,
+          mistakes: mistakes.map(m => m.wordId)
+        });
+      }
+    }
     this.blitz = null;
     this.navigate('home');
   },
@@ -2400,6 +2416,30 @@ const App = {
   },
 
   handleQuitEGE() {
+    const s = this.egeSession;
+    if (s && s.answers && s.answers.length > 0) {
+      const correctCount = s.answers.filter(a => a.isCorrect).length;
+      const total = s.answers.length;
+      const mistakes = s.answers.filter(a => !a.isCorrect);
+      const failedWords = [];
+      mistakes.forEach(m => {
+        if (m.question && m.question.lines) {
+          m.question.lines.forEach(line => {
+            const userSelected = (m.userAns || '').includes(String(line.lineNum));
+            if (userSelected !== line.matchesCondition && line.wordObj) {
+              failedWords.push(line.wordObj.id);
+            }
+          });
+        }
+      });
+      Storage.addSession({
+        taskType: 'task4_ege',
+        total,
+        correct: correctCount,
+        wrong: total - correctCount,
+        mistakes: failedWords
+      });
+    }
     this.egeSession = null;
     this.navigate('task4filter');
   },
