@@ -259,6 +259,14 @@ const App = {
       return;
     }
 
+    // 2c. Переключатель режима Задания №9 (словарные слова / исключения)
+    const task9SubmodeBtn = e.target.closest('[data-task9-submode]');
+    if (task9SubmodeBtn) {
+      this.screenParams.subMode = task9SubmodeBtn.dataset.task9Submode;
+      this.render();
+      return;
+    }
+
     // 2c. Выбор номера строки в формате ЕГЭ (1-5)
     const egeNumBtn = e.target.closest('[data-ege-num]');
     if (egeNumBtn) {
@@ -381,9 +389,11 @@ const App = {
 
       case 'task9':
         this.navigate('task9filter', {
+          subMode: 'vocab',
           letterMode: 'all',
           selectedLetters: ['а'],
-          sessionLength: 10
+          sessionLength: 10,
+          excCategory: 'all'
         });
         break;
 
@@ -405,6 +415,15 @@ const App = {
 
       case 'stats':
         this.navigate('stats');
+        break;
+
+      case 'set-exc-cat':
+        this.screenParams.excCategory = dataset.cat;
+        this.render();
+        break;
+
+      case 'start-task9-exceptions':
+        this.startTask9Exceptions();
         break;
 
       case 'start-task9':
@@ -617,7 +636,7 @@ const App = {
 
   startTask9() {
     const p = this.screenParams;
-    let words = [...WORDS_TASK9];
+    let words = WORDS_TASK9.filter(w => !w.isException);
 
     if ((p.letterMode === 'single' || p.letterMode === 'multi') && p.selectedLetters && p.selectedLetters.length > 0) {
       words = words.filter(w => p.selectedLetters.includes(w.firstLetter.toLowerCase()));
@@ -632,6 +651,32 @@ const App = {
 
     if (words.length === 0) {
       alert('Нет слов для тренировки с выбранными буквами');
+      return;
+    }
+
+    this.startTraining('task9', words);
+  },
+
+  startTask9Exceptions() {
+    const p = this.screenParams;
+    const cat = p.excCategory || 'all';
+    let words = typeof WORDS_TASK9_EXCEPTIONS !== 'undefined'
+      ? [...WORDS_TASK9_EXCEPTIONS]
+      : WORDS_TASK9.filter(w => w.isException);
+
+    if (cat && cat !== 'all') {
+      words = words.filter(w => w.excCategory === cat);
+    }
+
+    words = this.shuffleArray(words);
+
+    const len = p.sessionLength || 0;
+    if (len > 0 && words.length > len) {
+      words = words.slice(0, len);
+    }
+
+    if (words.length === 0) {
+      alert('Нет слов для тренировки в выбранной категории');
       return;
     }
 
@@ -947,7 +992,7 @@ const App = {
           <div class="mode-card-icon green">📝</div>
           <div>
             <div class="mode-card-title">Задание №9</div>
-            <div class="mode-card-desc">Словарные слова · ${WORDS_TASK9.length} слов</div>
+            <div class="mode-card-desc">Словарные слова (537) · Исключения (50)</div>
           </div>
         </button>
         <button class="mode-card" data-action="task4">
@@ -976,23 +1021,104 @@ const App = {
   // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №9 ====================
 
   renderTask9Filter() {
+    const subMode = this.screenParams.subMode || 'vocab'; // 'vocab' | 'exceptions'
+    const vocabWords = WORDS_TASK9.filter(w => !w.isException);
+    const excList = typeof WORDS_TASK9_EXCEPTIONS !== 'undefined'
+      ? WORDS_TASK9_EXCEPTIONS
+      : WORDS_TASK9.filter(w => w.isException);
+
+    // 1. Режим: Исключения и ловушки
+    if (subMode === 'exceptions') {
+      const excCat = this.screenParams.excCategory || 'all';
+      const sessionLength = this.screenParams.sessionLength ?? 10;
+
+      let filtered = excList;
+      if (excCat === 'alternation') {
+        filtered = excList.filter(w => w.excCategory === 'alternation');
+      } else if (excCat === 'ts') {
+        filtered = excList.filter(w => w.excCategory === 'ts');
+      } else if (excCat === 'homonyms') {
+        filtered = excList.filter(w => w.excCategory === 'homonyms');
+      }
+
+      const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
+
+      return `
+        <div class="screen-header">
+          <button class="back-btn" data-action="back">←</button>
+          <h2 class="screen-title">Задание №9 — Исключения</h2>
+        </div>
+
+        <!-- Переключатель режима: Словарные слова vs Исключения -->
+        <div class="task4-submode-tabs">
+          <button class="task4-submode-tab" data-task9-submode="vocab">
+            📖 Словарные слова (${vocabWords.length})
+          </button>
+          <button class="task4-submode-tab active" data-task9-submode="exceptions">
+            ⚡ Исключения (${excList.length})
+          </button>
+        </div>
+
+        <div class="ege-info-box">
+          <div class="ege-info-title">⚡ Исключения и ловушки корней ФИПИ</div>
+          <div class="ege-info-desc">
+            Все исключения из чередующихся корней (<i>гар/гор, раст/рос, равн/ровн...</i>), Ы/И после Ц, шипящие и контекстные омонимы (<i>кампания / компания</i>). Проверка ловушек строго в корне!
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Количество слов в сессии</div>
+          <div class="session-pills">
+            ${[10, 20, 30, 0].map(n => `
+              <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+                ${n === 0 ? 'Все' : n}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Категория исключений</div>
+          <div class="problem-filter-pills" style="margin-bottom:8px;">
+            <button class="problem-pill ${excCat === 'all' ? 'active' : ''}" data-action="set-exc-cat" data-cat="all">
+              Все (${excList.length})
+            </button>
+            <button class="problem-pill ${excCat === 'alternation' ? 'active' : ''}" data-action="set-exc-cat" data-cat="alternation">
+              Чередование (${excList.filter(w => w.excCategory === 'alternation').length})
+            </button>
+            <button class="problem-pill ${excCat === 'ts' ? 'active' : ''}" data-action="set-exc-cat" data-cat="ts">
+              Ы/И после Ц (${excList.filter(w => w.excCategory === 'ts').length})
+            </button>
+            <button class="problem-pill ${excCat === 'homonyms' ? 'active' : ''}" data-action="set-exc-cat" data-cat="homonyms">
+              Шипящие и омонимы (${excList.filter(w => w.excCategory === 'homonyms').length})
+            </button>
+          </div>
+        </div>
+
+        <button class="start-btn" data-action="start-task9-exceptions" ${filtered.length === 0 ? 'disabled' : ''}>
+          Начать тренировку (${displayCount} слов) 🚀
+        </button>
+      `;
+    }
+
+    // 2. Режим: Словарные слова (по умолчанию)
     const letterMode = this.screenParams.letterMode || 'all';
     const selectedLetters = this.screenParams.selectedLetters || [];
     const sessionLength = this.screenParams.sessionLength ?? 10;
 
     const letterCounts = {};
-    WORDS_TASK9.forEach(w => {
+    vocabWords.forEach(w => {
       const l = w.firstLetter.toLowerCase();
       letterCounts[l] = (letterCounts[l] || 0) + 1;
     });
     const availableLetters = Object.keys(letterCounts).sort((a, b) => a.localeCompare(b, 'ru'));
 
-    let filteredCount = WORDS_TASK9.length;
+    let filteredCount = vocabWords.length;
     let sampleWords = '';
 
     if (letterMode !== 'all') {
       if (selectedLetters.length > 0) {
-        const matched = WORDS_TASK9.filter(w => selectedLetters.includes(w.firstLetter.toLowerCase()));
+        const matched = vocabWords.filter(w => selectedLetters.includes(w.firstLetter.toLowerCase()));
         filteredCount = matched.length;
         const samples = matched.slice(0, 4).map(w => w.word).join(', ');
         sampleWords = samples + (matched.length > 4 ? '...' : '');
@@ -1007,6 +1133,16 @@ const App = {
       <div class="screen-header">
         <button class="back-btn" data-action="back">←</button>
         <h2 class="screen-title">Задание №9 — Словарные слова</h2>
+      </div>
+
+      <!-- Переключатель режима: Словарные слова vs Исключения -->
+      <div class="task4-submode-tabs">
+        <button class="task4-submode-tab active" data-task9-submode="vocab">
+          📖 Словарные слова (${vocabWords.length})
+        </button>
+        <button class="task4-submode-tab" data-task9-submode="exceptions">
+          ⚡ Исключения (${excList.length})
+        </button>
       </div>
 
       <div class="filter-section">
@@ -1027,7 +1163,7 @@ const App = {
             <div class="filter-mode-radio"></div>
             <div>
               <span class="filter-mode-text">Все слова</span>
-              <div class="filter-mode-desc">Тренировка по всему банку (${WORDS_TASK9.length} слов)</div>
+              <div class="filter-mode-desc">Тренировка по словарному банку (${vocabWords.length} слов)</div>
             </div>
           </button>
           <button class="filter-mode ${letterMode === 'single' ? 'active' : ''}" data-letter-mode="single">
@@ -1505,7 +1641,7 @@ const App = {
               <div class="dict-word-card">
                 <div>
                   <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
-                  <div class="dict-word-meta">буква в пропуске: <b>${w.correctLetter}</b></div>
+                  <div class="dict-word-meta">${w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`}</div>
                 </div>
                 <button class="dict-word-fav ${isFav ? 'active' : ''}"
                         data-action="toggle-fav" data-word-id="${w.id}" data-task="task9"

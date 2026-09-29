@@ -5915,6 +5915,61 @@ const WORDS_TASK9 = [
   }
 ];
 
+const WORDS_TASK9_EXCEPTIONS = [
+  { id: 't9_exc_001', word: 'пригарь', display: 'приг_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_002', word: 'изгарь', display: 'изг_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'и', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_003', word: 'выгарки', display: 'выг_рки', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'в', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_004', word: 'утварь', display: 'утв_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'твар / твор (искл.)', firstLetter: 'у', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_005', word: 'сочетание', display: 'соч_тание', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_006', word: 'чета', display: 'ч_та', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'ч', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_007', word: 'сочетать', display: 'соч_тать', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_008', word: 'бракосочетание', display: 'бракосоч_тание', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'б', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_009', word: 'побирушка', display: 'поб_рушка', correctLetter: 'и', wrongLetters: ['е'], tag: 'бер / бир (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_010', word: 'розжиг', display: 'розж_г', correctLetter: 'и', wrongLetters: ['е'], tag: 'жег / жиг (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_011', word: 'полог', display: 'пол_г', correctLetter: 'о', wrongLetters: ['а'], tag: 'лаг / лож (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_012', word: 'росток', display: 'р_сток', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_013', word: 'на вырост', display: 'на выр_ст', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'в', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_014', word: 'подростковый', display: 'подр_стковый', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_015', word: 'ростовщик', display: 'р_стовщик', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_016', word: 'отрасль', display: 'отр_сль', correctLetter: 'а', wrongLetters: ['о'], tag: 'раст / рос (искл.)', firstLetter: 'о', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_017', word: 'Ростов', display: 'Р_стов', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_018', word: 'Ростислав', display: 'Р_стислав', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_019', word: 'скачок', display: 'ск_чок', correctLetter: 'а', wrongLetters: ['о'], tag: 'скак / скоч (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_020', word: 'скачу', display: 'ск_чу', correctLetter: 'а', wrongLetters: ['о'], tag: 'скак / скоч (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_021', word: 'равнина', display: 'р_внина', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_022', word: 'равнение', display: 'р_внение', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_023', word: 'поравняться', display: 'пор_вняться', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_024', word: 'уровень', display: 'ур_вень', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'у', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_025', word: 'поровну', display: 'п_ровну', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_026', word: 'ровесник', display: 'р_весник', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_027', word: 'поровне', display: 'п_ровне', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_028', word: 'сровнять', display: 'ср_внять', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_029', word: 'пловец', display: 'пл_вец', correctLetter: 'о', wrongLetters: ['а'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_030', word: 'пловчиха', display: 'пл_вчиха', correctLetter: 'о', wrongLetters: ['а'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_031', word: 'плывуны', display: 'пл_вуны', correctLetter: 'ы', wrongLetters: ['и'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_032', word: 'зорянка', display: 'з_рянка', correctLetter: 'о', wrongLetters: ['а'], tag: 'зар / зор (искл.)', firstLetter: 'з', isException: true, excCategory: 'alternation' },
+  { id: 't9_exc_033', word: 'цыган', display: 'ц_ган', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
+  { id: 't9_exc_034', word: 'цыплёнок', display: 'ц_плёнок', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
+  { id: 't9_exc_035', word: 'на цыпочках', display: 'на ц_почках', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
+  { id: 't9_exc_036', word: 'цыц', display: 'ц_ц', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
+  { id: 't9_exc_037', word: 'цыкнуть', display: 'ц_кнуть', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
+  { id: 't9_exc_038', word: 'парашют', display: 'параш_т', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'п', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_039', word: 'брошюра', display: 'брош_ра', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'б', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_040', word: 'жюри', display: 'ж_ри', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'ж', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_041', word: 'предвыборная кампания', display: 'предвыборная к_мпания', correctLetter: 'а', wrongLetters: ['о'], tag: 'Омонимы (ловушка)', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_042', word: 'компания друзей', display: 'к_мпания друзей', correctLetter: 'о', wrongLetters: ['а'], tag: 'Омонимы (ловушка)', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_043', word: 'палисадник', display: 'пал_садник', correctLetter: 'и', wrongLetters: ['е'], tag: 'Ловушка корня', firstLetter: 'п', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_044', word: 'утрамбовать', display: 'утр_мбовать', correctLetter: 'а', wrongLetters: ['о'], tag: 'Ловушка корня', firstLetter: 'у', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_045', word: 'наваждение', display: 'нав_ждение', correctLetter: 'а', wrongLetters: ['о'], tag: 'Ловушка корня', firstLetter: 'н', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_046', word: 'бюллетень', display: 'б_ллетень', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Ловушка корня', firstLetter: 'б', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_047', word: 'апелляция', display: 'ап_лляция', correctLetter: 'е', wrongLetters: ['и'], tag: 'Ловушка корня', firstLetter: 'а', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_048', word: 'горизонт', display: 'г_ризонт', correctLetter: 'о', wrongLetters: ['а'], tag: 'Ловушка корня', firstLetter: 'г', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_049', word: 'комбинация', display: 'к_мбинация', correctLetter: 'о', wrongLetters: ['а'], tag: 'Ловушка корня', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
+  { id: 't9_exc_050', word: 'меценат', display: 'м_ценат', correctLetter: 'е', wrongLetters: ['и'], tag: 'Ловушка корня', firstLetter: 'м', isException: true, excCategory: 'homonyms' }
+];
+
+WORDS_TASK9.push(...WORDS_TASK9_EXCEPTIONS);
+
 const WORDS_TASK4 = [
   {
     "id": "t4_001",
