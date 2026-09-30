@@ -333,6 +333,14 @@ body.tg-dark .mode-card-icon.green {
   background: rgba(76, 175, 80, 0.15);
 }
 
+.mode-card-icon.teal {
+  background: #E0F2F1;
+}
+
+body.tg-dark .mode-card-icon.teal {
+  background: rgba(0, 150, 136, 0.2);
+}
+
 .mode-card-title {
   font-size: 16px;
   font-weight: 600;
@@ -1560,6 +1568,12 @@ body.tg-dark .stat-section-toggle-indicator {
   border: 1px solid var(--green-200);
 }
 
+.stat-task-badge.t10 {
+  background: #E0F2F1;
+  color: #00695C;
+  border: 1px solid #B2DFDB;
+}
+
 .stat-task-badge.t4 {
   background: #EDE7F6;
   color: #512DA8;
@@ -1678,6 +1692,11 @@ body.tg-dark .stat-task-badge.t9 {
   color: #A5D6A7;
   border-color: rgba(76, 175, 80, 0.4);
 }
+body.tg-dark .stat-task-badge.t10 {
+  background: rgba(0, 150, 136, 0.2);
+  color: #80CBC4;
+  border-color: rgba(0, 150, 136, 0.4);
+}
 body.tg-dark .stat-task-badge.t4 {
   background: rgba(126, 87, 194, 0.2);
   color: #D1C4E9;
@@ -1718,6 +1737,11 @@ body.tg-dark .stat-reset-btn:hover {
     background: rgba(76, 175, 80, 0.2);
     color: #A5D6A7;
     border-color: rgba(76, 175, 80, 0.4);
+  }
+  .stat-task-badge.t10 {
+    background: rgba(0, 150, 136, 0.2);
+    color: #80CBC4;
+    border-color: rgba(0, 150, 136, 0.4);
   }
   .stat-task-badge.t4 {
     background: rgba(126, 87, 194, 0.2);

@@ -56,7 +56,7 @@ const Storage = {
 
   isFavorite(wordId) {
     const data = this._getFavoritesData();
-    const all = [...(data.task9 || []), ...(data.task4 || [])];
+    const all = [...(data.task9 || []), ...(data.task10 || []), ...(data.task4 || [])];
     return all.includes(wordId);
   },
 
@@ -182,15 +182,18 @@ const Storage = {
     if (!data.cumulative) {
       data.cumulative = {
         t9: { total: 0, correct: 0, count: 0 },
+        t10: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       };
     }
     if (!data.cumulative.t9) data.cumulative.t9 = { total: 0, correct: 0, count: 0 };
+    if (!data.cumulative.t10) data.cumulative.t10 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t4) data.cumulative.t4 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.blitz) data.cumulative.blitz = { total: 0, correct: 0, count: 0 };
 
     let s9Tot = 0, s9Cor = 0, s9Cnt = 0;
+    let s10Tot = 0, s10Cor = 0, s10Cnt = 0;
     let s4Tot = 0, s4Cor = 0, s4Cnt = 0;
     let blzTot = 0, blzCor = 0, blzCnt = 0;
 
@@ -199,6 +202,8 @@ const Storage = {
       const cor = Number(s.correct) || 0;
       if (s.taskType === 'task9') {
         s9Tot += tot; s9Cor += cor; s9Cnt++;
+      } else if (s.taskType === 'task10') {
+        s10Tot += tot; s10Cor += cor; s10Cnt++;
       } else if (s.taskType === 'task4' || s.taskType === 'task4_ege') {
         s4Tot += tot; s4Cor += cor; s4Cnt++;
       } else if (s.taskType === 'blitz') {
@@ -209,6 +214,10 @@ const Storage = {
     data.cumulative.t9.total = Math.max(Number(data.cumulative.t9.total) || 0, s9Tot);
     data.cumulative.t9.correct = Math.max(Number(data.cumulative.t9.correct) || 0, s9Cor);
     data.cumulative.t9.count = Math.max(Number(data.cumulative.t9.count) || 0, s9Cnt);
+
+    data.cumulative.t10.total = Math.max(Number(data.cumulative.t10.total) || 0, s10Tot);
+    data.cumulative.t10.correct = Math.max(Number(data.cumulative.t10.correct) || 0, s10Cor);
+    data.cumulative.t10.count = Math.max(Number(data.cumulative.t10.count) || 0, s10Cnt);
 
     data.cumulative.t4.total = Math.max(Number(data.cumulative.t4.total) || 0, s4Tot);
     data.cumulative.t4.correct = Math.max(Number(data.cumulative.t4.correct) || 0, s4Cor);
@@ -232,6 +241,7 @@ const Storage = {
       const fallback = {
         cumulative: {
           t9: { total: 0, correct: 0, count: 0 },
+          t10: { total: 0, correct: 0, count: 0 },
           t4: { total: 0, correct: 0, count: 0 },
           blitz: { total: 0, correct: 0, count: 0 }
         },
@@ -273,7 +283,9 @@ const Storage = {
 
     // Обновляем пожизненные кумулятивные счётчики
     let tKey = 't9';
-    if (session.taskType === 'task4' || session.taskType === 'task4_ege') {
+    if (session.taskType === 'task10') {
+      tKey = 't10';
+    } else if (session.taskType === 'task4' || session.taskType === 'task4_ege') {
       tKey = 't4';
     } else if (session.taskType === 'blitz') {
       tKey = 'blitz';
@@ -345,6 +357,7 @@ const Storage = {
     const sessions = data.sessions || [];
 
     const task9Sessions = sessions.filter(s => s.taskType === 'task9');
+    const task10Sessions = sessions.filter(s => s.taskType === 'task10');
     const task4Sessions = sessions.filter(s => s.taskType === 'task4' || s.taskType === 'task4_ege');
     const blitzSessions = sessions.filter(s => s.taskType === 'blitz');
 
@@ -364,16 +377,18 @@ const Storage = {
     };
 
     const s9 = calcMetric(data.cumulative?.t9, task9Sessions);
+    const s10 = calcMetric(data.cumulative?.t10, task10Sessions);
     const s4 = calcMetric(data.cumulative?.t4, task4Sessions);
     const blz = calcMetric(data.cumulative?.blitz, blitzSessions);
 
-    const totalPracticed = s9.total + s4.total + blz.total;
-    const totalCorrect = s9.correct + s4.correct + blz.correct;
+    const totalPracticed = s9.total + s10.total + s4.total + blz.total;
+    const totalCorrect = s9.correct + s10.correct + s4.correct + blz.correct;
     const overallPercent = totalPracticed > 0 ? Math.round((totalCorrect / totalPracticed) * 100) : 0;
-    const totalSessions = s9.sessionsCount + s4.sessionsCount + blz.sessionsCount;
+    const totalSessions = s9.sessionsCount + s10.sessionsCount + s4.sessionsCount + blz.sessionsCount;
 
     return {
       task9: s9,
+      task10: s10,
       task4: s4,
       blitz: blz,
       totalPracticed,
@@ -508,6 +523,7 @@ const Storage = {
       h: Number(data.blitzHighScore) || 0,
       cum: data.cumulative || {
         t9: { total: 0, correct: 0, count: 0 },
+        t10: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       },
@@ -527,6 +543,7 @@ const Storage = {
       const blitzHighScore = Number(parsed.h ?? parsed.blitzHighScore) || 0;
       const cumulative = {
         t9: parsed.cum?.t9 || { total: 0, correct: 0, count: 0 },
+        t10: parsed.cum?.t10 || { total: 0, correct: 0, count: 0 },
         t4: parsed.cum?.t4 || { total: 0, correct: 0, count: 0 },
         blitz: parsed.cum?.blitz || { total: 0, correct: 0, count: 0 }
       };
@@ -565,6 +582,7 @@ const Storage = {
       if (!cs || typeof cs.setItem !== 'function') return;
       const payload = JSON.stringify({
         task9: data.task9 || [],
+        task10: data.task10 || [],
         task4: data.task4 || [],
         updatedAt: Date.now()
       });
@@ -672,6 +690,7 @@ const Storage = {
         // 1. СИНХРОНИЗАЦИЯ ИЗБРАННОГО
         let mergedFavs = {
           task9: [...(localFavs.task9 || [])],
+          task10: [...(localFavs.task10 || [])],
           task4: [...(localFavs.task4 || [])]
         };
 
@@ -679,21 +698,26 @@ const Storage = {
           try {
             const cloudFavs = JSON.parse(values.ege_cloud_favs);
             const unionT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
+            const unionT10 = Array.from(new Set([...(localFavs.task10 || []), ...(cloudFavs.task10 || [])]));
             const unionT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
 
-            if (unionT9.length !== (localFavs.task9 || []).length || unionT4.length !== (localFavs.task4 || []).length) {
-              mergedFavs = { task9: unionT9, task4: unionT4 };
+            if (unionT9.length !== (localFavs.task9 || []).length ||
+                unionT10.length !== (localFavs.task10 || []).length ||
+                unionT4.length !== (localFavs.task4 || []).length) {
+              mergedFavs = { task9: unionT9, task10: unionT10, task4: unionT4 };
               localStorage.setItem(this._getFavKey(), JSON.stringify(mergedFavs));
               hasLocalChanges = true;
             }
 
-            if (unionT9.length !== (cloudFavs.task9 || []).length || unionT4.length !== (cloudFavs.task4 || []).length) {
+            if (unionT9.length !== (cloudFavs.task9 || []).length ||
+                unionT10.length !== (cloudFavs.task10 || []).length ||
+                unionT4.length !== (cloudFavs.task4 || []).length) {
               shouldPushFavsToCloud = true;
             }
           } catch (e) {
             console.warn('Error parsing cloud favs:', e);
           }
-        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task4 || []).length > 0) {
+        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task10 || []).length > 0 || (localFavs.task4 || []).length > 0) {
           // В облаке ещё пусто, а локально есть избранное -> выгружаем в облако
           shouldPushFavsToCloud = true;
         }
@@ -741,11 +765,13 @@ const Storage = {
               // Слияние пожизненных счётчиков
               const cloudCum = cloudStats.cumulative || {
                 t9: { total: 0, correct: 0, count: 0 },
+                t10: { total: 0, correct: 0, count: 0 },
                 t4: { total: 0, correct: 0, count: 0 },
                 blitz: { total: 0, correct: 0, count: 0 }
               };
               const localCum = localStats.cumulative || {
                 t9: { total: 0, correct: 0, count: 0 },
+                t10: { total: 0, correct: 0, count: 0 },
                 t4: { total: 0, correct: 0, count: 0 },
                 blitz: { total: 0, correct: 0, count: 0 }
               };
@@ -755,6 +781,11 @@ const Storage = {
                   total: Math.max(Number(localCum.t9?.total) || 0, Number(cloudCum.t9?.total) || 0),
                   correct: Math.max(Number(localCum.t9?.correct) || 0, Number(cloudCum.t9?.correct) || 0),
                   count: Math.max(Number(localCum.t9?.count) || 0, Number(cloudCum.t9?.count) || 0)
+                },
+                t10: {
+                  total: Math.max(Number(localCum.t10?.total) || 0, Number(cloudCum.t10?.total) || 0),
+                  correct: Math.max(Number(localCum.t10?.correct) || 0, Number(cloudCum.t10?.correct) || 0),
+                  count: Math.max(Number(localCum.t10?.count) || 0, Number(cloudCum.t10?.count) || 0)
                 },
                 t4: {
                   total: Math.max(Number(localCum.t4?.total) || 0, Number(cloudCum.t4?.total) || 0),
@@ -772,6 +803,7 @@ const Storage = {
                 mergedSessions.length !== (localStats.sessions || []).length ||
                 Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length ||
                 mergedCum.t9.total !== (localCum.t9?.total || 0) ||
+                mergedCum.t10.total !== (localCum.t10?.total || 0) ||
                 mergedCum.t4.total !== (localCum.t4?.total || 0) ||
                 mergedCum.blitz.total !== (localCum.blitz?.total || 0);
 
@@ -791,6 +823,7 @@ const Storage = {
                 mergedSessions.length > (cloudStats.sessions || []).length ||
                 Object.keys(mergedAnswers).length > Object.keys(cloudStats.answers || {}).length ||
                 mergedCum.t9.total > (cloudCum.t9?.total || 0) ||
+                mergedCum.t10.total > (cloudCum.t10?.total || 0) ||
                 mergedCum.t4.total > (cloudCum.t4?.total || 0) ||
                 mergedCum.blitz.total > (cloudCum.blitz?.total || 0);
 

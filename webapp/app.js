@@ -197,7 +197,7 @@ const App = {
   },
 
   updateNav(screen) {
-    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task4filter'];
+    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task10filter', 'task4filter'];
     this.nav.classList.toggle('hidden', !navScreens.includes(screen));
     this.nav.querySelectorAll('.nav-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.screen === screen);
@@ -210,6 +210,7 @@ const App = {
     const renderers = {
       home: () => this.renderHome(),
       task9filter: () => this.renderTask9Filter(),
+      task10filter: () => this.renderTask10Filter(),
       task4filter: () => this.renderTask4Filter(),
       training: () => this.renderTraining(),
       results: () => this.renderResults(),
@@ -397,6 +398,13 @@ const App = {
         });
         break;
 
+      case 'task10':
+        this.navigate('task10filter', {
+          task10Category: 'all',
+          sessionLength: 10
+        });
+        break;
+
       case 'task4':
         this.navigate('task4filter', {
           filterType: 'all',
@@ -422,12 +430,21 @@ const App = {
         this.render();
         break;
 
+      case 'set-task10-cat':
+        this.screenParams.task10Category = dataset.cat;
+        this.render();
+        break;
+
       case 'start-task9-exceptions':
         this.startTask9Exceptions();
         break;
 
       case 'start-task9':
         this.startTask9();
+        break;
+
+      case 'start-task10':
+        this.startTask10();
         break;
 
       case 'start-task4':
@@ -517,7 +534,7 @@ const App = {
 
       case 'retry-mistakes': {
         const p = this.screenParams;
-        const list = p.taskType === 'task9' ? WORDS_TASK9 : WORDS_TASK4;
+        const list = p.taskType === 'task9' ? WORDS_TASK9 : (p.taskType === 'task10' ? WORDS_TASK10 : WORDS_TASK4);
         const mistakeWords = (p.mistakes || [])
           .map(m => list.find(w => w.id === m.wordId))
           .filter(Boolean);
@@ -628,7 +645,7 @@ const App = {
     } else {
       // Еще не ответили ни на один вопрос — просто возвращаемся назад
       this.training = null;
-      this.navigate(t.taskType === 'task9' ? 'task9filter' : 'task4filter');
+      this.navigate(t.taskType === 'task9' ? 'task9filter' : (t.taskType === 'task10' ? 'task10filter' : 'task4filter'));
     }
   },
 
@@ -683,6 +700,30 @@ const App = {
     this.startTraining('task9', words);
   },
 
+  startTask10() {
+    const p = this.screenParams;
+    const cat = p.task10Category || 'all';
+    let words = typeof WORDS_TASK10 !== 'undefined' ? [...WORDS_TASK10] : [];
+
+    if (cat && cat !== 'all') {
+      words = words.filter(w => w.category === cat);
+    }
+
+    words = this.shuffleArray(words);
+
+    const len = p.sessionLength || 0;
+    if (len > 0 && words.length > len) {
+      words = words.slice(0, len);
+    }
+
+    if (words.length === 0) {
+      alert('Нет слов для тренировки в выбранной категории');
+      return;
+    }
+
+    this.startTraining('task10', words);
+  },
+
   startTask4() {
     const p = this.screenParams;
     let words = [...WORDS_TASK4];
@@ -709,31 +750,34 @@ const App = {
   startFavoritesTraining() {
     const favData = Storage.getFavorites();
     const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id)).filter(Boolean);
+    const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
 
-    if (fav9.length > 0 && fav4.length > 0) {
-      this.showChoiceDialog(fav9, fav4);
-    } else if (fav9.length > 0) {
-      this.startTraining('task9', this.shuffleArray(fav9));
-    } else if (fav4.length > 0) {
-      this.startTraining('task4', this.shuffleArray(fav4));
+    const available = [];
+    if (fav9.length > 0) available.push({ type: 'task9', title: `№9 Словарные (${fav9.length})`, words: fav9 });
+    if (fav10.length > 0) available.push({ type: 'task10', title: `№10 Приставки (${fav10.length})`, words: fav10 });
+    if (fav4.length > 0) available.push({ type: 'task4', title: `№4 Ударения (${fav4.length})`, words: fav4 });
+
+    if (available.length > 1) {
+      this.showChoiceDialog(available);
+    } else if (available.length === 1) {
+      this.startTraining(available[0].type, this.shuffleArray(available[0].words));
     }
   },
 
-  showChoiceDialog(fav9, fav4) {
+  showChoiceDialog(available) {
     const overlay = document.createElement('div');
     overlay.className = 'dialog-overlay';
     overlay.innerHTML = `
       <div class="dialog">
         <div class="dialog-title">Что тренировать?</div>
-        <div class="dialog-text">У вас есть избранные слова обоих типов</div>
+        <div class="dialog-text">У вас есть избранные слова в нескольких заданиях</div>
         <div class="dialog-buttons" style="flex-direction:column;gap:8px;">
-          <button class="dialog-btn confirm" data-choice="task9" style="background:var(--green-700)">
-            №9 Словарные (${fav9.length})
-          </button>
-          <button class="dialog-btn confirm" data-choice="task4" style="background:var(--green-700)">
-            №4 Ударения (${fav4.length})
-          </button>
+          ${available.map(item => `
+            <button class="dialog-btn confirm" data-choice="${item.type}" style="background:var(--green-700)">
+              ${item.title}
+            </button>
+          `).join('')}
           <button class="dialog-btn cancel">Отмена</button>
         </div>
       </div>
@@ -744,10 +788,9 @@ const App = {
     overlay.querySelectorAll('[data-choice]').forEach(btn => {
       btn.onclick = () => {
         overlay.remove();
-        if (btn.dataset.choice === 'task9') {
-          this.startTraining('task9', this.shuffleArray(fav9));
-        } else {
-          this.startTraining('task4', this.shuffleArray(fav4));
+        const found = available.find(a => a.type === btn.dataset.choice);
+        if (found) {
+          this.startTraining(found.type, this.shuffleArray(found.words));
         }
       };
     });
@@ -757,7 +800,7 @@ const App = {
   startProblemWordsTraining(filter = 'all') {
     const stats = Storage.getStats();
     let problemWords = (stats.problemWords || [])
-      .map(pw => WORDS_TASK9.find(w => w.id === pw.id) || WORDS_TASK4.find(w => w.id === pw.id))
+      .map(pw => WORDS_TASK9.find(w => w.id === pw.id) || (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) || WORDS_TASK4.find(w => w.id === pw.id))
       .filter(Boolean);
 
     if (problemWords.length === 0) {
@@ -775,6 +818,16 @@ const App = {
       return;
     }
 
+    if (filter === 'task10') {
+      const task10Words = problemWords.filter(w => w.id.startsWith('t10_'));
+      if (task10Words.length === 0) {
+        alert('В Задании №10 нет сложных слов! 🎉');
+        return;
+      }
+      this.startTraining('task10', this.shuffleArray(task10Words));
+      return;
+    }
+
     if (filter === 'task4') {
       const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
       if (task4Words.length === 0) {
@@ -786,31 +839,34 @@ const App = {
     }
 
     const task9Words = problemWords.filter(w => w.id.startsWith('t9_'));
+    const task10Words = problemWords.filter(w => w.id.startsWith('t10_'));
     const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
 
-    if (task9Words.length > 0 && task4Words.length > 0) {
-      this.showProblemChoiceDialog(task9Words, task4Words);
-    } else if (task9Words.length > 0) {
-      this.startTraining('task9', this.shuffleArray(task9Words));
-    } else if (task4Words.length > 0) {
-      this.startTraining('task4', this.shuffleArray(task4Words));
+    const available = [];
+    if (task9Words.length > 0) available.push({ type: 'task9', title: `📝 Задание №9 — Слова (${task9Words.length})`, words: task9Words });
+    if (task10Words.length > 0) available.push({ type: 'task10', title: `🧩 Задание №10 — Приставки (${task10Words.length})`, words: task10Words });
+    if (task4Words.length > 0) available.push({ type: 'task4', title: `🔤 Задание №4 — Ударения (${task4Words.length})`, words: task4Words });
+
+    if (available.length > 1) {
+      this.showProblemChoiceDialog(available);
+    } else if (available.length === 1) {
+      this.startTraining(available[0].type, this.shuffleArray(available[0].words));
     }
   },
 
-  showProblemChoiceDialog(task9Words, task4Words) {
+  showProblemChoiceDialog(available) {
     const overlay = document.createElement('div');
     overlay.className = 'dialog-overlay';
     overlay.innerHTML = `
       <div class="dialog">
         <div class="dialog-title">Отработка сложных слов</div>
-        <div class="dialog-text">У вас есть ошибки в обоих заданиях. Что хотите повторить?</div>
+        <div class="dialog-text">У вас есть ошибки в нескольких заданиях. Что хотите повторить?</div>
         <div class="dialog-buttons" style="flex-direction:column;gap:8px;">
-          <button class="dialog-btn confirm" data-choice="task9" style="background:var(--green-700)">
-            📝 Задание №9 — Слова (${task9Words.length})
-          </button>
-          <button class="dialog-btn confirm" data-choice="task4" style="background:var(--green-700)">
-            🔤 Задание №4 — Ударения (${task4Words.length})
-          </button>
+          ${available.map(item => `
+            <button class="dialog-btn confirm" data-choice="${item.type}" style="background:var(--green-700)">
+              ${item.title}
+            </button>
+          `).join('')}
           <button class="dialog-btn cancel">Отмена</button>
         </div>
       </div>
@@ -821,10 +877,9 @@ const App = {
     overlay.querySelectorAll('[data-choice]').forEach(btn => {
       btn.onclick = () => {
         overlay.remove();
-        if (btn.dataset.choice === 'task9') {
-          this.startTraining('task9', this.shuffleArray(task9Words));
-        } else {
-          this.startTraining('task4', this.shuffleArray(task4Words));
+        const found = available.find(a => a.type === btn.dataset.choice);
+        if (found) {
+          this.startTraining(found.type, this.shuffleArray(found.words));
         }
       };
     });
@@ -859,7 +914,7 @@ const App = {
     if (!t || t.currentIndex >= t.words.length) return;
 
     const word = t.words[t.currentIndex];
-    if (t.taskType === 'task9') {
+    if (t.taskType === 'task9' || t.taskType === 'task10') {
       t.currentVariants = this.generateTask9Variants(word);
     } else {
       t.currentVariants = this.generateTask4Variants(word);
@@ -922,7 +977,7 @@ const App = {
 
     t.answers.push({
       wordId: word.id,
-      word: t.taskType === 'task9' ? word.word : word.correct,
+      word: (t.taskType === 'task9' || t.taskType === 'task10') ? word.word : word.correct,
       correct: isCorrect,
       selected: variant.text
     });
@@ -993,6 +1048,13 @@ const App = {
           <div>
             <div class="mode-card-title">Задание №9</div>
             <div class="mode-card-desc">Словарные слова (537) · Исключения (50)</div>
+          </div>
+        </button>
+        <button class="mode-card" data-action="task10">
+          <div class="mode-card-icon teal">🧩</div>
+          <div>
+            <div class="mode-card-title">Задание №10</div>
+            <div class="mode-card-desc">Приставки и исключения · ${typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.length : 121} слов</div>
           </div>
         </button>
         <button class="mode-card" data-action="task4">
@@ -1213,6 +1275,79 @@ const App = {
     `;
   },
 
+  // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №10 ====================
+
+  renderTask10Filter() {
+    const wordsList = typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [];
+    const cat = this.screenParams.task10Category || 'all';
+    const sessionLength = this.screenParams.sessionLength ?? 10;
+
+    let filtered = wordsList;
+    if (cat !== 'all') {
+      filtered = wordsList.filter(w => w.category === cat);
+    }
+
+    const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
+
+    const countCat = (c) => wordsList.filter(w => w.category === c).length;
+
+    return `
+      <div class="screen-header">
+        <button class="back-btn" data-action="back">←</button>
+        <h2 class="screen-title">Задание №10 — Приставки</h2>
+      </div>
+
+      <div class="ege-info-box">
+        <div class="ege-info-title">🧩 Правописание приставок и исключения ФИПИ</div>
+        <div class="ege-info-desc">
+          Все каверзные правила задания №10: смысловые различия <b>ПРЕ- / ПРИ-</b> (<i>пребывать / прибывать</i>), словарные слова, <b>ПРА- / ПРО-</b> (<i>прообраз</i>), <b>Ы / И</b> после приставок (<i>взимать, сызнова</i>) и разделительные <b>Ъ / Ь</b> (<i>подьячий, адъютант, двухэтажный</i>).
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Количество слов в сессии</div>
+        <div class="session-pills">
+          ${[10, 20, 30, 0].map(n => `
+            <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+              ${n === 0 ? 'Все' : n}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Категория правил и исключений</div>
+        <div class="problem-filter-pills" style="margin-bottom:8px;">
+          <button class="problem-pill ${cat === 'all' ? 'active' : ''}" data-action="set-task10-cat" data-cat="all">
+            Все (${wordsList.length})
+          </button>
+          <button class="problem-pill ${cat === 'pre_pri_pairs' ? 'active' : ''}" data-action="set-task10-cat" data-cat="pre_pri_pairs">
+            ПРЕ / ПРИ (пары) (${countCat('pre_pri_pairs')})
+          </button>
+          <button class="problem-pill ${cat === 'pre_words' ? 'active' : ''}" data-action="set-task10-cat" data-cat="pre_words">
+            Словарные ПРЕ- (${countCat('pre_words')})
+          </button>
+          <button class="problem-pill ${cat === 'pri_words' ? 'active' : ''}" data-action="set-task10-cat" data-cat="pri_words">
+            Словарные ПРИ- (${countCat('pri_words')})
+          </button>
+          <button class="problem-pill ${cat === 'y_i' ? 'active' : ''}" data-action="set-task10-cat" data-cat="y_i">
+            Ы / И после приставок (${countCat('y_i')})
+          </button>
+          <button class="problem-pill ${cat === 'signs' ? 'active' : ''}" data-action="set-task10-cat" data-cat="signs">
+            Разделительные Ъ / Ь (${countCat('signs')})
+          </button>
+          <button class="problem-pill ${cat === 'pra_pro' ? 'active' : ''}" data-action="set-task10-cat" data-cat="pra_pro">
+            ПРА / ПРО (${countCat('pra_pro')})
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" data-action="start-task10" ${filtered.length === 0 ? 'disabled' : ''}>
+        Начать тренировку (${displayCount} слов) 🚀
+      </button>
+    `;
+  },
+
   // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №4 ====================
 
   renderTask4Filter() {
@@ -1336,9 +1471,9 @@ const App = {
     let questionText = '';
     let questionHint = '';
 
-    if (t.taskType === 'task9') {
+    if (t.taskType === 'task9' || t.taskType === 'task10') {
       questionText = word.display;
-      questionHint = 'Выберите правильное написание';
+      questionHint = t.taskType === 'task10' ? (word.tag || 'Выберите правильную букву или приставку') : 'Выберите правильное написание';
     } else {
       questionText = word.word;
       questionHint = 'Выберите правильное ударение';
@@ -1435,7 +1570,7 @@ const App = {
   renderResults() {
     const p = this.screenParams;
     const percent = p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
-    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : 'Задание №4';
+    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : (p.taskType === 'task10' ? 'Задание №10' : 'Задание №4');
 
     let emoji = '🎉';
     if (percent < 50) emoji = '😤';
@@ -1495,7 +1630,7 @@ const App = {
             Повторить ошибки (${p.mistakes.length}) 🔄
           </button>
         ` : ''}
-        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : 'task4'}">
+        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : (p.taskType === 'task10' ? 'task10' : 'task4')}">
           Тренироваться ещё
         </button>
         <button class="btn-secondary" data-action="home">На главную</button>
@@ -1511,7 +1646,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
 
     // Получаем доступный набор начальных букв для текущего задания
-    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : WORDS_TASK4;
+    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : (activeTab === 'task10' ? (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : []) : WORDS_TASK4);
     const letterCounts = {};
     baseWords.forEach(w => {
       const l = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1542,6 +1677,9 @@ const App = {
       <div class="dict-tabs">
         <button class="dict-tab ${activeTab === 'task9' ? 'active' : ''}" data-dict-tab="task9">
           Задание №9 (${WORDS_TASK9.length})
+        </button>
+        <button class="dict-tab ${activeTab === 'task10' ? 'active' : ''}" data-dict-tab="task10">
+          Задание №10 (${typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.length : 121})
         </button>
         <button class="dict-tab ${activeTab === 'task4' ? 'active' : ''}" data-dict-tab="task4">
           Задание №4 (${WORDS_TASK4.length})
@@ -1590,7 +1728,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
     const searchQuery = (this.screenParams.searchQuery || '').toLowerCase().trim();
 
-    let words = activeTab === 'task9' ? [...WORDS_TASK9] : [...WORDS_TASK4];
+    let words = activeTab === 'task9' ? [...WORDS_TASK9] : (activeTab === 'task10' ? [...(typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [])] : [...WORDS_TASK4]);
 
     // Фильтр по поиску
     if (searchQuery) {
@@ -1621,8 +1759,8 @@ const App = {
       </div>
     `;
 
-    // 1. Задание №9: алфавитная группировка по первой букве
-    if (activeTab === 'task9') {
+    // 1. Задание №9 и Задание №10: алфавитная группировка по первой букве
+    if (activeTab === 'task9' || activeTab === 'task10') {
       const grouped = {};
       words.forEach(w => {
         const letter = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1637,14 +1775,17 @@ const App = {
           <div class="dict-section-header">${letter} <span class="dict-section-count">(${letterWords.length})</span></div>
           ${letterWords.map(w => {
             const isFav = Storage.isFavorite(w.id);
+            const tagHTML = activeTab === 'task10'
+              ? `<span style="color:#00796B;font-weight:600;">🧩 ${w.tag || 'Приставка'}</span> · буква: <b>${w.correctLetter}</b>`
+              : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`);
             return `
               <div class="dict-word-card">
                 <div>
                   <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
-                  <div class="dict-word-meta">${w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`}</div>
+                  <div class="dict-word-meta">${tagHTML}</div>
                 </div>
                 <button class="dict-word-fav ${isFav ? 'active' : ''}"
-                        data-action="toggle-fav" data-word-id="${w.id}" data-task="task9"
+                        data-action="toggle-fav" data-word-id="${w.id}" data-task="${activeTab}"
                         title="${isFav ? 'В избранном' : 'Добавить в избранное'}">
                   ${isFav ? '⭐' : '☆'}
                 </button>
@@ -1758,8 +1899,9 @@ const App = {
   renderFavorites() {
     const favData = Storage.getFavorites();
     const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id)).filter(Boolean);
+    const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
-    const isEmpty = fav9.length === 0 && fav4.length === 0;
+    const isEmpty = fav9.length === 0 && fav10.length === 0 && fav4.length === 0;
 
     if (isEmpty) {
       return `
@@ -1775,7 +1917,7 @@ const App = {
     }
 
     let contentHTML = '';
-    const totalFavs = fav9.length + fav4.length;
+    const totalFavs = fav9.length + fav10.length + fav4.length;
 
     if (fav9.length > 0) {
       contentHTML += `
@@ -1784,6 +1926,18 @@ const App = {
           <div class="fav-word-card">
             <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
             <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task9">✕</button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    if (fav10.length > 0) {
+      contentHTML += `
+        <div class="fav-section-title">Задание №10 — Приставки (${fav10.length})</div>
+        ${fav10.map(w => `
+          <div class="fav-word-card">
+            <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
+            <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task10">✕</button>
           </div>
         `).join('')}
       `;
@@ -1824,16 +1978,19 @@ const App = {
     // Фильтруем проблемные слова, проверяя их существование в текущей базе
     const allProblemWords = (stats.problemWords || [])
       .map(pw => {
-        const word = WORDS_TASK9.find(w => w.id === pw.id) || WORDS_TASK4.find(w => w.id === pw.id);
+        const word = WORDS_TASK9.find(w => w.id === pw.id) || (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) || WORDS_TASK4.find(w => w.id === pw.id);
         if (!word) return null;
         const isTask9 = word.id.startsWith('t9_');
+        const isTask10 = word.id.startsWith('t10_');
+        const taskType = isTask9 ? 'task9' : (isTask10 ? 'task10' : 'task4');
         return {
           ...pw,
           wordObj: word,
           isTask9,
-          taskType: isTask9 ? 'task9' : 'task4',
-          displayName: isTask9 ? word.word : word.correct,
-          displayHighlighted: isTask9
+          isTask10,
+          taskType,
+          displayName: (isTask9 || isTask10) ? word.word : word.correct,
+          displayHighlighted: (isTask9 || isTask10)
             ? this.highlightLetter(word.word, word.display)
             : this.highlightStress(word.correct)
         };
@@ -1841,7 +1998,8 @@ const App = {
       .filter(Boolean);
 
     const task9ProblemWords = allProblemWords.filter(w => w.isTask9);
-    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9);
+    const task10ProblemWords = allProblemWords.filter(w => w.isTask10);
+    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9 && !w.isTask10);
 
     const currentFilter = this.screenParams.problemFilter || 'all';
     const isExpanded = this.screenParams.problemsExpanded !== undefined
@@ -1850,6 +2008,7 @@ const App = {
 
     let displayWords = allProblemWords;
     if (currentFilter === 'task9') displayWords = task9ProblemWords;
+    else if (currentFilter === 'task10') displayWords = task10ProblemWords;
     else if (currentFilter === 'task4') displayWords = task4ProblemWords;
 
     // HTML сессий
@@ -1870,6 +2029,9 @@ const App = {
         if (s.taskType === 'task9') {
           label = '№9 Словарные слова';
           icon = '📝';
+        } else if (s.taskType === 'task10') {
+          label = '№10 Приставки и искл.';
+          icon = '🧩';
         } else if (s.taskType === 'task4_ege') {
           label = '№4 Формат ЕГЭ';
           icon = '📋';
@@ -1907,11 +2069,11 @@ const App = {
       const wordsListHTML = displayWords.map(pw => {
         const isFav = Storage.isFavorite(pw.id);
         const errorPercent = Math.round(pw.errorRate * 100);
-        const taskTag = pw.isTask9 ? '№9' : '№4';
+        const taskTag = pw.isTask9 ? '№9' : (pw.isTask10 ? '№10' : '№4');
         return `
           <div class="stat-problem-card">
             <div class="stat-problem-main">
-              <span class="stat-task-badge ${pw.isTask9 ? 't9' : 't4'}">${taskTag}</span>
+              <span class="stat-task-badge ${pw.isTask9 ? 't9' : (pw.isTask10 ? 't10' : 't4')}">${taskTag}</span>
               <span class="dict-word-text">${pw.displayHighlighted}</span>
             </div>
             <div class="stat-problem-actions">
@@ -1928,7 +2090,7 @@ const App = {
         `;
       }).join('');
 
-      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task4' ? ' (№4)' : '');
+      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task10' ? ' (№10)' : (currentFilter === 'task4' ? ' (№4)' : ''));
 
       problemContent = `
         <div class="stat-section-card">
@@ -1954,6 +2116,10 @@ const App = {
               <button class="problem-pill ${currentFilter === 'task9' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task9">
                 📝 №9 (${task9ProblemWords.length})
+              </button>
+              <button class="problem-pill ${currentFilter === 'task10' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="task10">
+                🧩 №10 (${task10ProblemWords.length})
               </button>
               <button class="problem-pill ${currentFilter === 'task4' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task4">
@@ -2034,6 +2200,18 @@ const App = {
           <div class="stat-card-meta">
             <span>Точность: <b>${stats.task9.percent}%</b></span>
             <span>(${stats.task9.correct}/${stats.task9.total})</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-badge">Задание №10</span>
+            <span class="stat-card-icon">🧩</span>
+          </div>
+          <div class="stat-card-value">${stats.task10?.total || 0} <span class="stat-card-unit">слов</span></div>
+          <div class="stat-card-meta">
+            <span>Точность: <b>${stats.task10?.percent || 0}%</b></span>
+            <span>(${stats.task10?.correct || 0}/${stats.task10?.total || 0})</span>
           </div>
         </div>
 
