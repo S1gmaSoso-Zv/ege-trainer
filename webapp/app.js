@@ -197,7 +197,7 @@ const App = {
   },
 
   updateNav(screen) {
-    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task10filter', 'task4filter'];
+    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task10filter', 'task11filter', 'task4filter'];
     this.nav.classList.toggle('hidden', !navScreens.includes(screen));
     this.nav.querySelectorAll('.nav-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.screen === screen);
@@ -211,6 +211,7 @@ const App = {
       home: () => this.renderHome(),
       task9filter: () => this.renderTask9Filter(),
       task10filter: () => this.renderTask10Filter(),
+      task11filter: () => this.renderTask11Filter(),
       task4filter: () => this.renderTask4Filter(),
       training: () => this.renderTraining(),
       results: () => this.renderResults(),
@@ -283,13 +284,17 @@ const App = {
       return;
     }
 
-    // 4. Режим выбора букв в Задании №9 (все / одна / несколько)
+    // 4. Режим выбора букв в Задании №9 (все / ловушки / по букве в корне / по алфавиту)
     const letterModeBtn = e.target.closest('[data-letter-mode]');
     if (letterModeBtn) {
       const mode = letterModeBtn.dataset.letterMode;
       this.screenParams.letterMode = mode;
       if (mode === 'all') {
         this.screenParams.selectedLetters = [];
+      } else if (mode === 'gap') {
+        if (!this.screenParams.selectedGapLetters || this.screenParams.selectedGapLetters.length === 0) {
+          this.screenParams.selectedGapLetters = ['а'];
+        }
       } else if (mode === 'single') {
         if (!this.screenParams.selectedLetters || this.screenParams.selectedLetters.length === 0) {
           this.screenParams.selectedLetters = ['а'];
@@ -299,6 +304,23 @@ const App = {
       } else if (mode === 'multi') {
         if (!this.screenParams.selectedLetters || this.screenParams.selectedLetters.length === 0) {
           this.screenParams.selectedLetters = ['а'];
+        }
+      }
+      this.render();
+      return;
+    }
+
+    // 4b. Кнопка выбора буквы в пропуске (А, О, Е, И, Я...)
+    const gapLetterBtn = e.target.closest('.gap-letter-btn');
+    if (gapLetterBtn) {
+      const letter = gapLetterBtn.dataset.gapLetter;
+      if (!this.screenParams.selectedGapLetters) this.screenParams.selectedGapLetters = [];
+      const idx = this.screenParams.selectedGapLetters.indexOf(letter);
+      if (idx === -1) {
+        this.screenParams.selectedGapLetters.push(letter);
+      } else {
+        if (this.screenParams.selectedGapLetters.length > 1) {
+          this.screenParams.selectedGapLetters.splice(idx, 1);
         }
       }
       this.render();
@@ -405,6 +427,13 @@ const App = {
         });
         break;
 
+      case 'task11':
+        this.navigate('task11filter', {
+          task11Category: 'all',
+          sessionLength: 10
+        });
+        break;
+
       case 'task4':
         this.navigate('task4filter', {
           filterType: 'all',
@@ -435,6 +464,11 @@ const App = {
         this.render();
         break;
 
+      case 'set-task11-cat':
+        this.screenParams.task11Category = dataset.cat;
+        this.render();
+        break;
+
       case 'start-task9-exceptions':
         this.startTask9Exceptions();
         break;
@@ -445,6 +479,10 @@ const App = {
 
       case 'start-task10':
         this.startTask10();
+        break;
+
+      case 'start-task11':
+        this.startTask11();
         break;
 
       case 'start-task4':
@@ -645,7 +683,7 @@ const App = {
     } else {
       // Еще не ответили ни на один вопрос — просто возвращаемся назад
       this.training = null;
-      this.navigate(t.taskType === 'task9' ? 'task9filter' : (t.taskType === 'task10' ? 'task10filter' : 'task4filter'));
+      this.navigate(t.taskType === 'task9' ? 'task9filter' : (t.taskType === 'task10' ? 'task10filter' : (t.taskType === 'task11' ? 'task11filter' : 'task4filter')));
     }
   },
 
@@ -655,7 +693,15 @@ const App = {
     const p = this.screenParams;
     let words = WORDS_TASK9.filter(w => !w.isException);
 
-    if ((p.letterMode === 'single' || p.letterMode === 'multi') && p.selectedLetters && p.selectedLetters.length > 0) {
+    if (p.letterMode === 'pair_ao') {
+      words = words.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о');
+    } else if (p.letterMode === 'pair_ei') {
+      words = words.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и');
+    } else if (p.letterMode === 'gap') {
+      if (p.selectedGapLetters && p.selectedGapLetters.length > 0) {
+        words = words.filter(w => p.selectedGapLetters.includes(w.correctLetter.toLowerCase()));
+      }
+    } else if ((p.letterMode === 'single' || p.letterMode === 'multi') && p.selectedLetters && p.selectedLetters.length > 0) {
       words = words.filter(w => p.selectedLetters.includes(w.firstLetter.toLowerCase()));
     }
 
@@ -667,7 +713,7 @@ const App = {
     }
 
     if (words.length === 0) {
-      alert('Нет слов для тренировки с выбранными буквами');
+      alert('Нет слов для тренировки с выбранными критериями');
       return;
     }
 
@@ -724,6 +770,32 @@ const App = {
     this.startTraining('task10', words);
   },
 
+  startTask11() {
+    const p = this.screenParams;
+    const cat = p.task11Category || 'all';
+    let words = typeof WORDS_TASK11 !== 'undefined' ? [...WORDS_TASK11] : [];
+
+    if (cat === 'exceptions') {
+      words = words.filter(w => w.isException);
+    } else if (cat && cat !== 'all') {
+      words = words.filter(w => w.category === cat);
+    }
+
+    words = this.shuffleArray(words);
+
+    const len = p.sessionLength || 0;
+    if (len > 0 && words.length > len) {
+      words = words.slice(0, len);
+    }
+
+    if (words.length === 0) {
+      alert('Нет слов для тренировки в выбранной категории');
+      return;
+    }
+
+    this.startTraining('task11', words);
+  },
+
   startTask4() {
     const p = this.screenParams;
     let words = [...WORDS_TASK4];
@@ -749,13 +821,15 @@ const App = {
 
   startFavoritesTraining() {
     const favData = Storage.getFavorites();
-    const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id)).filter(Boolean);
+    const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id) || (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === id) : null)).filter(Boolean);
     const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
+    const fav11 = (favData.task11 || []).map(id => (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
 
     const available = [];
     if (fav9.length > 0) available.push({ type: 'task9', title: `№9 Словарные (${fav9.length})`, words: fav9 });
     if (fav10.length > 0) available.push({ type: 'task10', title: `№10 Приставки (${fav10.length})`, words: fav10 });
+    if (fav11.length > 0) available.push({ type: 'task11', title: `№11 Суффиксы (${fav11.length})`, words: fav11 });
     if (fav4.length > 0) available.push({ type: 'task4', title: `№4 Ударения (${fav4.length})`, words: fav4 });
 
     if (available.length > 1) {
@@ -800,7 +874,11 @@ const App = {
   startProblemWordsTraining(filter = 'all') {
     const stats = Storage.getStats();
     let problemWords = (stats.problemWords || [])
-      .map(pw => WORDS_TASK9.find(w => w.id === pw.id) || (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) || WORDS_TASK4.find(w => w.id === pw.id))
+      .map(pw => WORDS_TASK9.find(w => w.id === pw.id) ||
+                 (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === pw.id) : null) ||
+                 (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) ||
+                 (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === pw.id) : null) ||
+                 WORDS_TASK4.find(w => w.id === pw.id))
       .filter(Boolean);
 
     if (problemWords.length === 0) {
@@ -809,7 +887,7 @@ const App = {
     }
 
     if (filter === 'task9') {
-      const task9Words = problemWords.filter(w => w.id.startsWith('t9_'));
+      const task9Words = problemWords.filter(w => w.id.startsWith('t9_') || w.id.startsWith('e9_'));
       if (task9Words.length === 0) {
         alert('В Задании №9 нет сложных слов! 🎉');
         return;
@@ -828,6 +906,16 @@ const App = {
       return;
     }
 
+    if (filter === 'task11') {
+      const task11Words = problemWords.filter(w => w.id.startsWith('t11_'));
+      if (task11Words.length === 0) {
+        alert('В Задании №11 нет сложных слов! 🎉');
+        return;
+      }
+      this.startTraining('task11', this.shuffleArray(task11Words));
+      return;
+    }
+
     if (filter === 'task4') {
       const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
       if (task4Words.length === 0) {
@@ -838,13 +926,15 @@ const App = {
       return;
     }
 
-    const task9Words = problemWords.filter(w => w.id.startsWith('t9_'));
+    const task9Words = problemWords.filter(w => w.id.startsWith('t9_') || w.id.startsWith('e9_'));
     const task10Words = problemWords.filter(w => w.id.startsWith('t10_'));
+    const task11Words = problemWords.filter(w => w.id.startsWith('t11_'));
     const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
 
     const available = [];
     if (task9Words.length > 0) available.push({ type: 'task9', title: `📝 Задание №9 — Слова (${task9Words.length})`, words: task9Words });
     if (task10Words.length > 0) available.push({ type: 'task10', title: `🧩 Задание №10 — Приставки (${task10Words.length})`, words: task10Words });
+    if (task11Words.length > 0) available.push({ type: 'task11', title: `✏️ Задание №11 — Суффиксы (${task11Words.length})`, words: task11Words });
     if (task4Words.length > 0) available.push({ type: 'task4', title: `🔤 Задание №4 — Ударения (${task4Words.length})`, words: task4Words });
 
     if (available.length > 1) {
@@ -914,7 +1004,7 @@ const App = {
     if (!t || t.currentIndex >= t.words.length) return;
 
     const word = t.words[t.currentIndex];
-    if (t.taskType === 'task9' || t.taskType === 'task10') {
+    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') {
       t.currentVariants = this.generateTask9Variants(word);
     } else {
       t.currentVariants = this.generateTask4Variants(word);
@@ -977,7 +1067,7 @@ const App = {
 
     t.answers.push({
       wordId: word.id,
-      word: (t.taskType === 'task9' || t.taskType === 'task10') ? word.word : word.correct,
+      word: (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') ? word.word : word.correct,
       correct: isCorrect,
       selected: variant.text
     });
@@ -1055,6 +1145,13 @@ const App = {
           <div>
             <div class="mode-card-title">Задание №10</div>
             <div class="mode-card-desc">Приставки и исключения · ${typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.length : 121} слов</div>
+          </div>
+        </button>
+        <button class="mode-card" data-action="task11">
+          <div class="mode-card-icon amber">✏️</div>
+          <div>
+            <div class="mode-card-title">Задание №11</div>
+            <div class="mode-card-desc">Суффиксы и исключения · ${typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.length : 148} слов</div>
           </div>
         </button>
         <button class="mode-card" data-action="task4">
@@ -1166,8 +1263,21 @@ const App = {
     // 2. Режим: Словарные слова (по умолчанию)
     const letterMode = this.screenParams.letterMode || 'all';
     const selectedLetters = this.screenParams.selectedLetters || [];
+    const selectedGapLetters = this.screenParams.selectedGapLetters || ['а'];
     const sessionLength = this.screenParams.sessionLength ?? 10;
 
+    const countAO = vocabWords.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о').length;
+    const countEI = vocabWords.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и').length;
+
+    // Подсчет по буквам в пропуске
+    const gapLetterCounts = {};
+    vocabWords.forEach(w => {
+      const gl = (w.correctLetter || '').toLowerCase();
+      if (gl) gapLetterCounts[gl] = (gapLetterCounts[gl] || 0) + 1;
+    });
+    const availableGapLetters = Object.keys(gapLetterCounts).sort((a, b) => a.localeCompare(b, 'ru'));
+
+    // Подсчет по первой букве слова
     const letterCounts = {};
     vocabWords.forEach(w => {
       const l = w.firstLetter.toLowerCase();
@@ -1178,12 +1288,21 @@ const App = {
     let filteredCount = vocabWords.length;
     let sampleWords = '';
 
-    if (letterMode !== 'all') {
+    if (letterMode === 'pair_ao') {
+      filteredCount = countAO;
+      sampleWords = vocabWords.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о').slice(0, 4).map(w => w.word).join(', ') + '...';
+    } else if (letterMode === 'pair_ei') {
+      filteredCount = countEI;
+      sampleWords = vocabWords.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и').slice(0, 4).map(w => w.word).join(', ') + '...';
+    } else if (letterMode === 'gap') {
+      const matched = vocabWords.filter(w => selectedGapLetters.includes(w.correctLetter.toLowerCase()));
+      filteredCount = matched.length;
+      sampleWords = matched.slice(0, 4).map(w => w.word).join(', ') + (matched.length > 4 ? '...' : '');
+    } else if (letterMode === 'single' || letterMode === 'multi') {
       if (selectedLetters.length > 0) {
         const matched = vocabWords.filter(w => selectedLetters.includes(w.firstLetter.toLowerCase()));
         filteredCount = matched.length;
-        const samples = matched.slice(0, 4).map(w => w.word).join(', ');
-        sampleWords = samples + (matched.length > 4 ? '...' : '');
+        sampleWords = matched.slice(0, 4).map(w => w.word).join(', ') + (matched.length > 4 ? '...' : '');
       } else {
         filteredCount = 0;
       }
@@ -1219,33 +1338,70 @@ const App = {
       </div>
 
       <div class="filter-section">
-        <div class="filter-label">Режим выбора слов</div>
+        <div class="filter-label">Режим выбора слов и ловушек</div>
         <div class="filter-modes">
           <button class="filter-mode ${letterMode === 'all' ? 'active' : ''}" data-letter-mode="all">
             <div class="filter-mode-radio"></div>
             <div>
               <span class="filter-mode-text">Все слова</span>
-              <div class="filter-mode-desc">Тренировка по словарному банку (${vocabWords.length} слов)</div>
+              <div class="filter-mode-desc">Тренировка по полному словарному банку (${vocabWords.length} слов)</div>
+            </div>
+          </button>
+          <button class="filter-mode ${letterMode === 'pair_ao' ? 'active' : ''}" data-letter-mode="pair_ao">
+            <div class="filter-mode-radio"></div>
+            <div>
+              <span class="filter-mode-text">🎯 Ловушка А / О</span>
+              <div class="filter-mode-desc">Только слова, где проверяются гласные А или О (${countAO} слов)</div>
+            </div>
+          </button>
+          <button class="filter-mode ${letterMode === 'pair_ei' ? 'active' : ''}" data-letter-mode="pair_ei">
+            <div class="filter-mode-radio"></div>
+            <div>
+              <span class="filter-mode-text">🎯 Ловушка Е / И</span>
+              <div class="filter-mode-desc">Только слова, где проверяются гласные Е или И (${countEI} слов)</div>
+            </div>
+          </button>
+          <button class="filter-mode ${letterMode === 'gap' ? 'active' : ''}" data-letter-mode="gap">
+            <div class="filter-mode-radio"></div>
+            <div>
+              <span class="filter-mode-text">🔠 По букве в корне (пропуске)</span>
+              <div class="filter-mode-desc">Выбрать букву, которая пишется в корне (А, О, Е, И, Я...)</div>
             </div>
           </button>
           <button class="filter-mode ${letterMode === 'single' ? 'active' : ''}" data-letter-mode="single">
             <div class="filter-mode-radio"></div>
             <div>
-              <span class="filter-mode-text">Одна буква</span>
-              <div class="filter-mode-desc">Тренировать слова на выбранную букву (например: только на букву «А»)</div>
+              <span class="filter-mode-text">🔤 Одна начальная буква (А-Я)</span>
+              <div class="filter-mode-desc">Тренировать слова, начинающиеся на выбранную букву</div>
             </div>
           </button>
           <button class="filter-mode ${letterMode === 'multi' ? 'active' : ''}" data-letter-mode="multi">
             <div class="filter-mode-radio"></div>
             <div>
-              <span class="filter-mode-text">Несколько букв</span>
-              <div class="filter-mode-desc">Выбрать нужные начальные буквы (например: «А», «Б» и «В»)</div>
+              <span class="filter-mode-text">🔤 Несколько начальных букв</span>
+              <div class="filter-mode-desc">Выбрать несколько первых букв алфавита</div>
             </div>
           </button>
         </div>
       </div>
 
-      ${letterMode !== 'all' ? `
+      ${letterMode === 'gap' ? `
+        <div class="filter-section">
+          <div class="filter-label">Выберите проверяемую гласную в корне:</div>
+          <div class="problem-filter-pills" style="margin-bottom:8px;">
+            ${availableGapLetters.map(l => `
+              <button class="problem-pill gap-letter-btn ${selectedGapLetters.includes(l) ? 'active' : ''}" data-gap-letter="${l}">
+                Буква «${l.toUpperCase()}» (${gapLetterCounts[l]})
+              </button>
+            `).join('')}
+          </div>
+          <div class="filter-hint">
+            Выбрано слов: <b>${filteredCount}</b>. Примеры: ${sampleWords}
+          </div>
+        </div>
+      ` : ''}
+
+      ${(letterMode === 'single' || letterMode === 'multi') ? `
         <div class="filter-section">
           <div class="filter-label">
             ${letterMode === 'single' ? 'С какой буквы начинаются слова (выберите одну)' : 'С каких букв начинаются слова (выберите несколько)'}
@@ -1268,8 +1424,17 @@ const App = {
         </div>
       ` : ''}
 
+      ${(letterMode === 'pair_ao' || letterMode === 'pair_ei') ? `
+        <div class="filter-section">
+          <div class="filter-hint" style="margin-top:0;">
+            Выбрана ловушка <b>${letterMode === 'pair_ao' ? 'А / О' : 'Е / И'}</b> (${filteredCount} слов).<br>
+            <span style="font-size:12px;opacity:0.85;">Примеры: ${sampleWords}</span>
+          </div>
+        </div>
+      ` : ''}
+
       <button class="start-btn" data-action="start-task9"
-        ${(letterMode !== 'all' && selectedLetters.length === 0) ? 'disabled' : ''}>
+        ${filteredCount === 0 ? 'disabled' : ''}>
         Начать тренировку (${displayCount} слов) 🚀
       </button>
     `;
@@ -1343,6 +1508,78 @@ const App = {
       </div>
 
       <button class="start-btn" data-action="start-task10" ${filtered.length === 0 ? 'disabled' : ''}>
+        Начать тренировку (${displayCount} слов) 🚀
+      </button>
+    `;
+  },
+
+  // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №11 ====================
+
+  renderTask11Filter() {
+    const wordsList = typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : [];
+    const cat = this.screenParams.task11Category || 'all';
+    const sessionLength = this.screenParams.sessionLength ?? 10;
+
+    let filtered = wordsList;
+    if (cat === 'exceptions') {
+      filtered = wordsList.filter(w => w.isException);
+    } else if (cat !== 'all') {
+      filtered = wordsList.filter(w => w.category === cat);
+    }
+
+    const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
+
+    const countCat = (c) => c === 'exceptions' ? wordsList.filter(w => w.isException).length : wordsList.filter(w => w.category === c).length;
+
+    return `
+      <div class="screen-header">
+        <button class="back-btn" data-action="back">←</button>
+        <h2 class="screen-title">Задание №11 — Суффиксы</h2>
+      </div>
+
+      <div class="ege-info-box">
+        <div class="ege-info-title">✏️ Правописание суффиксов (кроме -Н-/-НН-)</div>
+        <div class="ege-info-desc">
+          Суффиксы существительных (-чик/-щик, -ек/-ик, -оньк/-еньк), прилагательных (-лив/-чив, -ив/-ев, -чат, -ов), глаголов (-ова/-ева, -ыва/-ива, перед -ть) и наречий (-о/-а). Включая все исключения: <i>милостивый, юродивый, мажор, заинька, паинька, баиньки, затмевать, застревать, выздороветь...</i>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Количество слов в сессии</div>
+        <div class="session-pills">
+          ${[10, 20, 30, 0].map(n => `
+            <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+              ${n === 0 ? 'Все' : n}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Категория / Часть речи</div>
+        <div class="problem-filter-pills" style="margin-bottom:8px;">
+          <button class="problem-pill ${cat === 'all' ? 'active' : ''}" data-action="set-task11-cat" data-cat="all">
+            Все (${wordsList.length})
+          </button>
+          <button class="problem-pill ${cat === 'exceptions' ? 'active' : ''}" data-action="set-task11-cat" data-cat="exceptions" style="border-color:#F59E0B;color:#D97706;font-weight:700;">
+            ⚡ Исключения (${countCat('exceptions')})
+          </button>
+          <button class="problem-pill ${cat === 'adjectives' ? 'active' : ''}" data-action="set-task11-cat" data-cat="adjectives">
+            Прилагательные (${countCat('adjectives')})
+          </button>
+          <button class="problem-pill ${cat === 'nouns' ? 'active' : ''}" data-action="set-task11-cat" data-cat="nouns">
+            Существительные (${countCat('nouns')})
+          </button>
+          <button class="problem-pill ${cat === 'verbs' ? 'active' : ''}" data-action="set-task11-cat" data-cat="verbs">
+            Глаголы (${countCat('verbs')})
+          </button>
+          <button class="problem-pill ${cat === 'adverbs' ? 'active' : ''}" data-action="set-task11-cat" data-cat="adverbs">
+            Наречия (${countCat('adverbs')})
+          </button>
+        </div>
+      </div>
+
+      <button class="start-btn" data-action="start-task11" ${filtered.length === 0 ? 'disabled' : ''}>
         Начать тренировку (${displayCount} слов) 🚀
       </button>
     `;
@@ -1471,9 +1708,13 @@ const App = {
     let questionText = '';
     let questionHint = '';
 
-    if (t.taskType === 'task9' || t.taskType === 'task10') {
+    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') {
       questionText = word.display;
-      questionHint = t.taskType === 'task10' ? (word.tag || 'Выберите правильную букву или приставку') : 'Выберите правильное написание';
+      questionHint = t.taskType === 'task10'
+        ? (word.tag || 'Выберите правильную букву или приставку')
+        : (t.taskType === 'task11'
+          ? (word.tag || 'Выберите правильный суффикс')
+          : 'Выберите правильное написание');
     } else {
       questionText = word.word;
       questionHint = 'Выберите правильное ударение';
@@ -1570,7 +1811,7 @@ const App = {
   renderResults() {
     const p = this.screenParams;
     const percent = p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
-    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : (p.taskType === 'task10' ? 'Задание №10' : 'Задание №4');
+    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : (p.taskType === 'task10' ? 'Задание №10' : (p.taskType === 'task11' ? 'Задание №11' : 'Задание №4'));
 
     let emoji = '🎉';
     if (percent < 50) emoji = '😤';
@@ -1630,7 +1871,7 @@ const App = {
             Повторить ошибки (${p.mistakes.length}) 🔄
           </button>
         ` : ''}
-        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : (p.taskType === 'task10' ? 'task10' : 'task4')}">
+        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : (p.taskType === 'task10' ? 'task10' : (p.taskType === 'task11' ? 'task11' : 'task4'))}">
           Тренироваться ещё
         </button>
         <button class="btn-secondary" data-action="home">На главную</button>
@@ -1646,7 +1887,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
 
     // Получаем доступный набор начальных букв для текущего задания
-    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : (activeTab === 'task10' ? (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : []) : WORDS_TASK4);
+    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : (activeTab === 'task10' ? (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : []) : (activeTab === 'task11' ? (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : []) : WORDS_TASK4));
     const letterCounts = {};
     baseWords.forEach(w => {
       const l = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1680,6 +1921,9 @@ const App = {
         </button>
         <button class="dict-tab ${activeTab === 'task10' ? 'active' : ''}" data-dict-tab="task10">
           Задание №10 (${typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.length : 121})
+        </button>
+        <button class="dict-tab ${activeTab === 'task11' ? 'active' : ''}" data-dict-tab="task11">
+          Задание №11 (${typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.length : 148})
         </button>
         <button class="dict-tab ${activeTab === 'task4' ? 'active' : ''}" data-dict-tab="task4">
           Задание №4 (${WORDS_TASK4.length})
@@ -1728,7 +1972,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
     const searchQuery = (this.screenParams.searchQuery || '').toLowerCase().trim();
 
-    let words = activeTab === 'task9' ? [...WORDS_TASK9] : (activeTab === 'task10' ? [...(typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [])] : [...WORDS_TASK4]);
+    let words = activeTab === 'task9' ? [...WORDS_TASK9] : (activeTab === 'task10' ? [...(typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [])] : (activeTab === 'task11' ? [...(typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : [])] : [...WORDS_TASK4]));
 
     // Фильтр по поиску
     if (searchQuery) {
@@ -1759,8 +2003,8 @@ const App = {
       </div>
     `;
 
-    // 1. Задание №9 и Задание №10: алфавитная группировка по первой букве
-    if (activeTab === 'task9' || activeTab === 'task10') {
+    // 1. Задание №9, №10, №11: алфавитная группировка по первой букве
+    if (activeTab === 'task9' || activeTab === 'task10' || activeTab === 'task11') {
       const grouped = {};
       words.forEach(w => {
         const letter = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1775,9 +2019,11 @@ const App = {
           <div class="dict-section-header">${letter} <span class="dict-section-count">(${letterWords.length})</span></div>
           ${letterWords.map(w => {
             const isFav = Storage.isFavorite(w.id);
-            const tagHTML = activeTab === 'task10'
-              ? `<span style="color:#00796B;font-weight:600;">🧩 ${w.tag || 'Приставка'}</span> · буква: <b>${w.correctLetter}</b>`
-              : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`);
+            const tagHTML = activeTab === 'task11'
+              ? `<span style="color:#B45309;font-weight:600;">✏️ ${w.tag || 'Суффикс'}</span> · буква: <b>${w.correctLetter}</b>`
+              : (activeTab === 'task10'
+                ? `<span style="color:#00796B;font-weight:600;">🧩 ${w.tag || 'Приставка'}</span> · буква: <b>${w.correctLetter}</b>`
+                : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`));
             return `
               <div class="dict-word-card">
                 <div>
@@ -1898,10 +2144,11 @@ const App = {
 
   renderFavorites() {
     const favData = Storage.getFavorites();
-    const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id)).filter(Boolean);
+    const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id) || (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === id) : null)).filter(Boolean);
     const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
+    const fav11 = (favData.task11 || []).map(id => (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
-    const isEmpty = fav9.length === 0 && fav10.length === 0 && fav4.length === 0;
+    const isEmpty = fav9.length === 0 && fav10.length === 0 && fav11.length === 0 && fav4.length === 0;
 
     if (isEmpty) {
       return `
@@ -1917,7 +2164,7 @@ const App = {
     }
 
     let contentHTML = '';
-    const totalFavs = fav9.length + fav10.length + fav4.length;
+    const totalFavs = fav9.length + fav10.length + fav11.length + fav4.length;
 
     if (fav9.length > 0) {
       contentHTML += `
@@ -1938,6 +2185,18 @@ const App = {
           <div class="fav-word-card">
             <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
             <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task10">✕</button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    if (fav11.length > 0) {
+      contentHTML += `
+        <div class="fav-section-title">Задание №11 — Суффиксы (${fav11.length})</div>
+        ${fav11.map(w => `
+          <div class="fav-word-card">
+            <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
+            <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task11">✕</button>
           </div>
         `).join('')}
       `;
@@ -1978,19 +2237,25 @@ const App = {
     // Фильтруем проблемные слова, проверяя их существование в текущей базе
     const allProblemWords = (stats.problemWords || [])
       .map(pw => {
-        const word = WORDS_TASK9.find(w => w.id === pw.id) || (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) || WORDS_TASK4.find(w => w.id === pw.id);
+        const word = WORDS_TASK9.find(w => w.id === pw.id) ||
+                     (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === pw.id) : null) ||
+                     (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) ||
+                     (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === pw.id) : null) ||
+                     WORDS_TASK4.find(w => w.id === pw.id);
         if (!word) return null;
-        const isTask9 = word.id.startsWith('t9_');
+        const isTask9 = word.id.startsWith('t9_') || word.id.startsWith('e9_');
         const isTask10 = word.id.startsWith('t10_');
-        const taskType = isTask9 ? 'task9' : (isTask10 ? 'task10' : 'task4');
+        const isTask11 = word.id.startsWith('t11_');
+        const taskType = isTask9 ? 'task9' : (isTask10 ? 'task10' : (isTask11 ? 'task11' : 'task4'));
         return {
           ...pw,
           wordObj: word,
           isTask9,
           isTask10,
+          isTask11,
           taskType,
-          displayName: (isTask9 || isTask10) ? word.word : word.correct,
-          displayHighlighted: (isTask9 || isTask10)
+          displayName: (isTask9 || isTask10 || isTask11) ? word.word : word.correct,
+          displayHighlighted: (isTask9 || isTask10 || isTask11)
             ? this.highlightLetter(word.word, word.display)
             : this.highlightStress(word.correct)
         };
@@ -1999,7 +2264,8 @@ const App = {
 
     const task9ProblemWords = allProblemWords.filter(w => w.isTask9);
     const task10ProblemWords = allProblemWords.filter(w => w.isTask10);
-    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9 && !w.isTask10);
+    const task11ProblemWords = allProblemWords.filter(w => w.isTask11);
+    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9 && !w.isTask10 && !w.isTask11);
 
     const currentFilter = this.screenParams.problemFilter || 'all';
     const isExpanded = this.screenParams.problemsExpanded !== undefined
@@ -2009,6 +2275,7 @@ const App = {
     let displayWords = allProblemWords;
     if (currentFilter === 'task9') displayWords = task9ProblemWords;
     else if (currentFilter === 'task10') displayWords = task10ProblemWords;
+    else if (currentFilter === 'task11') displayWords = task11ProblemWords;
     else if (currentFilter === 'task4') displayWords = task4ProblemWords;
 
     // HTML сессий
@@ -2032,6 +2299,9 @@ const App = {
         } else if (s.taskType === 'task10') {
           label = '№10 Приставки и искл.';
           icon = '🧩';
+        } else if (s.taskType === 'task11') {
+          label = '№11 Суффиксы и искл.';
+          icon = '✏️';
         } else if (s.taskType === 'task4_ege') {
           label = '№4 Формат ЕГЭ';
           icon = '📋';
@@ -2069,11 +2339,11 @@ const App = {
       const wordsListHTML = displayWords.map(pw => {
         const isFav = Storage.isFavorite(pw.id);
         const errorPercent = Math.round(pw.errorRate * 100);
-        const taskTag = pw.isTask9 ? '№9' : (pw.isTask10 ? '№10' : '№4');
+        const taskTag = pw.isTask9 ? '№9' : (pw.isTask10 ? '№10' : (pw.isTask11 ? '№11' : '№4'));
         return `
           <div class="stat-problem-card">
             <div class="stat-problem-main">
-              <span class="stat-task-badge ${pw.isTask9 ? 't9' : (pw.isTask10 ? 't10' : 't4')}">${taskTag}</span>
+              <span class="stat-task-badge ${pw.isTask9 ? 't9' : (pw.isTask10 ? 't10' : (pw.isTask11 ? 't11' : 't4'))}">${taskTag}</span>
               <span class="dict-word-text">${pw.displayHighlighted}</span>
             </div>
             <div class="stat-problem-actions">
@@ -2090,7 +2360,7 @@ const App = {
         `;
       }).join('');
 
-      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task10' ? ' (№10)' : (currentFilter === 'task4' ? ' (№4)' : ''));
+      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task10' ? ' (№10)' : (currentFilter === 'task11' ? ' (№11)' : (currentFilter === 'task4' ? ' (№4)' : '')));
 
       problemContent = `
         <div class="stat-section-card">
@@ -2120,6 +2390,10 @@ const App = {
               <button class="problem-pill ${currentFilter === 'task10' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task10">
                 🧩 №10 (${task10ProblemWords.length})
+              </button>
+              <button class="problem-pill ${currentFilter === 'task11' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="task11">
+                ✏️ №11 (${task11ProblemWords.length})
               </button>
               <button class="problem-pill ${currentFilter === 'task4' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task4">
@@ -2212,6 +2486,18 @@ const App = {
           <div class="stat-card-meta">
             <span>Точность: <b>${stats.task10?.percent || 0}%</b></span>
             <span>(${stats.task10?.correct || 0}/${stats.task10?.total || 0})</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-badge">Задание №11</span>
+            <span class="stat-card-icon">✏️</span>
+          </div>
+          <div class="stat-card-value">${stats.task11?.total || 0} <span class="stat-card-unit">слов</span></div>
+          <div class="stat-card-meta">
+            <span>Точность: <b>${stats.task11?.percent || 0}%</b></span>
+            <span>(${stats.task11?.correct || 0}/${stats.task11?.total || 0})</span>
           </div>
         </div>
 

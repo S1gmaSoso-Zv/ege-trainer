@@ -56,7 +56,7 @@ const Storage = {
 
   isFavorite(wordId) {
     const data = this._getFavoritesData();
-    const all = [...(data.task9 || []), ...(data.task10 || []), ...(data.task4 || [])];
+    const all = [...(data.task9 || []), ...(data.task10 || []), ...(data.task11 || []), ...(data.task4 || [])];
     return all.includes(wordId);
   },
 
@@ -183,17 +183,20 @@ const Storage = {
       data.cumulative = {
         t9: { total: 0, correct: 0, count: 0 },
         t10: { total: 0, correct: 0, count: 0 },
+        t11: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       };
     }
     if (!data.cumulative.t9) data.cumulative.t9 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t10) data.cumulative.t10 = { total: 0, correct: 0, count: 0 };
+    if (!data.cumulative.t11) data.cumulative.t11 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t4) data.cumulative.t4 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.blitz) data.cumulative.blitz = { total: 0, correct: 0, count: 0 };
 
     let s9Tot = 0, s9Cor = 0, s9Cnt = 0;
     let s10Tot = 0, s10Cor = 0, s10Cnt = 0;
+    let s11Tot = 0, s11Cor = 0, s11Cnt = 0;
     let s4Tot = 0, s4Cor = 0, s4Cnt = 0;
     let blzTot = 0, blzCor = 0, blzCnt = 0;
 
@@ -204,6 +207,8 @@ const Storage = {
         s9Tot += tot; s9Cor += cor; s9Cnt++;
       } else if (s.taskType === 'task10') {
         s10Tot += tot; s10Cor += cor; s10Cnt++;
+      } else if (s.taskType === 'task11') {
+        s11Tot += tot; s11Cor += cor; s11Cnt++;
       } else if (s.taskType === 'task4' || s.taskType === 'task4_ege') {
         s4Tot += tot; s4Cor += cor; s4Cnt++;
       } else if (s.taskType === 'blitz') {
@@ -218,6 +223,10 @@ const Storage = {
     data.cumulative.t10.total = Math.max(Number(data.cumulative.t10.total) || 0, s10Tot);
     data.cumulative.t10.correct = Math.max(Number(data.cumulative.t10.correct) || 0, s10Cor);
     data.cumulative.t10.count = Math.max(Number(data.cumulative.t10.count) || 0, s10Cnt);
+
+    data.cumulative.t11.total = Math.max(Number(data.cumulative.t11.total) || 0, s11Tot);
+    data.cumulative.t11.correct = Math.max(Number(data.cumulative.t11.correct) || 0, s11Cor);
+    data.cumulative.t11.count = Math.max(Number(data.cumulative.t11.count) || 0, s11Cnt);
 
     data.cumulative.t4.total = Math.max(Number(data.cumulative.t4.total) || 0, s4Tot);
     data.cumulative.t4.correct = Math.max(Number(data.cumulative.t4.correct) || 0, s4Cor);
@@ -285,6 +294,8 @@ const Storage = {
     let tKey = 't9';
     if (session.taskType === 'task10') {
       tKey = 't10';
+    } else if (session.taskType === 'task11') {
+      tKey = 't11';
     } else if (session.taskType === 'task4' || session.taskType === 'task4_ege') {
       tKey = 't4';
     } else if (session.taskType === 'blitz') {
@@ -306,8 +317,6 @@ const Storage = {
         if (wordId && typeof wordId === 'string' && !wordId.startsWith('ege_')) {
           if (!data.answers[wordId]) {
             data.answers[wordId] = { correct: 0, wrong: 1, streak: 0 };
-          } else if (data.answers[wordId].wrong === 0 && data.answers[wordId].correct === 0) {
-            data.answers[wordId].wrong = 1;
           }
         }
       });
@@ -318,6 +327,8 @@ const Storage = {
 
   /**
    * Записать ответ по конкретному слову (для выявления сложных слов)
+   * Восстановлена исходная логика: верный ответ увеличивает correct,
+   * не затирая историю ошибок wrong.
    */
   recordAnswer(wordId, isCorrect) {
     if (!wordId || typeof wordId !== 'string' || wordId.startsWith('ege_')) return;
@@ -328,10 +339,6 @@ const Storage = {
 
     if (isCorrect) {
       entry.correct++;
-      // Если по слову числится ошибка, верный ответ уменьшает её счетчик
-      if (entry.wrong > 0) {
-        entry.wrong = Math.max(0, entry.wrong - 1);
-      }
     } else {
       entry.wrong++;
     }
@@ -342,11 +349,7 @@ const Storage = {
       streak: 0
     };
 
-    try {
-      localStorage.setItem(this._getStatsKey(), JSON.stringify(data));
-    } catch (e) {
-      console.error('recordAnswer save error:', e);
-    }
+    this._saveStatsData(data);
   },
 
   /**
@@ -358,6 +361,7 @@ const Storage = {
 
     const task9Sessions = sessions.filter(s => s.taskType === 'task9');
     const task10Sessions = sessions.filter(s => s.taskType === 'task10');
+    const task11Sessions = sessions.filter(s => s.taskType === 'task11');
     const task4Sessions = sessions.filter(s => s.taskType === 'task4' || s.taskType === 'task4_ege');
     const blitzSessions = sessions.filter(s => s.taskType === 'blitz');
 
@@ -378,17 +382,19 @@ const Storage = {
 
     const s9 = calcMetric(data.cumulative?.t9, task9Sessions);
     const s10 = calcMetric(data.cumulative?.t10, task10Sessions);
+    const s11 = calcMetric(data.cumulative?.t11, task11Sessions);
     const s4 = calcMetric(data.cumulative?.t4, task4Sessions);
     const blz = calcMetric(data.cumulative?.blitz, blitzSessions);
 
-    const totalPracticed = s9.total + s10.total + s4.total + blz.total;
-    const totalCorrect = s9.correct + s10.correct + s4.correct + blz.correct;
+    const totalPracticed = s9.total + s10.total + s11.total + s4.total + blz.total;
+    const totalCorrect = s9.correct + s10.correct + s11.correct + s4.correct + blz.correct;
     const overallPercent = totalPracticed > 0 ? Math.round((totalCorrect / totalPracticed) * 100) : 0;
-    const totalSessions = s9.sessionsCount + s10.sessionsCount + s4.sessionsCount + blz.sessionsCount;
+    const totalSessions = s9.sessionsCount + s10.sessionsCount + s11.sessionsCount + s4.sessionsCount + blz.sessionsCount;
 
     return {
       task9: s9,
       task10: s10,
+      task11: s11,
       task4: s4,
       blitz: blz,
       totalPracticed,
@@ -524,6 +530,7 @@ const Storage = {
       cum: data.cumulative || {
         t9: { total: 0, correct: 0, count: 0 },
         t10: { total: 0, correct: 0, count: 0 },
+        t11: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       },
@@ -544,6 +551,7 @@ const Storage = {
       const cumulative = {
         t9: parsed.cum?.t9 || { total: 0, correct: 0, count: 0 },
         t10: parsed.cum?.t10 || { total: 0, correct: 0, count: 0 },
+        t11: parsed.cum?.t11 || { total: 0, correct: 0, count: 0 },
         t4: parsed.cum?.t4 || { total: 0, correct: 0, count: 0 },
         blitz: parsed.cum?.blitz || { total: 0, correct: 0, count: 0 }
       };
@@ -583,6 +591,7 @@ const Storage = {
       const payload = JSON.stringify({
         task9: data.task9 || [],
         task10: data.task10 || [],
+        task11: data.task11 || [],
         task4: data.task4 || [],
         updatedAt: Date.now()
       });
@@ -691,6 +700,7 @@ const Storage = {
         let mergedFavs = {
           task9: [...(localFavs.task9 || [])],
           task10: [...(localFavs.task10 || [])],
+          task11: [...(localFavs.task11 || [])],
           task4: [...(localFavs.task4 || [])]
         };
 
@@ -699,25 +709,28 @@ const Storage = {
             const cloudFavs = JSON.parse(values.ege_cloud_favs);
             const unionT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
             const unionT10 = Array.from(new Set([...(localFavs.task10 || []), ...(cloudFavs.task10 || [])]));
+            const unionT11 = Array.from(new Set([...(localFavs.task11 || []), ...(cloudFavs.task11 || [])]));
             const unionT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
 
             if (unionT9.length !== (localFavs.task9 || []).length ||
                 unionT10.length !== (localFavs.task10 || []).length ||
+                unionT11.length !== (localFavs.task11 || []).length ||
                 unionT4.length !== (localFavs.task4 || []).length) {
-              mergedFavs = { task9: unionT9, task10: unionT10, task4: unionT4 };
+              mergedFavs = { task9: unionT9, task10: unionT10, task11: unionT11, task4: unionT4 };
               localStorage.setItem(this._getFavKey(), JSON.stringify(mergedFavs));
               hasLocalChanges = true;
             }
 
             if (unionT9.length !== (cloudFavs.task9 || []).length ||
                 unionT10.length !== (cloudFavs.task10 || []).length ||
+                unionT11.length !== (cloudFavs.task11 || []).length ||
                 unionT4.length !== (cloudFavs.task4 || []).length) {
               shouldPushFavsToCloud = true;
             }
           } catch (e) {
             console.warn('Error parsing cloud favs:', e);
           }
-        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task10 || []).length > 0 || (localFavs.task4 || []).length > 0) {
+        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task10 || []).length > 0 || (localFavs.task11 || []).length > 0 || (localFavs.task4 || []).length > 0) {
           // В облаке ещё пусто, а локально есть избранное -> выгружаем в облако
           shouldPushFavsToCloud = true;
         }
@@ -766,12 +779,14 @@ const Storage = {
               const cloudCum = cloudStats.cumulative || {
                 t9: { total: 0, correct: 0, count: 0 },
                 t10: { total: 0, correct: 0, count: 0 },
+                t11: { total: 0, correct: 0, count: 0 },
                 t4: { total: 0, correct: 0, count: 0 },
                 blitz: { total: 0, correct: 0, count: 0 }
               };
               const localCum = localStats.cumulative || {
                 t9: { total: 0, correct: 0, count: 0 },
                 t10: { total: 0, correct: 0, count: 0 },
+                t11: { total: 0, correct: 0, count: 0 },
                 t4: { total: 0, correct: 0, count: 0 },
                 blitz: { total: 0, correct: 0, count: 0 }
               };
@@ -786,6 +801,11 @@ const Storage = {
                   total: Math.max(Number(localCum.t10?.total) || 0, Number(cloudCum.t10?.total) || 0),
                   correct: Math.max(Number(localCum.t10?.correct) || 0, Number(cloudCum.t10?.correct) || 0),
                   count: Math.max(Number(localCum.t10?.count) || 0, Number(cloudCum.t10?.count) || 0)
+                },
+                t11: {
+                  total: Math.max(Number(localCum.t11?.total) || 0, Number(cloudCum.t11?.total) || 0),
+                  correct: Math.max(Number(localCum.t11?.correct) || 0, Number(cloudCum.t11?.correct) || 0),
+                  count: Math.max(Number(localCum.t11?.count) || 0, Number(cloudCum.t11?.count) || 0)
                 },
                 t4: {
                   total: Math.max(Number(localCum.t4?.total) || 0, Number(cloudCum.t4?.total) || 0),
@@ -804,6 +824,7 @@ const Storage = {
                 Object.keys(mergedAnswers).length !== Object.keys(localStats.answers || {}).length ||
                 mergedCum.t9.total !== (localCum.t9?.total || 0) ||
                 mergedCum.t10.total !== (localCum.t10?.total || 0) ||
+                mergedCum.t11.total !== (localCum.t11?.total || 0) ||
                 mergedCum.t4.total !== (localCum.t4?.total || 0) ||
                 mergedCum.blitz.total !== (localCum.blitz?.total || 0);
 
@@ -824,6 +845,7 @@ const Storage = {
                 Object.keys(mergedAnswers).length > Object.keys(cloudStats.answers || {}).length ||
                 mergedCum.t9.total > (cloudCum.t9?.total || 0) ||
                 mergedCum.t10.total > (cloudCum.t10?.total || 0) ||
+                mergedCum.t11.total > (cloudCum.t11?.total || 0) ||
                 mergedCum.t4.total > (cloudCum.t4?.total || 0) ||
                 mergedCum.blitz.total > (cloudCum.blitz?.total || 0);
 

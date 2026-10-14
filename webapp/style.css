@@ -1574,6 +1574,12 @@ body.tg-dark .stat-section-toggle-indicator {
   border: 1px solid #B2DFDB;
 }
 
+.stat-task-badge.t11 {
+  background: #FEF3C7;
+  color: #B45309;
+  border: 1px solid #FDE68A;
+}
+
 .stat-task-badge.t4 {
   background: #EDE7F6;
   color: #512DA8;
@@ -1697,6 +1703,11 @@ body.tg-dark .stat-task-badge.t10 {
   color: #80CBC4;
   border-color: rgba(0, 150, 136, 0.4);
 }
+body.tg-dark .stat-task-badge.t11 {
+  background: rgba(245, 158, 11, 0.2);
+  color: #FCD34D;
+  border-color: rgba(245, 158, 11, 0.4);
+}
 body.tg-dark .stat-task-badge.t4 {
   background: rgba(126, 87, 194, 0.2);
   color: #D1C4E9;
@@ -1742,6 +1753,11 @@ body.tg-dark .stat-reset-btn:hover {
     background: rgba(0, 150, 136, 0.2);
     color: #80CBC4;
     border-color: rgba(0, 150, 136, 0.4);
+  }
+  .stat-task-badge.t11 {
+    background: rgba(245, 158, 11, 0.2);
+    color: #FCD34D;
+    border-color: rgba(245, 158, 11, 0.4);
   }
   .stat-task-badge.t4 {
     background: rgba(126, 87, 194, 0.2);
