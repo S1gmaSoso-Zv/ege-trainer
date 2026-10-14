@@ -56,7 +56,7 @@ const Storage = {
 
   isFavorite(wordId) {
     const data = this._getFavoritesData();
-    const all = [...(data.task9 || []), ...(data.task10 || []), ...(data.task11 || []), ...(data.task4 || [])];
+    const all = [...(data.task9 || []), ...(data.task10 || []), ...(data.task11 || []), ...(data.task12 || []), ...(data.task4 || [])];
     return all.includes(wordId);
   },
 
@@ -67,6 +67,7 @@ const Storage = {
       if (wordId.startsWith('t9_') || wordId.startsWith('e9_')) key = 'task9';
       else if (wordId.startsWith('t10_')) key = 'task10';
       else if (wordId.startsWith('t11_')) key = 'task11';
+      else if (wordId.startsWith('t12_')) key = 'task12';
       else if (wordId.startsWith('t4_')) key = 'task4';
       else key = 'task9';
     }
@@ -191,6 +192,7 @@ const Storage = {
         t9: { total: 0, correct: 0, count: 0 },
         t10: { total: 0, correct: 0, count: 0 },
         t11: { total: 0, correct: 0, count: 0 },
+        t12: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       };
@@ -198,12 +200,14 @@ const Storage = {
     if (!data.cumulative.t9) data.cumulative.t9 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t10) data.cumulative.t10 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t11) data.cumulative.t11 = { total: 0, correct: 0, count: 0 };
+    if (!data.cumulative.t12) data.cumulative.t12 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.t4) data.cumulative.t4 = { total: 0, correct: 0, count: 0 };
     if (!data.cumulative.blitz) data.cumulative.blitz = { total: 0, correct: 0, count: 0 };
 
     let s9Tot = 0, s9Cor = 0, s9Cnt = 0;
     let s10Tot = 0, s10Cor = 0, s10Cnt = 0;
     let s11Tot = 0, s11Cor = 0, s11Cnt = 0;
+    let s12Tot = 0, s12Cor = 0, s12Cnt = 0;
     let s4Tot = 0, s4Cor = 0, s4Cnt = 0;
     let blzTot = 0, blzCor = 0, blzCnt = 0;
 
@@ -216,6 +220,8 @@ const Storage = {
         s10Tot += tot; s10Cor += cor; s10Cnt++;
       } else if (s.taskType === 'task11') {
         s11Tot += tot; s11Cor += cor; s11Cnt++;
+      } else if (s.taskType === 'task12') {
+        s12Tot += tot; s12Cor += cor; s12Cnt++;
       } else if (s.taskType === 'task4' || s.taskType === 'task4_ege') {
         s4Tot += tot; s4Cor += cor; s4Cnt++;
       } else if (s.taskType === 'blitz') {
@@ -234,6 +240,10 @@ const Storage = {
     data.cumulative.t11.total = Math.max(Number(data.cumulative.t11.total) || 0, s11Tot);
     data.cumulative.t11.correct = Math.max(Number(data.cumulative.t11.correct) || 0, s11Cor);
     data.cumulative.t11.count = Math.max(Number(data.cumulative.t11.count) || 0, s11Cnt);
+
+    data.cumulative.t12.total = Math.max(Number(data.cumulative.t12.total) || 0, s12Tot);
+    data.cumulative.t12.correct = Math.max(Number(data.cumulative.t12.correct) || 0, s12Cor);
+    data.cumulative.t12.count = Math.max(Number(data.cumulative.t12.count) || 0, s12Cnt);
 
     data.cumulative.t4.total = Math.max(Number(data.cumulative.t4.total) || 0, s4Tot);
     data.cumulative.t4.correct = Math.max(Number(data.cumulative.t4.correct) || 0, s4Cor);
@@ -303,6 +313,8 @@ const Storage = {
       tKey = 't10';
     } else if (session.taskType === 'task11') {
       tKey = 't11';
+    } else if (session.taskType === 'task12') {
+      tKey = 't12';
     } else if (session.taskType === 'task4' || session.taskType === 'task4_ege') {
       tKey = 't4';
     } else if (session.taskType === 'blitz') {
@@ -369,6 +381,7 @@ const Storage = {
     const task9Sessions = sessions.filter(s => s.taskType === 'task9');
     const task10Sessions = sessions.filter(s => s.taskType === 'task10');
     const task11Sessions = sessions.filter(s => s.taskType === 'task11');
+    const task12Sessions = sessions.filter(s => s.taskType === 'task12');
     const task4Sessions = sessions.filter(s => s.taskType === 'task4' || s.taskType === 'task4_ege');
     const blitzSessions = sessions.filter(s => s.taskType === 'blitz');
 
@@ -390,18 +403,20 @@ const Storage = {
     const s9 = calcMetric(data.cumulative?.t9, task9Sessions);
     const s10 = calcMetric(data.cumulative?.t10, task10Sessions);
     const s11 = calcMetric(data.cumulative?.t11, task11Sessions);
+    const s12 = calcMetric(data.cumulative?.t12, task12Sessions);
     const s4 = calcMetric(data.cumulative?.t4, task4Sessions);
     const blz = calcMetric(data.cumulative?.blitz, blitzSessions);
 
-    const totalPracticed = s9.total + s10.total + s11.total + s4.total + blz.total;
-    const totalCorrect = s9.correct + s10.correct + s11.correct + s4.correct + blz.correct;
+    const totalPracticed = s9.total + s10.total + s11.total + s12.total + s4.total + blz.total;
+    const totalCorrect = s9.correct + s10.correct + s11.correct + s12.correct + s4.correct + blz.correct;
     const overallPercent = totalPracticed > 0 ? Math.round((totalCorrect / totalPracticed) * 100) : 0;
-    const totalSessions = s9.sessionsCount + s10.sessionsCount + s11.sessionsCount + s4.sessionsCount + blz.sessionsCount;
+    const totalSessions = s9.sessionsCount + s10.sessionsCount + s11.sessionsCount + s12.sessionsCount + s4.sessionsCount + blz.sessionsCount;
 
     return {
       task9: s9,
       task10: s10,
       task11: s11,
+      task12: s12,
       task4: s4,
       blitz: blz,
       totalPracticed,
@@ -538,6 +553,7 @@ const Storage = {
         t9: { total: 0, correct: 0, count: 0 },
         t10: { total: 0, correct: 0, count: 0 },
         t11: { total: 0, correct: 0, count: 0 },
+        t12: { total: 0, correct: 0, count: 0 },
         t4: { total: 0, correct: 0, count: 0 },
         blitz: { total: 0, correct: 0, count: 0 }
       },
@@ -559,6 +575,7 @@ const Storage = {
         t9: parsed.cum?.t9 || { total: 0, correct: 0, count: 0 },
         t10: parsed.cum?.t10 || { total: 0, correct: 0, count: 0 },
         t11: parsed.cum?.t11 || { total: 0, correct: 0, count: 0 },
+        t12: parsed.cum?.t12 || { total: 0, correct: 0, count: 0 },
         t4: parsed.cum?.t4 || { total: 0, correct: 0, count: 0 },
         blitz: parsed.cum?.blitz || { total: 0, correct: 0, count: 0 }
       };
@@ -599,6 +616,7 @@ const Storage = {
         task9: data.task9 || [],
         task10: data.task10 || [],
         task11: data.task11 || [],
+        task12: data.task12 || [],
         task4: data.task4 || [],
         updatedAt: Date.now()
       });
@@ -708,6 +726,7 @@ const Storage = {
           task9: [...(localFavs.task9 || [])],
           task10: [...(localFavs.task10 || [])],
           task11: [...(localFavs.task11 || [])],
+          task12: [...(localFavs.task12 || [])],
           task4: [...(localFavs.task4 || [])]
         };
 
@@ -717,13 +736,15 @@ const Storage = {
             const unionT9 = Array.from(new Set([...(localFavs.task9 || []), ...(cloudFavs.task9 || [])]));
             const unionT10 = Array.from(new Set([...(localFavs.task10 || []), ...(cloudFavs.task10 || [])]));
             const unionT11 = Array.from(new Set([...(localFavs.task11 || []), ...(cloudFavs.task11 || [])]));
+            const unionT12 = Array.from(new Set([...(localFavs.task12 || []), ...(cloudFavs.task12 || [])]));
             const unionT4 = Array.from(new Set([...(localFavs.task4 || []), ...(cloudFavs.task4 || [])]));
 
             if (unionT9.length !== (localFavs.task9 || []).length ||
                 unionT10.length !== (localFavs.task10 || []).length ||
                 unionT11.length !== (localFavs.task11 || []).length ||
+                unionT12.length !== (localFavs.task12 || []).length ||
                 unionT4.length !== (localFavs.task4 || []).length) {
-              mergedFavs = { task9: unionT9, task10: unionT10, task11: unionT11, task4: unionT4 };
+              mergedFavs = { task9: unionT9, task10: unionT10, task11: unionT11, task12: unionT12, task4: unionT4 };
               localStorage.setItem(this._getFavKey(), JSON.stringify(mergedFavs));
               hasLocalChanges = true;
             }
@@ -731,13 +752,14 @@ const Storage = {
             if (unionT9.length !== (cloudFavs.task9 || []).length ||
                 unionT10.length !== (cloudFavs.task10 || []).length ||
                 unionT11.length !== (cloudFavs.task11 || []).length ||
+                unionT12.length !== (cloudFavs.task12 || []).length ||
                 unionT4.length !== (cloudFavs.task4 || []).length) {
               shouldPushFavsToCloud = true;
             }
           } catch (e) {
             console.warn('Error parsing cloud favs:', e);
           }
-        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task10 || []).length > 0 || (localFavs.task11 || []).length > 0 || (localFavs.task4 || []).length > 0) {
+        } else if ((localFavs.task9 || []).length > 0 || (localFavs.task10 || []).length > 0 || (localFavs.task11 || []).length > 0 || (localFavs.task12 || []).length > 0 || (localFavs.task4 || []).length > 0) {
           // В облаке ещё пусто, а локально есть избранное -> выгружаем в облако
           shouldPushFavsToCloud = true;
         }

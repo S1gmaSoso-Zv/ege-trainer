@@ -8918,3 +8918,1313 @@ const WORDS_TASK11 = [
   { id: 't11_154', word: 'новизна', display: 'нов_зна', correctLetter: 'и', wrongLetters: ['е'], tag: 'неизменяемый суффикс -ИЗН-', category: 'nouns', firstLetter: 'н' }
 ];
 
+
+const WORDS_TASK12 = [
+  {
+    "id": "t12_001",
+    "word": "обессилевший",
+    "display": "обессил_вший",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "обессилевший (сам лишился сил)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обессилевший (от усталости) — перед -ВШ- сохраняется гласная инфинитива: обессилеть (непереходный глагол, значение: сам потерял силы)."
+  },
+  {
+    "id": "t12_002",
+    "word": "обессиливший",
+    "display": "обессил_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "обессиливший (лишивший сил кого-то)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обессиливший (врага) — перед -ВШ- сохраняется гласная инфинитива: обессилить (переходный глагол, значение: лишил сил кого-либо)."
+  },
+  {
+    "id": "t12_003",
+    "word": "обескровевший",
+    "display": "обескров_вший",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "обескровевший (сам потерял кровь)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обескровевший (от раны) — перед -ВШ- сохраняется гласная инфинитива: обескроветь (непереходный глагол, сам потерял кровь)."
+  },
+  {
+    "id": "t12_004",
+    "word": "обескровивший",
+    "display": "обескров_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "обескровивший (лишивший крови кого-то)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обескровивший (врага) — перед -ВШ- сохраняется гласная инфинитива: обескровить (переходный глагол, кого-либо лишил крови)."
+  },
+  {
+    "id": "t12_005",
+    "word": "брезжущий",
+    "display": "брезж_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "запомнить: брезжущий",
+    "category": "frequent_mistakes",
+    "firstLetter": "б",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: брезжущий (пишется суффикс -УЩ-)."
+  },
+  {
+    "id": "t12_006",
+    "word": "алчущий",
+    "display": "алч_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "алчущий (от алкать I спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "а",
+    "isFrequentMistake": true,
+    "explanation": "Алчущий — образовано от глагола I спряжения АЛКАТЬ (на -АТЬ), поэтому пишется суффикс -УЩ-."
+  },
+  {
+    "id": "t12_007",
+    "word": "всеобъемлющий",
+    "display": "всеобъемл_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "всеобъемлющий (от объемлить I спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Всеобъемлющий — от глагола I спряжения объемлить / обнимать, пишется суффикс -ЮЩ-."
+  },
+  {
+    "id": "t12_008",
+    "word": "скаченный с горы",
+    "display": "скач_нный с горы",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "а",
+      "и"
+    ],
+    "tag": "скаченный с горы (от скатить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "Скаченный (с горы) — от глагола на -ИТЬ (скатить). Перед -НН- глагольное -ИТЬ переходит в суффикс -ЕНН- (только глаголы на -АТЬ/-ЯТЬ сохраняют А/Я)."
+  },
+  {
+    "id": "t12_009",
+    "word": "скачанный",
+    "display": "скач_нный",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "скачанный файл (от скачать)",
+    "category": "frequent_mistakes",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "Скачанный (файл) — от глагола на -АТЬ (скачать), перед -НН- гласная инфинитива А сохраняется."
+  },
+  {
+    "id": "t12_010",
+    "word": "почитаемый",
+    "display": "почита_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "почитаемый (от почитать I спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "Почитаемый — от глагола I спряжения ПОЧИТАТЬ, пишется суффикс -ЕМ-."
+  },
+  {
+    "id": "t12_011",
+    "word": "немыслимый",
+    "display": "немысл_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "немыслимый (от мыслить II спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isFrequentMistake": true,
+    "explanation": "Немыслимый — от глагола II спряжения МЫСЛИТЬ, пишется суффикс -ИМ-."
+  },
+  {
+    "id": "t12_012",
+    "word": "заметивший",
+    "display": "замет_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "заметивший (от заметить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Заметивший (собаку) — перед суффиксом -ВШ- сохраняется гласная инфинитива: заметить -> заметивший."
+  },
+  {
+    "id": "t12_013",
+    "word": "калечишь",
+    "display": "калеч_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "калечишь (калечить — II спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "к",
+    "isFrequentMistake": true,
+    "explanation": "Калечишь — глагол II спряжения (калечить — на -ИТЬ), пишется окончание -ИШЬ."
+  },
+  {
+    "id": "t12_014",
+    "word": "окончивший",
+    "display": "оконч_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "окончивший (от окончить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Окончивший — перед суффиксом -ВШ- сохраняется гласная инфинитива: окончить -> окончивший."
+  },
+  {
+    "id": "t12_015",
+    "word": "беспокоишься",
+    "display": "беспоко_шься",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "беспокоишься (беспокоиться — II спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "б",
+    "isFrequentMistake": true,
+    "explanation": "Беспокоишься — глагол II спряжения (беспокоиться — на -ИТЬ), пишется окончание -ИШЬСЯ."
+  },
+  {
+    "id": "t12_016",
+    "word": "замешанный в преступлении",
+    "display": "замеш_нный в преступлении",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "замешанный в преступлении (от замешать)",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Замешанный (в преступлении) — от глагола ЗАМЕШАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива А."
+  },
+  {
+    "id": "t12_017",
+    "word": "повенчанный",
+    "display": "повенч_нный",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "повенчанный (от повенчать)",
+    "category": "frequent_mistakes",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "Повенчанный — от глагола ПОВЕНЧАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива (А)."
+  },
+  {
+    "id": "t12_018",
+    "word": "достроенный",
+    "display": "достро_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "достроенный (от достроить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "д",
+    "isFrequentMistake": true,
+    "explanation": "Достроенный — если инфинитив на -ИТЬ (достроить), то перед -НН- пишется Е (суффикс -ЕНН-)."
+  },
+  {
+    "id": "t12_019",
+    "word": "отгонишь",
+    "display": "отгон_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "отгонишь (исключение гнать — II спр.)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Отгонишь — глагол II спряжения (исключение: гнать -> отогнать; наличие приставки не меняет спряжение)."
+  },
+  {
+    "id": "t12_020",
+    "word": "обидевшийся",
+    "display": "обид_вшийся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "обидевшийся (от обидеть)",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Обидевшийся — перед суффиксом -ВШ- сохраняется гласная инфинитива: обидеть (глагол-исключение на -ЕТЬ)."
+  },
+  {
+    "id": "t12_021",
+    "word": "выгоришь",
+    "display": "выгор_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "выгоришь (убираем приставку ВЫ-)",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Выгоришь — убираем ударную приставку ВЫ- -> горИшь (под ударением чётко слышна И)."
+  },
+  {
+    "id": "t12_022",
+    "word": "уверенный",
+    "display": "увер_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "уверенный (от уверить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "у",
+    "isFrequentMistake": true,
+    "explanation": "Уверенный — если глагол на -ИТЬ (уверить), то перед -НН- пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_023",
+    "word": "неприемлемый",
+    "display": "неприемл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: неприемлемый",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: неприемлемый (суффикс -ЕМ-, от глагола принять/приемлеть I спр.)."
+  },
+  {
+    "id": "t12_024",
+    "word": "неотъемлемый",
+    "display": "неотъемл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: неотъемлемый",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: неотъемлемый (суффикс -ЕМ-, от глагола отнять/отъемлеть I спр.)."
+  },
+  {
+    "id": "t12_025",
+    "word": "незыблемый",
+    "display": "незыбл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: незыблемый",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: незыблемый (суффикс -ЕМ-, от глагола зыбить I спр.)."
+  },
+  {
+    "id": "t12_026",
+    "word": "движимый",
+    "display": "движ_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "запомнить: движимый",
+    "category": "frequent_mistakes",
+    "firstLetter": "д",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: движимый (суффикс -ИМ-, от устаревшего глагола движити)."
+  },
+  {
+    "id": "t12_027",
+    "word": "мучимый",
+    "display": "муч_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "запомнить: мучимый",
+    "category": "frequent_mistakes",
+    "firstLetter": "м",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: мучимый (суффикс -ИМ-, от глагола II спряжения мучить)."
+  },
+  {
+    "id": "t12_028",
+    "word": "застреленный",
+    "display": "застрел_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "я",
+      "и"
+    ],
+    "tag": "застреленный (от застрелить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Застреленный — от глагола на -ИТЬ (застрелить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_029",
+    "word": "расстрелянный",
+    "display": "расстрел_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "расстрелянный (от расстрелять)",
+    "category": "frequent_mistakes",
+    "firstLetter": "р",
+    "isFrequentMistake": true,
+    "explanation": "Расстрелянный — от глагола на -ЯТЬ (расстрелять), перед -НН- сохраняется Я."
+  },
+  {
+    "id": "t12_030",
+    "word": "вывалянный в пыли",
+    "display": "вывал_нный в пыли",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "вывалянный в пыли (от вывалять)",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Вывалянный (в пыли) — от глагола на -ЯТЬ (вывалять), сохраняется Я перед -НН-."
+  },
+  {
+    "id": "t12_031",
+    "word": "вываленный из мешка",
+    "display": "вывал_нный из мешка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "я",
+      "и"
+    ],
+    "tag": "вываленный из мешка (от вывалить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Вываленный (из мешка) — от глагола на -ИТЬ (вывалить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_032",
+    "word": "замешенное тесто",
+    "display": "замеш_нное тесто",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "а",
+      "и"
+    ],
+    "tag": "замешенное тесто (от замесить)",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Замешенное (тесто) — от глагола на -ИТЬ (замесить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_033",
+    "word": "бреешь",
+    "display": "бре_шь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр. (брить)",
+    "category": "exceptions",
+    "firstLetter": "б",
+    "isException": true
+  },
+  {
+    "id": "t12_034",
+    "word": "стелешь",
+    "display": "стел_шь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр. (стелить)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_035",
+    "word": "стелющийся",
+    "display": "стел_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "исключение I спр. (стелить)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_036",
+    "word": "зиждется",
+    "display": "зижд_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр. (зиждиться)",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_037",
+    "word": "зыблется",
+    "display": "зыбл_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр. (зыбиться)",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_038",
+    "word": "гонишь",
+    "display": "гон_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (гнать)",
+    "category": "exceptions",
+    "firstLetter": "г",
+    "isException": true
+  },
+  {
+    "id": "t12_039",
+    "word": "держишь",
+    "display": "держ_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (держать)",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_040",
+    "word": "дышишь",
+    "display": "дыш_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (дышать)",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_041",
+    "word": "дышащий",
+    "display": "дыш_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "исключение II спр. (дышать)",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_042",
+    "word": "слышишь",
+    "display": "слыш_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (слышать)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_043",
+    "word": "слышащий",
+    "display": "слыш_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "исключение II спр. (слышать)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_044",
+    "word": "слышимый",
+    "display": "слыш_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (слышать)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_045",
+    "word": "смотришь",
+    "display": "смотр_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (смотреть)",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_046",
+    "word": "видишь",
+    "display": "вид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (видеть)",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_047",
+    "word": "видимый",
+    "display": "вид_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (видеть)",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_048",
+    "word": "ненавидишь",
+    "display": "ненавид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (ненавидеть)",
+    "category": "exceptions",
+    "firstLetter": "н",
+    "isException": true
+  },
+  {
+    "id": "t12_049",
+    "word": "ненавидимый",
+    "display": "ненавид_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (ненавидеть)",
+    "category": "exceptions",
+    "firstLetter": "н",
+    "isException": true
+  },
+  {
+    "id": "t12_050",
+    "word": "зависишь",
+    "display": "завис_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (зависеть)",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_051",
+    "word": "зависимый",
+    "display": "завис_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (зависеть)",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_052",
+    "word": "терпишь",
+    "display": "терп_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (терпеть)",
+    "category": "exceptions",
+    "firstLetter": "т",
+    "isException": true
+  },
+  {
+    "id": "t12_053",
+    "word": "терпимый",
+    "display": "терп_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (терпеть)",
+    "category": "exceptions",
+    "firstLetter": "т",
+    "isException": true
+  },
+  {
+    "id": "t12_054",
+    "word": "обидишь",
+    "display": "обид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (обидеть)",
+    "category": "exceptions",
+    "firstLetter": "о",
+    "isException": true
+  },
+  {
+    "id": "t12_055",
+    "word": "вертишь",
+    "display": "верт_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр. (вертеть)",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_056",
+    "word": "вертящий",
+    "display": "верт_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "исключение II спр. (вертеть)",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_057",
+    "word": "тает",
+    "display": "та_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "таять — I спр.",
+    "category": "verbs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_058",
+    "word": "сеет",
+    "display": "се_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "сеять — I спр.",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_059",
+    "word": "веет",
+    "display": "ве_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "веять — I спр.",
+    "category": "verbs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t12_060",
+    "word": "лает",
+    "display": "ла_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "лаять — I спр.",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_061",
+    "word": "чует",
+    "display": "чу_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "чуять — I спр.",
+    "category": "verbs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_062",
+    "word": "реет",
+    "display": "ре_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "реять — I спр.",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t12_063",
+    "word": "надеешься",
+    "display": "наде_шься",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "надеяться — I спр.",
+    "category": "verbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t12_064",
+    "word": "лелеет",
+    "display": "леле_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "лелеять — I спр.",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_065",
+    "word": "клеит",
+    "display": "кле_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "клеить — II спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_066",
+    "word": "строит",
+    "display": "стро_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "строить — II спр.",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_067",
+    "word": "чистит",
+    "display": "чист_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "чистить — II спр.",
+    "category": "verbs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_068",
+    "word": "колышется",
+    "display": "колыш_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "колыхать — I спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_069",
+    "word": "дремлет",
+    "display": "дремл_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "дремать — I спр.",
+    "category": "verbs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t12_070",
+    "word": "шепчет",
+    "display": "шепч_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "шептать — I спр.",
+    "category": "verbs",
+    "firstLetter": "ш"
+  },
+  {
+    "id": "t12_071",
+    "word": "маячит",
+    "display": "маяч_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "маячить — II спр.",
+    "category": "verbs",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_072",
+    "word": "борется",
+    "display": "бор_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "бороться — I спр.",
+    "category": "verbs",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t12_073",
+    "word": "колет",
+    "display": "кол_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "колоть — I спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_074",
+    "word": "стелет",
+    "display": "стел_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "стелить — I спр. (искл.)",
+    "category": "verbs",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_075",
+    "word": "бреет",
+    "display": "бре_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "брить — I спр. (искл.)",
+    "category": "verbs",
+    "firstLetter": "б",
+    "isException": true
+  },
+  {
+    "id": "t12_076",
+    "word": "жалит",
+    "display": "жал_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "жалить — II спр.",
+    "category": "verbs",
+    "firstLetter": "ж"
+  },
+  {
+    "id": "t12_077",
+    "word": "тащит",
+    "display": "тащ_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "тащить — II спр.",
+    "category": "verbs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_078",
+    "word": "машет",
+    "display": "маш_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "махать — I спр.",
+    "category": "verbs",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_079",
+    "word": "стелешься",
+    "display": "стел_шься",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "стелить — I спр. (искл.)",
+    "category": "verbs",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_080",
+    "word": "плачет",
+    "display": "плач_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "плакать — I спр.",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t12_081",
+    "word": "тающий",
+    "display": "та_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "таять — I спр.",
+    "category": "participles",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_082",
+    "word": "сеющий",
+    "display": "се_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "сеять — I спр.",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_083",
+    "word": "веющий",
+    "display": "ве_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "веять — I спр.",
+    "category": "participles",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t12_084",
+    "word": "чующий",
+    "display": "чу_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "чуять — I спр.",
+    "category": "participles",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_085",
+    "word": "реющий",
+    "display": "ре_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "реять — I спр.",
+    "category": "participles",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t12_086",
+    "word": "надеющийся",
+    "display": "наде_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "надеяться — I спр.",
+    "category": "participles",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t12_087",
+    "word": "лелеемый",
+    "display": "леле_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "лелеять — I спр.",
+    "category": "participles",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_088",
+    "word": "клеящий",
+    "display": "кле_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "клеить — II спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_089",
+    "word": "клеивший",
+    "display": "кле_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "клеить (перед -ВШ- сохраняется И)",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_090",
+    "word": "строящий",
+    "display": "стро_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "строить — II спр.",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_091",
+    "word": "строивший",
+    "display": "стро_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "строить (перед -ВШ- сохраняется И)",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_092",
+    "word": "колышущийся",
+    "display": "колыш_щийся",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "колыхать — I спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_093",
+    "word": "дремлющий",
+    "display": "дремл_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "дремать — I спр.",
+    "category": "participles",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t12_094",
+    "word": "шепчущий",
+    "display": "шепч_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "шептать — I спр.",
+    "category": "participles",
+    "firstLetter": "ш"
+  },
+  {
+    "id": "t12_095",
+    "word": "маячащий",
+    "display": "маяч_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "маячить — II спр.",
+    "category": "participles",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_096",
+    "word": "борющийся",
+    "display": "бор_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "бороться — I спр.",
+    "category": "participles",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t12_097",
+    "word": "колющий",
+    "display": "кол_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "колоть — I спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_098",
+    "word": "стелющий",
+    "display": "стел_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "стелить — I спр. (искл.)",
+    "category": "participles",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_099",
+    "word": "посеянный",
+    "display": "посе_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "посеять (перед -НН- сохраняется Я)",
+    "category": "participles",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t12_100",
+    "word": "развеянный",
+    "display": "разве_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "развеять (перед -НН- сохраняется Я)",
+    "category": "participles",
+    "firstLetter": "р"
+  }
+];

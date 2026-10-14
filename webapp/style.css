@@ -1586,6 +1586,12 @@ body.tg-dark .stat-section-toggle-indicator {
   border: 1px solid #D1C4E9;
 }
 
+.stat-task-badge.t12 {
+  background: #F3E8FF;
+  color: #7C3AED;
+  border: 1px solid #DDD6FE;
+}
+
 .stat-error-chip {
   font-size: 11px;
   font-weight: 600;
@@ -1713,6 +1719,11 @@ body.tg-dark .stat-task-badge.t4 {
   color: #D1C4E9;
   border-color: rgba(126, 87, 194, 0.4);
 }
+body.tg-dark .stat-task-badge.t12 {
+  background: rgba(124, 58, 237, 0.2);
+  color: #C4B5FD;
+  border-color: rgba(124, 58, 237, 0.4);
+}
 body.tg-dark .stat-error-chip {
   background: rgba(239, 83, 80, 0.15);
   color: #EF5350;
@@ -1763,6 +1774,11 @@ body.tg-dark .stat-reset-btn:hover {
     background: rgba(126, 87, 194, 0.2);
     color: #D1C4E9;
     border-color: rgba(126, 87, 194, 0.4);
+  }
+  .stat-task-badge.t12 {
+    background: rgba(124, 58, 237, 0.2);
+    color: #C4B5FD;
+    border-color: rgba(124, 58, 237, 0.4);
   }
   .stat-error-chip {
     background: rgba(239, 83, 80, 0.15);
@@ -2515,5 +2531,89 @@ body.tg-dark .blitz-task-type {
 
 .ege-result-banner.failure .ege-result-text {
   color: var(--text-primary);
+}
+
+/* Explanation / Solution box for frequent mistakes training */
+.explanation-box {
+  margin-top: 14px;
+  background: var(--bg-secondary);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.explanation-toggle-btn {
+  width: 100%;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--green-700);
+  text-align: left;
+}
+
+.explanation-toggle-btn:hover {
+  background: rgba(46, 125, 50, 0.04);
+}
+
+.explanation-chevron {
+  font-size: 11px;
+  color: var(--text-secondary);
+  transition: transform 0.2s ease;
+}
+
+.explanation-content {
+  display: none;
+  padding: 0 14px 14px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.5;
+  color: var(--text-primary);
+  background: var(--bg-primary);
+}
+
+.explanation-content.open {
+  display: block;
+}
+
+.explanation-text {
+  padding-top: 10px;
+  white-space: pre-line;
+}
+
+.next-word-btn {
+  margin-top: 14px;
+  background: var(--green-700);
+  color: #fff;
+  font-weight: 700;
+  font-size: 15px;
+  padding: 14px 20px;
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 12px rgba(46, 125, 50, 0.25);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  animation: pulse-next-btn 1.5s infinite alternate;
+}
+
+@keyframes pulse-next-btn {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.02); }
+}
+
+.mode-card-icon.purple {
+  background: rgba(156, 39, 176, 0.1);
+  color: #9C27B0;
+}
+body.tg-dark .mode-card-icon.purple {
+  background: rgba(186, 104, 200, 0.15);
+  color: #CE93D8;
 }
 

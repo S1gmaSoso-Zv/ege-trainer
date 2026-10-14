@@ -197,7 +197,7 @@ const App = {
   },
 
   updateNav(screen) {
-    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task10filter', 'task11filter', 'task4filter'];
+    const navScreens = ['home', 'dictionary', 'favorites', 'stats', 'task9filter', 'task10filter', 'task11filter', 'task12filter', 'task4filter'];
     this.nav.classList.toggle('hidden', !navScreens.includes(screen));
     this.nav.querySelectorAll('.nav-btn').forEach(btn => {
       btn.classList.toggle('active', btn.dataset.screen === screen);
@@ -212,6 +212,7 @@ const App = {
       task9filter: () => this.renderTask9Filter(),
       task10filter: () => this.renderTask10Filter(),
       task11filter: () => this.renderTask11Filter(),
+      task12filter: () => this.renderTask12Filter(),
       task4filter: () => this.renderTask4Filter(),
       training: () => this.renderTraining(),
       results: () => this.renderResults(),
@@ -413,6 +414,13 @@ const App = {
         });
         break;
 
+      case 'task12':
+        this.navigate('task12filter', {
+          task12Category: 'all',
+          sessionLength: 10
+        });
+        break;
+
       case 'task4':
         this.navigate('task4filter', {
           filterType: 'all',
@@ -448,6 +456,11 @@ const App = {
         this.render();
         break;
 
+      case 'set-task12-cat':
+        this.screenParams.task12Category = dataset.cat;
+        this.render();
+        break;
+
       case 'start-task9-exceptions':
         this.startTask9Exceptions();
         break;
@@ -462,6 +475,21 @@ const App = {
 
       case 'start-task11':
         this.startTask11();
+        break;
+
+      case 'start-task12':
+        this.startTask12();
+        break;
+
+      case 'toggle-explanation':
+        if (this.training) {
+          this.training.explanationOpen = !this.training.explanationOpen;
+          this.render();
+        }
+        break;
+
+      case 'next-question':
+        this.goToNextQuestion();
         break;
 
       case 'start-task4':
@@ -551,7 +579,7 @@ const App = {
 
       case 'retry-mistakes': {
         const p = this.screenParams;
-        const list = p.taskType === 'task9' ? WORDS_TASK9 : (p.taskType === 'task10' ? WORDS_TASK10 : WORDS_TASK4);
+        const list = p.taskType === 'task9' ? WORDS_TASK9 : (p.taskType === 'task10' ? WORDS_TASK10 : (p.taskType === 'task11' ? WORDS_TASK11 : (p.taskType === 'task12' ? WORDS_TASK12 : WORDS_TASK4)));
         const mistakeWords = (p.mistakes || [])
           .map(m => list.find(w => w.id === m.wordId))
           .filter(Boolean);
@@ -767,6 +795,39 @@ const App = {
     this.startTraining('task11', words);
   },
 
+  startTask12() {
+    const p = this.screenParams;
+    const cat = p.task12Category || 'all';
+    let words = typeof WORDS_TASK12 !== 'undefined' ? [...WORDS_TASK12] : [];
+
+    let isFrequentMistakes = false;
+    if (cat === 'frequent_mistakes') {
+      words = words.filter(w => w.isFrequentMistake);
+      isFrequentMistakes = true;
+    } else if (cat === 'exceptions') {
+      words = words.filter(w => w.isException);
+    } else if (cat && cat !== 'all') {
+      words = words.filter(w => w.category === cat);
+    }
+
+    words = this.shuffleArray(words);
+
+    const len = p.sessionLength || 0;
+    if (len > 0 && words.length > len) {
+      words = words.slice(0, len);
+    }
+
+    if (words.length === 0) {
+      alert('Нет слов для тренировки в выбранной категории');
+      return;
+    }
+
+    this.startTraining('task12', words, {
+      isFrequentMistakesMode: isFrequentMistakes,
+      manualAdvance: isFrequentMistakes
+    });
+  },
+
   startTask4() {
     const p = this.screenParams;
     let words = [...WORDS_TASK4];
@@ -795,12 +856,14 @@ const App = {
     const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id) || (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === id) : null)).filter(Boolean);
     const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
     const fav11 = (favData.task11 || []).map(id => (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === id) : null)).filter(Boolean);
+    const fav12 = (favData.task12 || []).map(id => (typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
 
     const available = [];
     if (fav9.length > 0) available.push({ type: 'task9', title: `№9 Словарные (${fav9.length})`, words: fav9 });
     if (fav10.length > 0) available.push({ type: 'task10', title: `№10 Приставки (${fav10.length})`, words: fav10 });
     if (fav11.length > 0) available.push({ type: 'task11', title: `№11 Суффиксы (${fav11.length})`, words: fav11 });
+    if (fav12.length > 0) available.push({ type: 'task12', title: `№12 Спряжения (${fav12.length})`, words: fav12 });
     if (fav4.length > 0) available.push({ type: 'task4', title: `№4 Ударения (${fav4.length})`, words: fav4 });
 
     if (available.length > 1) {
@@ -849,6 +912,7 @@ const App = {
                  (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === pw.id) : null) ||
                  (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) ||
                  (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === pw.id) : null) ||
+                 (typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.find(w => w.id === pw.id) : null) ||
                  WORDS_TASK4.find(w => w.id === pw.id))
       .filter(Boolean);
 
@@ -887,6 +951,16 @@ const App = {
       return;
     }
 
+    if (filter === 'task12') {
+      const task12Words = problemWords.filter(w => w.id.startsWith('t12_'));
+      if (task12Words.length === 0) {
+        alert('В Задании №12 нет сложных слов! 🎉');
+        return;
+      }
+      this.startTraining('task12', this.shuffleArray(task12Words));
+      return;
+    }
+
     if (filter === 'task4') {
       const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
       if (task4Words.length === 0) {
@@ -900,12 +974,14 @@ const App = {
     const task9Words = problemWords.filter(w => w.id.startsWith('t9_') || w.id.startsWith('e9_'));
     const task10Words = problemWords.filter(w => w.id.startsWith('t10_'));
     const task11Words = problemWords.filter(w => w.id.startsWith('t11_'));
+    const task12Words = problemWords.filter(w => w.id.startsWith('t12_'));
     const task4Words = problemWords.filter(w => w.id.startsWith('t4_'));
 
     const available = [];
     if (task9Words.length > 0) available.push({ type: 'task9', title: `📝 Задание №9 — Слова (${task9Words.length})`, words: task9Words });
     if (task10Words.length > 0) available.push({ type: 'task10', title: `🧩 Задание №10 — Приставки (${task10Words.length})`, words: task10Words });
     if (task11Words.length > 0) available.push({ type: 'task11', title: `✏️ Задание №11 — Суффиксы (${task11Words.length})`, words: task11Words });
+    if (task12Words.length > 0) available.push({ type: 'task12', title: `🎯 Задание №12 — Спряжения (${task12Words.length})`, words: task12Words });
     if (task4Words.length > 0) available.push({ type: 'task4', title: `🔤 Задание №4 — Ударения (${task4Words.length})`, words: task4Words });
 
     if (available.length > 1) {
@@ -949,7 +1025,7 @@ const App = {
 
   // ==================== ЛОГИКА ТРЕНИРОВКИ ====================
 
-  startTraining(taskType, words) {
+  startTraining(taskType, words, options = {}) {
     if (this._nextQuestionTimer) {
       clearTimeout(this._nextQuestionTimer);
       this._nextQuestionTimer = null;
@@ -963,7 +1039,10 @@ const App = {
       answered: false,
       selectedVariant: null,
       currentVariants: null,
-      combo: 0
+      combo: 0,
+      isFrequentMistakesMode: options.isFrequentMistakesMode || false,
+      manualAdvance: options.manualAdvance || false,
+      explanationOpen: false
     };
 
     this.prepareCurrentWord();
@@ -975,7 +1054,7 @@ const App = {
     if (!t || t.currentIndex >= t.words.length) return;
 
     const word = t.words[t.currentIndex];
-    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') {
+    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11' || t.taskType === 'task12') {
       t.currentVariants = this.generateTask9Variants(word);
     } else {
       t.currentVariants = this.generateTask4Variants(word);
@@ -1038,26 +1117,46 @@ const App = {
 
     t.answers.push({
       wordId: word.id,
-      word: (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') ? word.word : word.correct,
+      word: (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11' || t.taskType === 'task12') ? word.word : word.correct,
       correct: isCorrect,
       selected: variant.text
     });
+
+    const isMistakesSession = t.isFrequentMistakesMode || (word.isFrequentMistake && t.manualAdvance);
+
+    if (isMistakesSession) {
+      t.explanationOpen = true;
+      this.render();
+      return;
+    }
 
     this.render();
 
     const delay = isCorrect ? 650 : 1600;
     this._nextQuestionTimer = setTimeout(() => {
-      t.currentIndex++;
-      t.answered = false;
-      t.selectedVariant = null;
-
-      if (t.currentIndex >= t.words.length) {
-        this.finishTraining();
-      } else {
-        this.prepareCurrentWord();
-        this.render();
-      }
+      this.goToNextQuestion();
     }, delay);
+  },
+
+  goToNextQuestion() {
+    if (this._nextQuestionTimer) {
+      clearTimeout(this._nextQuestionTimer);
+      this._nextQuestionTimer = null;
+    }
+    const t = this.training;
+    if (!t) return;
+
+    t.currentIndex++;
+    t.answered = false;
+    t.selectedVariant = null;
+    t.explanationOpen = false;
+
+    if (t.currentIndex >= t.words.length) {
+      this.finishTraining();
+    } else {
+      this.prepareCurrentWord();
+      this.render();
+    }
   },
 
   finishTraining() {
@@ -1122,7 +1221,14 @@ const App = {
           <div class="mode-card-icon amber">✏️</div>
           <div>
             <div class="mode-card-title">Задание №11</div>
-            <div class="mode-card-desc">Суффиксы и исключения · ${typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.length : 148} слов</div>
+            <div class="mode-card-desc">Суффиксы и исключения · ${typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.length : 154} слов</div>
+          </div>
+        </button>
+        <button class="mode-card" data-action="task12">
+          <div class="mode-card-icon purple">🎯</div>
+          <div>
+            <div class="mode-card-title">Задание №12</div>
+            <div class="mode-card-desc">Глаголы, причастия и исключения · ${typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.length : 100} слов</div>
           </div>
         </button>
         <button class="mode-card" data-action="task4">
@@ -1488,6 +1594,89 @@ const App = {
     `;
   },
 
+  // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №12 ====================
+
+  renderTask12Filter() {
+    const wordsList = typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12 : [];
+    const cat = this.screenParams.task12Category || 'all';
+    const sessionLength = this.screenParams.sessionLength ?? 10;
+
+    let filtered = wordsList;
+    if (cat === 'frequent_mistakes') {
+      filtered = wordsList.filter(w => w.isFrequentMistake);
+    } else if (cat === 'exceptions') {
+      filtered = wordsList.filter(w => w.isException);
+    } else if (cat !== 'all') {
+      filtered = wordsList.filter(w => w.category === cat);
+    }
+
+    const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
+
+    const countCat = (c) => {
+      if (c === 'frequent_mistakes') return wordsList.filter(w => w.isFrequentMistake).length;
+      if (c === 'exceptions') return wordsList.filter(w => w.isException).length;
+      return wordsList.filter(w => w.category === c).length;
+    };
+
+    return `
+      <div class="screen-header">
+        <button class="back-btn" data-action="back">←</button>
+        <h2 class="screen-title">Задание №12 — Спряжения и суффиксы</h2>
+      </div>
+
+      <div class="ege-info-box">
+        <div class="ege-info-title">🎯 Личные окончания глаголов и суффиксы причастий</div>
+        <div class="ege-info-desc">
+          Окончания I и II спряжения, суффиксы действительных и страдательных причастий (-ущ/-ющ, -ащ/-ящ, -ем/-им, гласные перед -вш- и -нн-). Включая все исключения: <i>брить, стелить, зиждиться, зыбиться; гнать, держать, дышать, слышать...</i> и запоминаемые слова: <i>неприемлемый, движимый, брезжущий, алчущий, обессилевший / обессиливший...</i>
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Количество слов в сессии</div>
+        <div class="session-pills">
+          ${[10, 20, 30, 0].map(n => `
+            <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+              ${n === 0 ? 'Все' : n}
+            </button>
+          `).join('')}
+        </div>
+      </div>
+
+      <div class="filter-section">
+        <div class="filter-label">Категория / Режим тренировки</div>
+        <div class="problem-filter-pills" style="margin-bottom:8px;">
+          <button class="problem-pill ${cat === 'all' ? 'active' : ''}" data-action="set-task12-cat" data-cat="all">
+            Все (${wordsList.length})
+          </button>
+          <button class="problem-pill ${cat === 'frequent_mistakes' ? 'active' : ''}" data-action="set-task12-cat" data-cat="frequent_mistakes" style="border-color:#E53935;color:#D32F2F;font-weight:700;">
+            🔥 Частые ошибки и ловушки (${countCat('frequent_mistakes')})
+          </button>
+          <button class="problem-pill ${cat === 'exceptions' ? 'active' : ''}" data-action="set-task12-cat" data-cat="exceptions" style="border-color:#F59E0B;color:#D97706;font-weight:700;">
+            ⚡ Исключения I и II спр. (${countCat('exceptions')})
+          </button>
+          <button class="problem-pill ${cat === 'verbs' ? 'active' : ''}" data-action="set-task12-cat" data-cat="verbs">
+            Глаголы (${countCat('verbs')})
+          </button>
+          <button class="problem-pill ${cat === 'participles' ? 'active' : ''}" data-action="set-task12-cat" data-cat="participles">
+            Причастия (${countCat('participles')})
+          </button>
+        </div>
+      </div>
+
+      ${cat === 'frequent_mistakes' ? `
+        <div class="filter-section">
+          <div class="filter-hint" style="margin-top:0;background:rgba(211,47,47,0.06);border:1px solid rgba(211,47,47,0.2);padding:10px 12px;border-radius:10px;font-size:13px;color:var(--text-primary);">
+            💡 <b>Режим с разбором:</b> после каждого ответа можно открыть решение с правилом, а переход дальше осуществляется кнопкой «Следующее слово».
+          </div>
+        </div>
+      ` : ''}
+
+      <button class="start-btn" data-action="start-task12" ${filtered.length === 0 ? 'disabled' : ''}>
+        Начать тренировку (${displayCount} слов) 🚀
+      </button>
+    `;
+  },
+
   // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №4 ====================
 
   renderTask4Filter() {
@@ -1611,13 +1800,15 @@ const App = {
     let questionText = '';
     let questionHint = '';
 
-    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11') {
+    if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11' || t.taskType === 'task12') {
       questionText = word.display;
       questionHint = t.taskType === 'task10'
         ? (word.tag || 'Выберите правильную букву или приставку')
         : (t.taskType === 'task11'
           ? (word.tag || 'Выберите правильный суффикс')
-          : 'Выберите правильное написание');
+          : (t.taskType === 'task12'
+            ? (word.tag || 'Выберите правильную букву в окончании или суффиксе')
+            : 'Выберите правильное написание'));
     } else {
       questionText = word.word;
       questionHint = 'Выберите правильное ударение';
@@ -1705,6 +1896,24 @@ const App = {
         <div class="variants">
           ${variantsHTML}
         </div>
+
+        ${t.answered && word.explanation ? `
+          <div class="explanation-box">
+            <button class="explanation-toggle-btn" data-action="toggle-explanation">
+              <span>💡 ${t.explanationOpen ? 'Скрыть объяснение' : 'Показать объяснение правила'}</span>
+              <span class="explanation-chevron">${t.explanationOpen ? '▲' : '▼'}</span>
+            </button>
+            <div class="explanation-content ${t.explanationOpen ? 'open' : ''}">
+              <div class="explanation-text">${this.escapeHTML(word.explanation)}</div>
+            </div>
+          </div>
+        ` : ''}
+
+        ${t.answered && (t.isFrequentMistakesMode || (word.isFrequentMistake && t.manualAdvance)) ? `
+          <button class="start-btn next-word-btn" data-action="next-question">
+            Следующее слово ➔
+          </button>
+        ` : ''}
       </div>
     `;
   },
@@ -1714,7 +1923,7 @@ const App = {
   renderResults() {
     const p = this.screenParams;
     const percent = p.total > 0 ? Math.round((p.correct / p.total) * 100) : 0;
-    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : (p.taskType === 'task10' ? 'Задание №10' : (p.taskType === 'task11' ? 'Задание №11' : 'Задание №4'));
+    const taskLabel = p.taskType === 'task9' ? 'Задание №9' : (p.taskType === 'task10' ? 'Задание №10' : (p.taskType === 'task11' ? 'Задание №11' : (p.taskType === 'task12' ? 'Задание №12' : 'Задание №4')));
 
     let emoji = '🎉';
     if (percent < 50) emoji = '😤';
@@ -1774,7 +1983,7 @@ const App = {
             Повторить ошибки (${p.mistakes.length}) 🔄
           </button>
         ` : ''}
-        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : (p.taskType === 'task10' ? 'task10' : (p.taskType === 'task11' ? 'task11' : 'task4'))}">
+        <button class="btn-primary" data-action="${p.taskType === 'task9' ? 'task9' : (p.taskType === 'task10' ? 'task10' : (p.taskType === 'task11' ? 'task11' : (p.taskType === 'task12' ? 'task12' : 'task4')))}">
           Тренироваться ещё
         </button>
         <button class="btn-secondary" data-action="home">На главную</button>
@@ -1790,7 +1999,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
 
     // Получаем доступный набор начальных букв для текущего задания
-    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : (activeTab === 'task10' ? (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : []) : (activeTab === 'task11' ? (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : []) : WORDS_TASK4));
+    const baseWords = activeTab === 'task9' ? WORDS_TASK9 : (activeTab === 'task10' ? (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : []) : (activeTab === 'task11' ? (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : []) : (activeTab === 'task12' ? (typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12 : []) : WORDS_TASK4)));
     const letterCounts = {};
     baseWords.forEach(w => {
       const l = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1827,6 +2036,9 @@ const App = {
         </button>
         <button class="dict-tab ${activeTab === 'task11' ? 'active' : ''}" data-dict-tab="task11">
           Задание №11 (${typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.length : 148})
+        </button>
+        <button class="dict-tab ${activeTab === 'task12' ? 'active' : ''}" data-dict-tab="task12">
+          Задание №12 (${typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.length : 100})
         </button>
         <button class="dict-tab ${activeTab === 'task4' ? 'active' : ''}" data-dict-tab="task4">
           Задание №4 (${WORDS_TASK4.length})
@@ -1875,7 +2087,7 @@ const App = {
     const dictLetter = (this.screenParams.dictLetter || '').toUpperCase();
     const searchQuery = (this.screenParams.searchQuery || '').toLowerCase().trim();
 
-    let words = activeTab === 'task9' ? [...WORDS_TASK9] : (activeTab === 'task10' ? [...(typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [])] : (activeTab === 'task11' ? [...(typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : [])] : [...WORDS_TASK4]));
+    let words = activeTab === 'task9' ? [...WORDS_TASK9] : (activeTab === 'task10' ? [...(typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10 : [])] : (activeTab === 'task11' ? [...(typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11 : [])] : (activeTab === 'task12' ? [...(typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12 : [])] : [...WORDS_TASK4])));
 
     // Фильтр по поиску
     if (searchQuery) {
@@ -1906,8 +2118,8 @@ const App = {
       </div>
     `;
 
-    // 1. Задание №9, №10, №11: алфавитная группировка по первой букве
-    if (activeTab === 'task9' || activeTab === 'task10' || activeTab === 'task11') {
+    // 1. Задание №9, №10, №11, №12: алфавитная группировка по первой букве
+    if (activeTab === 'task9' || activeTab === 'task10' || activeTab === 'task11' || activeTab === 'task12') {
       const grouped = {};
       words.forEach(w => {
         const letter = (w.firstLetter || w.word[0] || '').toUpperCase();
@@ -1922,11 +2134,13 @@ const App = {
           <div class="dict-section-header">${letter} <span class="dict-section-count">(${letterWords.length})</span></div>
           ${letterWords.map(w => {
             const isFav = Storage.isFavorite(w.id);
-            const tagHTML = activeTab === 'task11'
-              ? `<span style="color:#B45309;font-weight:600;">✏️ ${w.tag || 'Суффикс'}</span> · буква: <b>${w.correctLetter}</b>`
-              : (activeTab === 'task10'
-                ? `<span style="color:#00796B;font-weight:600;">🧩 ${w.tag || 'Приставка'}</span> · буква: <b>${w.correctLetter}</b>`
-                : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`));
+            const tagHTML = activeTab === 'task12'
+              ? (w.isFrequentMistake ? `<span style="color:#7C3AED;font-weight:600;">🔥 ${w.tag || 'Ловушка'}</span> · буква: <b>${w.correctLetter}</b>` : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `<span style="color:#6D28D9;font-weight:600;">🎯 ${w.tag || 'Спряжение'}</span> · буква: <b>${w.correctLetter}</b>`))
+              : (activeTab === 'task11'
+                ? `<span style="color:#B45309;font-weight:600;">✏️ ${w.tag || 'Суффикс'}</span> · буква: <b>${w.correctLetter}</b>`
+                : (activeTab === 'task10'
+                  ? `<span style="color:#00796B;font-weight:600;">🧩 ${w.tag || 'Приставка'}</span> · буква: <b>${w.correctLetter}</b>`
+                  : (w.isException ? `<span style="color:#E65100;font-weight:600;">⚡ ${w.tag || 'Исключение'}</span>` : `буква в пропуске: <b>${w.correctLetter}</b>`)));
             return `
               <div class="dict-word-card">
                 <div>
@@ -2050,8 +2264,9 @@ const App = {
     const fav9 = (favData.task9 || []).map(id => WORDS_TASK9.find(w => w.id === id) || (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === id) : null)).filter(Boolean);
     const fav10 = (favData.task10 || []).map(id => (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === id) : null)).filter(Boolean);
     const fav11 = (favData.task11 || []).map(id => (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === id) : null)).filter(Boolean);
+    const fav12 = (favData.task12 || []).map(id => (typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.find(w => w.id === id) : null)).filter(Boolean);
     const fav4 = (favData.task4 || []).map(id => WORDS_TASK4.find(w => w.id === id)).filter(Boolean);
-    const isEmpty = fav9.length === 0 && fav10.length === 0 && fav11.length === 0 && fav4.length === 0;
+    const isEmpty = fav9.length === 0 && fav10.length === 0 && fav11.length === 0 && fav12.length === 0 && fav4.length === 0;
 
     if (isEmpty) {
       return `
@@ -2067,7 +2282,7 @@ const App = {
     }
 
     let contentHTML = '';
-    const totalFavs = fav9.length + fav10.length + fav11.length + fav4.length;
+    const totalFavs = fav9.length + fav10.length + fav11.length + fav12.length + fav4.length;
 
     if (fav9.length > 0) {
       contentHTML += `
@@ -2100,6 +2315,18 @@ const App = {
           <div class="fav-word-card">
             <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
             <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task11">✕</button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    if (fav12.length > 0) {
+      contentHTML += `
+        <div class="fav-section-title">Задание №12 — Спряжения и суффиксы (${fav12.length})</div>
+        ${fav12.map(w => `
+          <div class="fav-word-card">
+            <div class="dict-word-text">${this.highlightLetter(w.word, w.display)}</div>
+            <button class="fav-remove-btn" data-action="remove-fav" data-word-id="${w.id}" data-task="task12">✕</button>
           </div>
         `).join('')}
       `;
@@ -2144,21 +2371,24 @@ const App = {
                      (typeof WORDS_TASK9_EXCEPTIONS !== 'undefined' ? WORDS_TASK9_EXCEPTIONS.find(w => w.id === pw.id) : null) ||
                      (typeof WORDS_TASK10 !== 'undefined' ? WORDS_TASK10.find(w => w.id === pw.id) : null) ||
                      (typeof WORDS_TASK11 !== 'undefined' ? WORDS_TASK11.find(w => w.id === pw.id) : null) ||
+                     (typeof WORDS_TASK12 !== 'undefined' ? WORDS_TASK12.find(w => w.id === pw.id) : null) ||
                      WORDS_TASK4.find(w => w.id === pw.id);
         if (!word) return null;
         const isTask9 = word.id.startsWith('t9_') || word.id.startsWith('e9_');
         const isTask10 = word.id.startsWith('t10_');
         const isTask11 = word.id.startsWith('t11_');
-        const taskType = isTask9 ? 'task9' : (isTask10 ? 'task10' : (isTask11 ? 'task11' : 'task4'));
+        const isTask12 = word.id.startsWith('t12_');
+        const taskType = isTask9 ? 'task9' : (isTask10 ? 'task10' : (isTask11 ? 'task11' : (isTask12 ? 'task12' : 'task4')));
         return {
           ...pw,
           wordObj: word,
           isTask9,
           isTask10,
           isTask11,
+          isTask12,
           taskType,
-          displayName: (isTask9 || isTask10 || isTask11) ? word.word : word.correct,
-          displayHighlighted: (isTask9 || isTask10 || isTask11)
+          displayName: (isTask9 || isTask10 || isTask11 || isTask12) ? word.word : word.correct,
+          displayHighlighted: (isTask9 || isTask10 || isTask11 || isTask12)
             ? this.highlightLetter(word.word, word.display)
             : this.highlightStress(word.correct)
         };
@@ -2168,7 +2398,8 @@ const App = {
     const task9ProblemWords = allProblemWords.filter(w => w.isTask9);
     const task10ProblemWords = allProblemWords.filter(w => w.isTask10);
     const task11ProblemWords = allProblemWords.filter(w => w.isTask11);
-    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9 && !w.isTask10 && !w.isTask11);
+    const task12ProblemWords = allProblemWords.filter(w => w.isTask12);
+    const task4ProblemWords = allProblemWords.filter(w => !w.isTask9 && !w.isTask10 && !w.isTask11 && !w.isTask12);
 
     const currentFilter = this.screenParams.problemFilter || 'all';
     const isExpanded = this.screenParams.problemsExpanded !== undefined
@@ -2179,6 +2410,7 @@ const App = {
     if (currentFilter === 'task9') displayWords = task9ProblemWords;
     else if (currentFilter === 'task10') displayWords = task10ProblemWords;
     else if (currentFilter === 'task11') displayWords = task11ProblemWords;
+    else if (currentFilter === 'task12') displayWords = task12ProblemWords;
     else if (currentFilter === 'task4') displayWords = task4ProblemWords;
 
     // HTML сессий
@@ -2205,6 +2437,9 @@ const App = {
         } else if (s.taskType === 'task11') {
           label = '№11 Суффиксы и искл.';
           icon = '✏️';
+        } else if (s.taskType === 'task12') {
+          label = '№12 Спряжения и искл.';
+          icon = '🎯';
         } else if (s.taskType === 'task4_ege') {
           label = '№4 Формат ЕГЭ';
           icon = '📋';
@@ -2242,11 +2477,12 @@ const App = {
       const wordsListHTML = displayWords.map(pw => {
         const isFav = Storage.isFavorite(pw.id);
         const errorPercent = Math.round(pw.errorRate * 100);
-        const taskTag = pw.isTask9 ? '№9' : (pw.isTask10 ? '№10' : (pw.isTask11 ? '№11' : '№4'));
+        const taskTag = pw.isTask9 ? '№9' : (pw.isTask10 ? '№10' : (pw.isTask11 ? '№11' : (pw.isTask12 ? '№12' : '№4')));
+        const taskBadgeCls = pw.isTask9 ? 't9' : (pw.isTask10 ? 't10' : (pw.isTask11 ? 't11' : (pw.isTask12 ? 't12' : 't4')));
         return `
           <div class="stat-problem-card">
             <div class="stat-problem-main">
-              <span class="stat-task-badge ${pw.isTask9 ? 't9' : (pw.isTask10 ? 't10' : (pw.isTask11 ? 't11' : 't4'))}">${taskTag}</span>
+              <span class="stat-task-badge ${taskBadgeCls}">${taskTag}</span>
               <span class="dict-word-text">${pw.displayHighlighted}</span>
             </div>
             <div class="stat-problem-actions">
@@ -2263,7 +2499,7 @@ const App = {
         `;
       }).join('');
 
-      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task10' ? ' (№10)' : (currentFilter === 'task11' ? ' (№11)' : (currentFilter === 'task4' ? ' (№4)' : '')));
+      const filterTag = currentFilter === 'task9' ? ' (№9)' : (currentFilter === 'task10' ? ' (№10)' : (currentFilter === 'task11' ? ' (№11)' : (currentFilter === 'task12' ? ' (№12)' : (currentFilter === 'task4' ? ' (№4)' : ''))));
 
       problemContent = `
         <div class="stat-section-card">
@@ -2297,6 +2533,10 @@ const App = {
               <button class="problem-pill ${currentFilter === 'task11' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task11">
                 ✏️ №11 (${task11ProblemWords.length})
+              </button>
+              <button class="problem-pill ${currentFilter === 'task12' ? 'active' : ''}"
+                      data-action="set-problem-filter" data-filter="task12">
+                🎯 №12 (${task12ProblemWords.length})
               </button>
               <button class="problem-pill ${currentFilter === 'task4' ? 'active' : ''}"
                       data-action="set-problem-filter" data-filter="task4">
@@ -2401,6 +2641,18 @@ const App = {
           <div class="stat-card-meta">
             <span>Точность: <b>${stats.task11?.percent || 0}%</b></span>
             <span>(${stats.task11?.correct || 0}/${stats.task11?.total || 0})</span>
+          </div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-card-top">
+            <span class="stat-card-badge">Задание №12</span>
+            <span class="stat-card-icon">🎯</span>
+          </div>
+          <div class="stat-card-value">${stats.task12?.total || 0} <span class="stat-card-unit">слов</span></div>
+          <div class="stat-card-meta">
+            <span>Точность: <b>${stats.task12?.percent || 0}%</b></span>
+            <span>(${stats.task12?.correct || 0}/${stats.task12?.total || 0})</span>
           </div>
         </div>
 
