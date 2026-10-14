@@ -5912,6 +5912,61 @@ const WORDS_TASK9 = [
     ],
     "tag": "а",
     "firstLetter": "э"
+  },
+  {
+    "id": "t9_538",
+    "word": "шероховатый",
+    "display": "ш_роховатый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "е (запомнить)",
+    "firstLetter": "ш"
+  },
+  {
+    "id": "t9_539",
+    "word": "укрощать",
+    "display": "укр_щать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "о (кроткий)",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t9_540",
+    "word": "полоскать",
+    "display": "пол_скать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "о (полощет)",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t9_541",
+    "word": "ожог",
+    "display": "ож_г",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ё"
+    ],
+    "tag": "о (сильный ожог — сущ.)",
+    "firstLetter": "о"
+  },
+  {
+    "id": "t9_542",
+    "word": "выскочка",
+    "display": "выск_чка",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "о (чередование -скак-/-скоч-)",
+    "firstLetter": "в"
   }
 ];
 
@@ -8687,7 +8742,16 @@ const WORDS_TASK10 = [
   { id: 't10_118', word: 'неотъемлемый', display: 'неот_емлемый', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ', category: 'signs', firstLetter: 'н' },
   { id: 't10_119', word: 'фельдъегерь', display: 'фельд_егерь', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ', category: 'signs', firstLetter: 'ф' },
   { id: 't10_120', word: 'двухэтажный', display: 'двух_тажный', correctLetter: 'э', wrongLetters: ['ъэ'], tag: 'Сложные слова без Ъ', category: 'signs', firstLetter: 'д' },
-  { id: 't10_121', word: 'трёхъязычный', display: 'трёх_язычный', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ в сложных словах', category: 'signs', firstLetter: 'т' }
+  { id: 't10_121', word: 'трёхъязычный', display: 'трёх_язычный', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ в сложных словах', category: 'signs', firstLetter: 'т' },
+  { id: 't10_122', word: 'придать форму', display: 'пр_дать форму', correctLetter: 'и', wrongLetters: ['е'], tag: 'придать форму (значение «изменить вид»)', category: 'pri_words', firstLetter: 'п' },
+  { id: 't10_123', word: 'присвоить', display: 'пр_своить', correctLetter: 'и', wrongLetters: ['е'], tag: 'присвоить (значение присоединения)', category: 'pri_words', firstLetter: 'п' },
+  { id: 't10_124', word: 'приподнять', display: 'пр_поднять', correctLetter: 'и', wrongLetters: ['е'], tag: 'приподнять (неполнота действия)', category: 'pri_words', firstLetter: 'п' },
+  { id: 't10_125', word: 'чересчур', display: 'чере_чур', correctLetter: 'с', wrongLetters: ['з'], tag: 'запомнить: чересчур', category: 'signs', firstLetter: 'ч' },
+  { id: 't10_126', word: 'дисбаланс', display: 'ди_баланс', correctLetter: 'с', wrongLetters: ['з'], tag: 'иноязычная приставка дис-', category: 'signs', firstLetter: 'д' },
+  { id: 't10_127', word: 'дисгармония', display: 'ди_гармония', correctLetter: 'с', wrongLetters: ['з'], tag: 'иноязычная приставка дис-', category: 'signs', firstLetter: 'д' },
+  { id: 't10_128', word: 'здесь', display: '_десь', correctLetter: 'з', wrongLetters: ['с'], tag: 'корень здесь (з- часть корня)', category: 'signs', firstLetter: 'з' },
+  { id: 't10_129', word: 'расчёт', display: 'ра_чёт', correctLetter: 'с', wrongLetters: ['сс'], tag: 'расчёт (с одним С)', category: 'signs', firstLetter: 'р' },
+  { id: 't10_130', word: 'рассчитывать', display: 'ра_считывать', correctLetter: 'с', wrongLetters: ['з'], tag: 'рассчитывать (с двумя С)', category: 'signs', firstLetter: 'р' }
 ];
 
 const WORDS_TASK11 = [
@@ -8845,6 +8909,12 @@ const WORDS_TASK11 = [
   { id: 't11_145', word: 'засветло', display: 'засветл_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка ЗА-)', category: 'adverbs', firstLetter: 'з' },
   { id: 't11_146', word: 'запросто', display: 'запрост_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка ЗА-)', category: 'adverbs', firstLetter: 'з' },
   { id: 't11_147', word: 'насухо', display: 'насух_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка НА-)', category: 'adverbs', firstLetter: 'н' },
-  { id: 't11_148', word: 'вправо', display: 'вправ_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка В-)', category: 'adverbs', firstLetter: 'в' }
+  { id: 't11_148', word: 'вправо', display: 'вправ_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка В-)', category: 'adverbs', firstLetter: 'в' },
+  { id: 't11_149', word: 'проржавить', display: 'проржав_ть', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -И- в перех. глаголе', category: 'verbs', firstLetter: 'п' },
+  { id: 't11_150', word: 'порывистый', display: 'порыв_стый', correctLetter: 'и', wrongLetters: ['е'], tag: 'неизменяемый суффикс -ИСТ-', category: 'adjectives', firstLetter: 'п' },
+  { id: 't11_151', word: 'европеец', display: 'европе_ц', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЦ- в сущ. м.р.', category: 'nouns', firstLetter: 'е' },
+  { id: 't11_152', word: 'хрущёвка', display: 'хрущ_вка', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁВК- в отглаг. сущ.', category: 'nouns', firstLetter: 'х' },
+  { id: 't11_153', word: 'сердцевина', display: 'сердц_вина', correctLetter: 'е', wrongLetters: ['и'], tag: 'неизменяемый суффикс -ЕВИН-', category: 'nouns', firstLetter: 'с' },
+  { id: 't11_154', word: 'новизна', display: 'нов_зна', correctLetter: 'и', wrongLetters: ['е'], tag: 'неизменяемый суффикс -ИЗН-', category: 'nouns', firstLetter: 'н' }
 ];
 

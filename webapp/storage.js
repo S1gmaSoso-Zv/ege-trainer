@@ -62,7 +62,14 @@ const Storage = {
 
   toggleFavorite(wordId, taskType) {
     const data = this._getFavoritesData();
-    const key = taskType; // 'task9' or 'task4'
+    let key = taskType;
+    if (!key) {
+      if (wordId.startsWith('t9_') || wordId.startsWith('e9_')) key = 'task9';
+      else if (wordId.startsWith('t10_')) key = 'task10';
+      else if (wordId.startsWith('t11_')) key = 'task11';
+      else if (wordId.startsWith('t4_')) key = 'task4';
+      else key = 'task9';
+    }
     if (!data[key]) data[key] = [];
 
     const idx = data[key].indexOf(wordId);

@@ -284,17 +284,13 @@ const App = {
       return;
     }
 
-    // 4. Режим выбора букв в Задании №9 (все / ловушки / по букве в корне / по алфавиту)
+    // 4. Режим выбора букв в Задании №9 (все / одна / несколько)
     const letterModeBtn = e.target.closest('[data-letter-mode]');
     if (letterModeBtn) {
       const mode = letterModeBtn.dataset.letterMode;
       this.screenParams.letterMode = mode;
       if (mode === 'all') {
         this.screenParams.selectedLetters = [];
-      } else if (mode === 'gap') {
-        if (!this.screenParams.selectedGapLetters || this.screenParams.selectedGapLetters.length === 0) {
-          this.screenParams.selectedGapLetters = ['а'];
-        }
       } else if (mode === 'single') {
         if (!this.screenParams.selectedLetters || this.screenParams.selectedLetters.length === 0) {
           this.screenParams.selectedLetters = ['а'];
@@ -304,23 +300,6 @@ const App = {
       } else if (mode === 'multi') {
         if (!this.screenParams.selectedLetters || this.screenParams.selectedLetters.length === 0) {
           this.screenParams.selectedLetters = ['а'];
-        }
-      }
-      this.render();
-      return;
-    }
-
-    // 4b. Кнопка выбора буквы в пропуске (А, О, Е, И, Я...)
-    const gapLetterBtn = e.target.closest('.gap-letter-btn');
-    if (gapLetterBtn) {
-      const letter = gapLetterBtn.dataset.gapLetter;
-      if (!this.screenParams.selectedGapLetters) this.screenParams.selectedGapLetters = [];
-      const idx = this.screenParams.selectedGapLetters.indexOf(letter);
-      if (idx === -1) {
-        this.screenParams.selectedGapLetters.push(letter);
-      } else {
-        if (this.screenParams.selectedGapLetters.length > 1) {
-          this.screenParams.selectedGapLetters.splice(idx, 1);
         }
       }
       this.render();
@@ -693,15 +672,7 @@ const App = {
     const p = this.screenParams;
     let words = WORDS_TASK9.filter(w => !w.isException);
 
-    if (p.letterMode === 'pair_ao') {
-      words = words.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о');
-    } else if (p.letterMode === 'pair_ei') {
-      words = words.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и');
-    } else if (p.letterMode === 'gap') {
-      if (p.selectedGapLetters && p.selectedGapLetters.length > 0) {
-        words = words.filter(w => p.selectedGapLetters.includes(w.correctLetter.toLowerCase()));
-      }
-    } else if ((p.letterMode === 'single' || p.letterMode === 'multi') && p.selectedLetters && p.selectedLetters.length > 0) {
+    if ((p.letterMode === 'single' || p.letterMode === 'multi') && p.selectedLetters && p.selectedLetters.length > 0) {
       words = words.filter(w => p.selectedLetters.includes(w.firstLetter.toLowerCase()));
     }
 
@@ -713,7 +684,7 @@ const App = {
     }
 
     if (words.length === 0) {
-      alert('Нет слов для тренировки с выбранными критериями');
+      alert('Нет слов для тренировки с выбранными буквами');
       return;
     }
 
@@ -1263,21 +1234,8 @@ const App = {
     // 2. Режим: Словарные слова (по умолчанию)
     const letterMode = this.screenParams.letterMode || 'all';
     const selectedLetters = this.screenParams.selectedLetters || [];
-    const selectedGapLetters = this.screenParams.selectedGapLetters || ['а'];
     const sessionLength = this.screenParams.sessionLength ?? 10;
 
-    const countAO = vocabWords.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о').length;
-    const countEI = vocabWords.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и').length;
-
-    // Подсчет по буквам в пропуске
-    const gapLetterCounts = {};
-    vocabWords.forEach(w => {
-      const gl = (w.correctLetter || '').toLowerCase();
-      if (gl) gapLetterCounts[gl] = (gapLetterCounts[gl] || 0) + 1;
-    });
-    const availableGapLetters = Object.keys(gapLetterCounts).sort((a, b) => a.localeCompare(b, 'ru'));
-
-    // Подсчет по первой букве слова
     const letterCounts = {};
     vocabWords.forEach(w => {
       const l = w.firstLetter.toLowerCase();
@@ -1288,21 +1246,12 @@ const App = {
     let filteredCount = vocabWords.length;
     let sampleWords = '';
 
-    if (letterMode === 'pair_ao') {
-      filteredCount = countAO;
-      sampleWords = vocabWords.filter(w => w.correctLetter === 'а' || w.correctLetter === 'о').slice(0, 4).map(w => w.word).join(', ') + '...';
-    } else if (letterMode === 'pair_ei') {
-      filteredCount = countEI;
-      sampleWords = vocabWords.filter(w => w.correctLetter === 'е' || w.correctLetter === 'и').slice(0, 4).map(w => w.word).join(', ') + '...';
-    } else if (letterMode === 'gap') {
-      const matched = vocabWords.filter(w => selectedGapLetters.includes(w.correctLetter.toLowerCase()));
-      filteredCount = matched.length;
-      sampleWords = matched.slice(0, 4).map(w => w.word).join(', ') + (matched.length > 4 ? '...' : '');
-    } else if (letterMode === 'single' || letterMode === 'multi') {
+    if (letterMode !== 'all') {
       if (selectedLetters.length > 0) {
         const matched = vocabWords.filter(w => selectedLetters.includes(w.firstLetter.toLowerCase()));
         filteredCount = matched.length;
-        sampleWords = matched.slice(0, 4).map(w => w.word).join(', ') + (matched.length > 4 ? '...' : '');
+        const samples = matched.slice(0, 4).map(w => w.word).join(', ');
+        sampleWords = samples + (matched.length > 4 ? '...' : '');
       } else {
         filteredCount = 0;
       }
@@ -1338,70 +1287,33 @@ const App = {
       </div>
 
       <div class="filter-section">
-        <div class="filter-label">Режим выбора слов и ловушек</div>
+        <div class="filter-label">Режим выбора слов</div>
         <div class="filter-modes">
           <button class="filter-mode ${letterMode === 'all' ? 'active' : ''}" data-letter-mode="all">
             <div class="filter-mode-radio"></div>
             <div>
               <span class="filter-mode-text">Все слова</span>
-              <div class="filter-mode-desc">Тренировка по полному словарному банку (${vocabWords.length} слов)</div>
-            </div>
-          </button>
-          <button class="filter-mode ${letterMode === 'pair_ao' ? 'active' : ''}" data-letter-mode="pair_ao">
-            <div class="filter-mode-radio"></div>
-            <div>
-              <span class="filter-mode-text">🎯 Ловушка А / О</span>
-              <div class="filter-mode-desc">Только слова, где проверяются гласные А или О (${countAO} слов)</div>
-            </div>
-          </button>
-          <button class="filter-mode ${letterMode === 'pair_ei' ? 'active' : ''}" data-letter-mode="pair_ei">
-            <div class="filter-mode-radio"></div>
-            <div>
-              <span class="filter-mode-text">🎯 Ловушка Е / И</span>
-              <div class="filter-mode-desc">Только слова, где проверяются гласные Е или И (${countEI} слов)</div>
-            </div>
-          </button>
-          <button class="filter-mode ${letterMode === 'gap' ? 'active' : ''}" data-letter-mode="gap">
-            <div class="filter-mode-radio"></div>
-            <div>
-              <span class="filter-mode-text">🔠 По букве в корне (пропуске)</span>
-              <div class="filter-mode-desc">Выбрать букву, которая пишется в корне (А, О, Е, И, Я...)</div>
+              <div class="filter-mode-desc">Тренировка по словарному банку (${vocabWords.length} слов)</div>
             </div>
           </button>
           <button class="filter-mode ${letterMode === 'single' ? 'active' : ''}" data-letter-mode="single">
             <div class="filter-mode-radio"></div>
             <div>
-              <span class="filter-mode-text">🔤 Одна начальная буква (А-Я)</span>
-              <div class="filter-mode-desc">Тренировать слова, начинающиеся на выбранную букву</div>
+              <span class="filter-mode-text">Одна буква</span>
+              <div class="filter-mode-desc">Тренировать слова на выбранную букву (например: только на букву «А»)</div>
             </div>
           </button>
           <button class="filter-mode ${letterMode === 'multi' ? 'active' : ''}" data-letter-mode="multi">
             <div class="filter-mode-radio"></div>
             <div>
-              <span class="filter-mode-text">🔤 Несколько начальных букв</span>
-              <div class="filter-mode-desc">Выбрать несколько первых букв алфавита</div>
+              <span class="filter-mode-text">Несколько букв</span>
+              <div class="filter-mode-desc">Выбрать нужные начальные буквы (например: «А», «Б» и «В»)</div>
             </div>
           </button>
         </div>
       </div>
 
-      ${letterMode === 'gap' ? `
-        <div class="filter-section">
-          <div class="filter-label">Выберите проверяемую гласную в корне:</div>
-          <div class="problem-filter-pills" style="margin-bottom:8px;">
-            ${availableGapLetters.map(l => `
-              <button class="problem-pill gap-letter-btn ${selectedGapLetters.includes(l) ? 'active' : ''}" data-gap-letter="${l}">
-                Буква «${l.toUpperCase()}» (${gapLetterCounts[l]})
-              </button>
-            `).join('')}
-          </div>
-          <div class="filter-hint">
-            Выбрано слов: <b>${filteredCount}</b>. Примеры: ${sampleWords}
-          </div>
-        </div>
-      ` : ''}
-
-      ${(letterMode === 'single' || letterMode === 'multi') ? `
+      ${letterMode !== 'all' ? `
         <div class="filter-section">
           <div class="filter-label">
             ${letterMode === 'single' ? 'С какой буквы начинаются слова (выберите одну)' : 'С каких букв начинаются слова (выберите несколько)'}
@@ -1424,17 +1336,8 @@ const App = {
         </div>
       ` : ''}
 
-      ${(letterMode === 'pair_ao' || letterMode === 'pair_ei') ? `
-        <div class="filter-section">
-          <div class="filter-hint" style="margin-top:0;">
-            Выбрана ловушка <b>${letterMode === 'pair_ao' ? 'А / О' : 'Е / И'}</b> (${filteredCount} слов).<br>
-            <span style="font-size:12px;opacity:0.85;">Примеры: ${sampleWords}</span>
-          </div>
-        </div>
-      ` : ''}
-
       <button class="start-btn" data-action="start-task9"
-        ${filteredCount === 0 ? 'disabled' : ''}>
+        ${(letterMode !== 'all' && selectedLetters.length === 0) ? 'disabled' : ''}>
         Начать тренировку (${displayCount} слов) 🚀
       </button>
     `;
