@@ -1,9 +1,11 @@
-/**
- * Полная база данных слов для тренажёра ЕГЭ (Задания №9 и №4)
- * Составлена по официальным материалам ФИПИ.
- * Задание 9 (Словарные слова): 537 слов
- * Задание 4 (Ударения): 240 слов
- */
+// ==========================================
+// БАЗА ДАННЫХ СЛОВ ДЛЯ ТРЕНАЖЁРА ЕГЭ
+// Задание №9 (Корни, словарные слова, исключения)
+// Задание №10 (Правописание приставок и разделительные знаки)
+// Задание №11 (Суффиксы всех частей речи, кроме -Н-/-НН-)
+// Задание №12 (Личные окончания глаголов и суффиксы причастий)
+// Задание №4 (Орфоэпический словник ФИПИ — Ударения)
+// ==========================================
 
 const WORDS_TASK9 = [
   {
@@ -1863,7 +1865,9 @@ const WORDS_TASK9 = [
       "е"
     ],
     "tag": "и",
-    "firstLetter": "и"
+    "firstLetter": "и",
+    "isFrequentMistake": true,
+    "explanation": "инИциатива — непроверяемая гласная И во втором слоге (словарное слово, необходимо запомнить)."
   },
   {
     "id": "t9_170",
@@ -2017,7 +2021,9 @@ const WORDS_TASK9 = [
       "о"
     ],
     "tag": "а",
-    "firstLetter": "к"
+    "firstLetter": "к",
+    "isFrequentMistake": true,
+    "explanation": "кАмпания (выборная, военная) — совокупность мероприятий для осуществления важной общественно-политической или хозяйственной задачи. Не путать с кОмпания (группа друзей, фирма)."
   },
   {
     "id": "t9_184",
@@ -2424,7 +2430,9 @@ const WORDS_TASK9 = [
       "а"
     ],
     "tag": "о",
-    "firstLetter": "к"
+    "firstLetter": "к",
+    "isFrequentMistake": true,
+    "explanation": "кОмпания (друзей, фирма) — группа людей, проводящих вместе время, или предприятие. Не путать с кАмпания (мероприятия)."
   },
   {
     "id": "t9_221",
@@ -3711,7 +3719,9 @@ const WORDS_TASK9 = [
       "и"
     ],
     "tag": "е",
-    "firstLetter": "п"
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "пЕриодический — непроверяемая гласная Е в первом слоге корня (период, необходимо запомнить)."
   },
   {
     "id": "t9_338",
@@ -4877,7 +4887,9 @@ const WORDS_TASK9 = [
       "е"
     ],
     "tag": "и",
-    "firstLetter": "с"
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "стИпендия — непроверяемая гласная И в корне (словарное слово, необходимо запомнить)."
   },
   {
     "id": "t9_444",
@@ -5196,7 +5208,9 @@ const WORDS_TASK9 = [
       "а"
     ],
     "tag": "о",
-    "firstLetter": "т"
+    "firstLetter": "т",
+    "isFrequentMistake": true,
+    "explanation": "трОтуар — непроверяемая безударная гласная О в корне (словарное слово, необходимо запомнить)."
   },
   {
     "id": "t9_473",
@@ -5251,7 +5265,9 @@ const WORDS_TASK9 = [
       "о"
     ],
     "tag": "а",
-    "firstLetter": "у"
+    "firstLetter": "у",
+    "isFrequentMistake": true,
+    "explanation": "утрАмбовать — непроверяемая безударная гласная А в корне. Это словарное слово, написание необходимо запомнить."
   },
   {
     "id": "t9_478",
@@ -5922,7 +5938,9 @@ const WORDS_TASK9 = [
       "и"
     ],
     "tag": "е (запомнить)",
-    "firstLetter": "ш"
+    "firstLetter": "ш",
+    "isFrequentMistake": true,
+    "explanation": "шЕроховатый — непроверяемая безударная гласная Е в корне (необходимо запомнить)."
   },
   {
     "id": "t9_539",
@@ -5971,59 +5989,5576 @@ const WORDS_TASK9 = [
 ];
 
 const WORDS_TASK9_EXCEPTIONS = [
-  { id: 't9_exc_001', word: 'пригарь', display: 'приг_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_002', word: 'изгарь', display: 'изг_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'и', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_003', word: 'выгарки', display: 'выг_рки', correctLetter: 'а', wrongLetters: ['о'], tag: 'гар / гор (искл.)', firstLetter: 'в', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_004', word: 'утварь', display: 'утв_рь', correctLetter: 'а', wrongLetters: ['о'], tag: 'твар / твор (искл.)', firstLetter: 'у', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_005', word: 'сочетание', display: 'соч_тание', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_006', word: 'чета', display: 'ч_та', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'ч', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_007', word: 'сочетать', display: 'соч_тать', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_008', word: 'бракосочетание', display: 'бракосоч_тание', correctLetter: 'е', wrongLetters: ['и'], tag: 'чет / чит (искл.)', firstLetter: 'б', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_009', word: 'побирушка', display: 'поб_рушка', correctLetter: 'и', wrongLetters: ['е'], tag: 'бер / бир (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_010', word: 'розжиг', display: 'розж_г', correctLetter: 'и', wrongLetters: ['е'], tag: 'жег / жиг (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_011', word: 'полог', display: 'пол_г', correctLetter: 'о', wrongLetters: ['а'], tag: 'лаг / лож (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_012', word: 'росток', display: 'р_сток', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_013', word: 'на вырост', display: 'на выр_ст', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'в', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_014', word: 'подростковый', display: 'подр_стковый', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_015', word: 'ростовщик', display: 'р_стовщик', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_016', word: 'отрасль', display: 'отр_сль', correctLetter: 'а', wrongLetters: ['о'], tag: 'раст / рос (искл.)', firstLetter: 'о', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_017', word: 'Ростов', display: 'Р_стов', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_018', word: 'Ростислав', display: 'Р_стислав', correctLetter: 'о', wrongLetters: ['а'], tag: 'раст / рос (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_019', word: 'скачок', display: 'ск_чок', correctLetter: 'а', wrongLetters: ['о'], tag: 'скак / скоч (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_020', word: 'скачу', display: 'ск_чу', correctLetter: 'а', wrongLetters: ['о'], tag: 'скак / скоч (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_021', word: 'равнина', display: 'р_внина', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_022', word: 'равнение', display: 'р_внение', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_023', word: 'поравняться', display: 'пор_вняться', correctLetter: 'а', wrongLetters: ['о'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_024', word: 'уровень', display: 'ур_вень', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'у', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_025', word: 'поровну', display: 'п_ровну', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_026', word: 'ровесник', display: 'р_весник', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'р', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_027', word: 'поровне', display: 'п_ровне', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_028', word: 'сровнять', display: 'ср_внять', correctLetter: 'о', wrongLetters: ['а'], tag: 'равн / ровн (искл.)', firstLetter: 'с', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_029', word: 'пловец', display: 'пл_вец', correctLetter: 'о', wrongLetters: ['а'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_030', word: 'пловчиха', display: 'пл_вчиха', correctLetter: 'о', wrongLetters: ['а'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_031', word: 'плывуны', display: 'пл_вуны', correctLetter: 'ы', wrongLetters: ['и'], tag: 'плав / плов (искл.)', firstLetter: 'п', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_032', word: 'зорянка', display: 'з_рянка', correctLetter: 'о', wrongLetters: ['а'], tag: 'зар / зор (искл.)', firstLetter: 'з', isException: true, excCategory: 'alternation' },
-  { id: 't9_exc_033', word: 'цыган', display: 'ц_ган', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
-  { id: 't9_exc_034', word: 'цыплёнок', display: 'ц_плёнок', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
-  { id: 't9_exc_035', word: 'на цыпочках', display: 'на ц_почках', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
-  { id: 't9_exc_036', word: 'цыц', display: 'ц_ц', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
-  { id: 't9_exc_037', word: 'цыкнуть', display: 'ц_кнуть', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы/И после Ц (искл.)', firstLetter: 'ц', isException: true, excCategory: 'ts' },
-  { id: 't9_exc_038', word: 'парашют', display: 'параш_т', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'п', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_039', word: 'брошюра', display: 'брош_ра', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'б', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_040', word: 'жюри', display: 'ж_ри', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Шипящие (искл.)', firstLetter: 'ж', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_041', word: 'предвыборная кампания', display: 'предвыборная к_мпания', correctLetter: 'а', wrongLetters: ['о'], tag: 'Омонимы (ловушка)', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_042', word: 'компания друзей', display: 'к_мпания друзей', correctLetter: 'о', wrongLetters: ['а'], tag: 'Омонимы (ловушка)', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_043', word: 'палисадник', display: 'пал_садник', correctLetter: 'и', wrongLetters: ['е'], tag: 'Ловушка корня', firstLetter: 'п', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_044', word: 'утрамбовать', display: 'утр_мбовать', correctLetter: 'а', wrongLetters: ['о'], tag: 'Ловушка корня', firstLetter: 'у', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_045', word: 'наваждение', display: 'нав_ждение', correctLetter: 'а', wrongLetters: ['о'], tag: 'Ловушка корня', firstLetter: 'н', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_046', word: 'бюллетень', display: 'б_ллетень', correctLetter: 'ю', wrongLetters: ['у'], tag: 'Ловушка корня', firstLetter: 'б', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_047', word: 'апелляция', display: 'ап_лляция', correctLetter: 'е', wrongLetters: ['и'], tag: 'Ловушка корня', firstLetter: 'а', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_048', word: 'горизонт', display: 'г_ризонт', correctLetter: 'о', wrongLetters: ['а'], tag: 'Ловушка корня', firstLetter: 'г', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_049', word: 'комбинация', display: 'к_мбинация', correctLetter: 'о', wrongLetters: ['а'], tag: 'Ловушка корня', firstLetter: 'к', isException: true, excCategory: 'homonyms' },
-  { id: 't9_exc_050', word: 'меценат', display: 'м_ценат', correctLetter: 'е', wrongLetters: ['и'], tag: 'Ловушка корня', firstLetter: 'м', isException: true, excCategory: 'homonyms' }
+  {
+    "id": "t9_exc_001",
+    "word": "пригарь",
+    "display": "приг_рь",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "гар / гор (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "пригАрь — исключение из правила чередования корней гар-/гор- (без ударения пишется буква А)."
+  },
+  {
+    "id": "t9_exc_002",
+    "word": "изгарь",
+    "display": "изг_рь",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "гар / гор (искл.)",
+    "firstLetter": "и",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "изгАрь — исключение из правила чередования корней гар-/гор- (без ударения пишется буква А)."
+  },
+  {
+    "id": "t9_exc_003",
+    "word": "выгарки",
+    "display": "выг_рки",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "гар / гор (искл.)",
+    "firstLetter": "в",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "выгАрки — исключение из правила чередования корней гар-/гор- (без ударения пишется буква А)."
+  },
+  {
+    "id": "t9_exc_004",
+    "word": "утварь",
+    "display": "утв_рь",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "твар / твор (искл.)",
+    "firstLetter": "у",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "утвАрь — исключение из правила чередования корней твор-/твар- (без ударения пишется буква А)."
+  },
+  {
+    "id": "t9_exc_005",
+    "word": "сочетание",
+    "display": "соч_тание",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "чет / чит (искл.)",
+    "firstLetter": "с",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "сочЕтание — исключение из правила чередования чет-/чит- (нет суффикса -А-, но пишется Е)."
+  },
+  {
+    "id": "t9_exc_006",
+    "word": "чета",
+    "display": "ч_та",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "чет / чит (искл.)",
+    "firstLetter": "ч",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "чЕта — исключение из правила чередования чет-/чит- (нет суффикса -А-, но пишется Е)."
+  },
+  {
+    "id": "t9_exc_007",
+    "word": "сочетать",
+    "display": "соч_тать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "чет / чит (искл.)",
+    "firstLetter": "с",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "сочЕтать — исключение из правила чередования чет-/чит- (нет суффикса -А-, но пишется Е)."
+  },
+  {
+    "id": "t9_exc_008",
+    "word": "бракосочетание",
+    "display": "бракосоч_тание",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "чет / чит (искл.)",
+    "firstLetter": "б",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "бракосочЕтание — исключение из правила чередования чет-/чит- (пишется Е)."
+  },
+  {
+    "id": "t9_exc_009",
+    "word": "побирушка",
+    "display": "поб_рушка",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "бер / бир (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_010",
+    "word": "розжиг",
+    "display": "розж_г",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "жег / жиг (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_011",
+    "word": "полог",
+    "display": "пол_г",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "лаг / лож (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "пОлог — исключение из правила чередующихся корней лаг-/лож- (перед Г пишется буква О)."
+  },
+  {
+    "id": "t9_exc_012",
+    "word": "росток",
+    "display": "р_сток",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "рОсток — исключение из правила корней раст-/ращ-/рос- (перед СТ пишется буква О)."
+  },
+  {
+    "id": "t9_exc_013",
+    "word": "на вырост",
+    "display": "на выр_ст",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "в",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "на вырОст — исключение из правила корней раст-/рос- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_014",
+    "word": "подростковый",
+    "display": "подр_стковый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_015",
+    "word": "ростовщик",
+    "display": "р_стовщик",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "рОстовщик — исключение из правила корней раст-/рос- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_016",
+    "word": "отрасль",
+    "display": "отр_сль",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "о",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "отрАсль — исключение из правила корней раст-/рос- (перед С пишется буква А)."
+  },
+  {
+    "id": "t9_exc_017",
+    "word": "Ростов",
+    "display": "Р_стов",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "РОстов — имя собственное, исключение из корней раст-/рос- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_018",
+    "word": "Ростислав",
+    "display": "Р_стислав",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "раст / рос (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "РОстислав — имя собственное, исключение из корней раст-/рос- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_019",
+    "word": "скачок",
+    "display": "ск_чок",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "скак / скоч (искл.)",
+    "firstLetter": "с",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "скАчок — исключение из правила корней скак-/скоч- (перед Ч пишется буква А)."
+  },
+  {
+    "id": "t9_exc_020",
+    "word": "скачу",
+    "display": "ск_чу",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "скак / скоч (искл.)",
+    "firstLetter": "с",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "скАчу — форма глагола скакать, исключение (перед Ч пишется буква А)."
+  },
+  {
+    "id": "t9_exc_021",
+    "word": "равнина",
+    "display": "р_внина",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "рАвнина — исключение из корней равн-/ровн- (значение «ровный, гладкий», но пишется А)."
+  },
+  {
+    "id": "t9_exc_022",
+    "word": "равнение",
+    "display": "р_внение",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_023",
+    "word": "поравняться",
+    "display": "пор_вняться",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_024",
+    "word": "уровень",
+    "display": "ур_вень",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "у",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "урОвень — исключение из правила корней равн-/ровн- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_025",
+    "word": "поровну",
+    "display": "п_ровну",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "пОровну — исключение из правила корней равн-/ровн- (пишется буква О)."
+  },
+  {
+    "id": "t9_exc_026",
+    "word": "ровесник",
+    "display": "р_весник",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "р",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "рОвесник — исключение из правила корней равн-/ровн- (значение «одинаковый по возрасту», пишется О)."
+  },
+  {
+    "id": "t9_exc_027",
+    "word": "поровне",
+    "display": "п_ровне",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_028",
+    "word": "сровнять",
+    "display": "ср_внять",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "равн / ровн (искл.)",
+    "firstLetter": "с",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_029",
+    "word": "пловец",
+    "display": "пл_вец",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "плав / плов (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_030",
+    "word": "пловчиха",
+    "display": "пл_вчиха",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "плав / плов (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_031",
+    "word": "плывуны",
+    "display": "пл_вуны",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "плав / плов (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "alternation"
+  },
+  {
+    "id": "t9_exc_032",
+    "word": "зорянка",
+    "display": "з_рянка",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "зар / зор (искл.)",
+    "firstLetter": "з",
+    "isException": true,
+    "excCategory": "alternation",
+    "isFrequentMistake": true,
+    "explanation": "зорЯнка — название птицы, корень зор- без ударения пишется с буквой О."
+  },
+  {
+    "id": "t9_exc_033",
+    "word": "цыган",
+    "display": "ц_ган",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы/И после Ц (искл.)",
+    "firstLetter": "ц",
+    "isException": true,
+    "excCategory": "ts"
+  },
+  {
+    "id": "t9_exc_034",
+    "word": "цыплёнок",
+    "display": "ц_плёнок",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы/И после Ц (искл.)",
+    "firstLetter": "ц",
+    "isException": true,
+    "excCategory": "ts"
+  },
+  {
+    "id": "t9_exc_035",
+    "word": "на цыпочках",
+    "display": "на ц_почках",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы/И после Ц (искл.)",
+    "firstLetter": "ц",
+    "isException": true,
+    "excCategory": "ts"
+  },
+  {
+    "id": "t9_exc_036",
+    "word": "цыц",
+    "display": "ц_ц",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы/И после Ц (искл.)",
+    "firstLetter": "ц",
+    "isException": true,
+    "excCategory": "ts"
+  },
+  {
+    "id": "t9_exc_037",
+    "word": "цыкнуть",
+    "display": "ц_кнуть",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы/И после Ц (искл.)",
+    "firstLetter": "ц",
+    "isException": true,
+    "excCategory": "ts"
+  },
+  {
+    "id": "t9_exc_038",
+    "word": "парашют",
+    "display": "параш_т",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "Шипящие (искл.)",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_039",
+    "word": "брошюра",
+    "display": "брош_ра",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "Шипящие (искл.)",
+    "firstLetter": "б",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_040",
+    "word": "жюри",
+    "display": "ж_ри",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "Шипящие (искл.)",
+    "firstLetter": "ж",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_041",
+    "word": "предвыборная кампания",
+    "display": "предвыборная к_мпания",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "Омонимы (ловушка)",
+    "firstLetter": "к",
+    "isException": true,
+    "excCategory": "homonyms",
+    "isFrequentMistake": true,
+    "explanation": "предвыборная кАмпания — совокупность мероприятий. Не путать с кОмпанией (друзья, организация)."
+  },
+  {
+    "id": "t9_exc_042",
+    "word": "компания друзей",
+    "display": "к_мпания друзей",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "Омонимы (ловушка)",
+    "firstLetter": "к",
+    "isException": true,
+    "excCategory": "homonyms",
+    "isFrequentMistake": true,
+    "explanation": "кОмпания друзей — группа людей или организация. Не путать с кАмпанией (мероприятия)."
+  },
+  {
+    "id": "t9_exc_043",
+    "word": "палисадник",
+    "display": "пал_садник",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "п",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_044",
+    "word": "утрамбовать",
+    "display": "утр_мбовать",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "у",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_045",
+    "word": "наваждение",
+    "display": "нав_ждение",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "н",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_046",
+    "word": "бюллетень",
+    "display": "б_ллетень",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "б",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_047",
+    "word": "апелляция",
+    "display": "ап_лляция",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "а",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_048",
+    "word": "горизонт",
+    "display": "г_ризонт",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "г",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_049",
+    "word": "комбинация",
+    "display": "к_мбинация",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "к",
+    "isException": true,
+    "excCategory": "homonyms"
+  },
+  {
+    "id": "t9_exc_050",
+    "word": "меценат",
+    "display": "м_ценат",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ловушка корня",
+    "firstLetter": "м",
+    "isException": true,
+    "excCategory": "homonyms"
+  }
 ];
 
 WORDS_TASK9.push(...WORDS_TASK9_EXCEPTIONS);
+
+const WORDS_TASK10 = [
+  {
+    "id": "t10_001",
+    "word": "пребывать в городе",
+    "display": "пр_бывать в городе",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "пребывать (находиться)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕбывать (в городе) — значение «находиться где-либо». Не путать с прИбывать (в город) — «приезжать»."
+  },
+  {
+    "id": "t10_002",
+    "word": "прибывать в город",
+    "display": "пр_бывать в город",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "прибывать (приезжать)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИбывать (в город) — значение приближения («приезжать»)."
+  },
+  {
+    "id": "t10_003",
+    "word": "предавать друга",
+    "display": "пр_давать друга",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "предавать (выдавать тайну)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕдавать (друга) — значение «выдавать тайну, совершать измену». Не путать с прИдавать (значение) — «добавлять»."
+  },
+  {
+    "id": "t10_004",
+    "word": "придавать значение",
+    "display": "пр_давать значение",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "придавать (прибавлять)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИдавать (значение, форму) — значение «добавлять, прибавлять»."
+  },
+  {
+    "id": "t10_005",
+    "word": "предел терпения",
+    "display": "пр_дел терпения",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "предел (граница)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕдел (терпения) — значение «граница, край». Не путать с церковным прИделом (пристройкой)."
+  },
+  {
+    "id": "t10_006",
+    "word": "церковный придел",
+    "display": "церковный пр_дел",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "придел (пристройка в храме)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "ц",
+    "isFrequentMistake": true,
+    "explanation": "прИдел (в церкви) — боковой алтарь, пристройка (значение присоединения)."
+  },
+  {
+    "id": "t10_007",
+    "word": "преемник президента",
+    "display": "пр_емник президента",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "преемник (продолжатель)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕемник (президента) — продолжатель дела (перенимает полномочия). Не путать с радиоприёмником."
+  },
+  {
+    "id": "t10_008",
+    "word": "включить приёмник",
+    "display": "включить пр_ёмник",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приёмник (аппарат/радио)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "прИёмник (радио) — аппарат, который принимает сигналы (значение приближения/приёма)."
+  },
+  {
+    "id": "t10_009",
+    "word": "презирать трусов",
+    "display": "пр_зирать трусов",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "презирать (без уважения)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕзирать (трусов) — относиться без уважения, с пренебрежением. Не путать с «призреть сироту»."
+  },
+  {
+    "id": "t10_010",
+    "word": "призреть сироту",
+    "display": "пр_зреть сироту",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "призреть (дать приют/заботу)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИзреть (сироту) — дать приют, позаботиться (значение приближения/опеки)."
+  },
+  {
+    "id": "t10_011",
+    "word": "прекрасный день",
+    "display": "пр_красный день",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "прекрасный (очень красивый)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕкрасный — приставка ПРЕ- в значении высокой степени качества («очень красивый»)."
+  },
+  {
+    "id": "t10_012",
+    "word": "преступить закон",
+    "display": "пр_ступить закон",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "преступить (нарушить)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕступить (закон) — нарушить закон (приставка ПРЕ- близка по значению к ПЕРЕ-)."
+  },
+  {
+    "id": "t10_013",
+    "word": "приступить к сочинению",
+    "display": "пр_ступить к сочинению",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приступить (начать)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИступить (к работе, к сочинению) — начать действие (приблизиться к началу)."
+  },
+  {
+    "id": "t10_014",
+    "word": "претворить мечту в жизнь",
+    "display": "пр_творить мечту в жизнь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "претворить (осуществить)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕтворить (в жизнь) — осуществить, воплотить мечту."
+  },
+  {
+    "id": "t10_015",
+    "word": "претвориться в жизнь",
+    "display": "пр_твориться в жизнь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "претвориться (осуществиться)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИтворить (дверь) — неполнота действия («чуть-чуть прикрыть»)."
+  },
+  {
+    "id": "t10_016",
+    "word": "притворить дверь",
+    "display": "пр_творить дверь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "притворить (прикрыть)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕтвориться (в жизнь) — воплотиться, осуществиться."
+  },
+  {
+    "id": "t10_017",
+    "word": "притвориться спящим",
+    "display": "пр_твориться спящим",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "притвориться (принять иной вид)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИтвориться (спящим) — принять иной вид, сымитировать."
+  },
+  {
+    "id": "t10_018",
+    "word": "преклониться перед талантом",
+    "display": "пр_клониться перед талантом",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "преклониться (выразить почтение)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕклониться (перед талантом) — выразить глубокое уважение, восхищение."
+  },
+  {
+    "id": "t10_019",
+    "word": "приклониться к земле",
+    "display": "пр_клониться к земле",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приклониться (наклониться)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИклониться (к земле) — физически наклониться, приблизиться к земле."
+  },
+  {
+    "id": "t10_020",
+    "word": "превратный смысл",
+    "display": "пр_вратный смысл",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "превратный (извращённый)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕвратный (смысл) — непостоянный, превратно понятый (перевёрнутый)."
+  },
+  {
+    "id": "t10_021",
+    "word": "старый привратник",
+    "display": "старый пр_вратник",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "привратник (сторож у ворот)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "прИвратник — сторож при вратах (значение нахождения «при» чём-либо)."
+  },
+  {
+    "id": "t10_022",
+    "word": "претерпеть невзгоды",
+    "display": "пр_терпеть невзгоды",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "претерпеть (пережить)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕтерпеть (невзгоды) — пережить, перетерпеть трудности (ПРЕ- = ПЕРЕ-)."
+  },
+  {
+    "id": "t10_023",
+    "word": "притерпеться к невзгодам",
+    "display": "пр_терпеться к невзгодам",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "притерпеться (привыкнуть)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИтерпеться (к невзгодам) — привыкнуть к трудностям."
+  },
+  {
+    "id": "t10_024",
+    "word": "преходящий успех",
+    "display": "пр_ходящий успех",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "преходящий (временный)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прЕходящий (успех) — временный, быстро проходящий (ПРЕ- = ПЕРЕ-)."
+  },
+  {
+    "id": "t10_025",
+    "word": "приходящая няня",
+    "display": "пр_ходящая няня",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приходящая (на время)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИходящая (няня) — приходящая на время (приближение/приход)."
+  },
+  {
+    "id": "t10_026",
+    "word": "приукрасить достижения",
+    "display": "пр_украсить достижения",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приукрасить (неполнота действия)",
+    "category": "pre_pri_pairs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИукрасить (достижения) — неполнота действия («чуть-чуть украсить»)."
+  },
+  {
+    "id": "t10_027",
+    "word": "преамбула",
+    "display": "пр_амбула",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_028",
+    "word": "превалировать",
+    "display": "пр_валировать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_029",
+    "word": "превзойти",
+    "display": "пр_взойти",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_030",
+    "word": "превозмочь",
+    "display": "пр_возмочь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_031",
+    "word": "превозносить",
+    "display": "пр_возносить",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_032",
+    "word": "превратить",
+    "display": "пр_вратить",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_033",
+    "word": "презент",
+    "display": "пр_зент",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_034",
+    "word": "президент",
+    "display": "пр_зидент",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_035",
+    "word": "президиум",
+    "display": "пр_зидиум",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_036",
+    "word": "преимущество",
+    "display": "пр_имущество",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_037",
+    "word": "прекратить",
+    "display": "пр_кратить",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_038",
+    "word": "прелюдия",
+    "display": "пр_людия",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_039",
+    "word": "премировать",
+    "display": "пр_мировать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_040",
+    "word": "премьера",
+    "display": "пр_мьера",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_041",
+    "word": "пренебрежение",
+    "display": "пр_небрежение",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_042",
+    "word": "преобразовать",
+    "display": "пр_образовать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_043",
+    "word": "преодолеть",
+    "display": "пр_одолеть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_044",
+    "word": "времяпрепровождение",
+    "display": "времяпр_провождение",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t10_045",
+    "word": "знаки препинания",
+    "display": "знаки пр_пинания",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t10_046",
+    "word": "препираться",
+    "display": "пр_пираться",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_047",
+    "word": "преподаватель",
+    "display": "пр_подаватель",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_048",
+    "word": "препятствие",
+    "display": "пр_пятствие",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_049",
+    "word": "пререкаться",
+    "display": "пр_рекаться",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_050",
+    "word": "прерогатива",
+    "display": "пр_рогатива",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_051",
+    "word": "преследовать",
+    "display": "пр_следовать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_052",
+    "word": "пресловутый",
+    "display": "пр_словутый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_053",
+    "word": "пресмыкающийся",
+    "display": "пр_смыкающийся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_054",
+    "word": "престиж",
+    "display": "пр_стиж",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_055",
+    "word": "претендент",
+    "display": "пр_тендент",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_056",
+    "word": "камень преткновения",
+    "display": "камень пр_ткновения",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t10_057",
+    "word": "преуспевать",
+    "display": "пр_успевать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_058",
+    "word": "префект",
+    "display": "пр_фект",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_059",
+    "word": "преферанс",
+    "display": "пр_феранс",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_060",
+    "word": "прецедент",
+    "display": "пр_цедент",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_061",
+    "word": "беспрекословный",
+    "display": "беспр_кословный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t10_062",
+    "word": "непрестанный",
+    "display": "непр_станный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "словарное ПРЕ-",
+    "category": "pre_words",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t10_063",
+    "word": "прибор",
+    "display": "пр_бор",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_064",
+    "word": "приватизация",
+    "display": "пр_ватизация",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_065",
+    "word": "привередливый",
+    "display": "пр_вередливый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_066",
+    "word": "привет",
+    "display": "пр_вет",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_067",
+    "word": "привилегия",
+    "display": "пр_вилегия",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_068",
+    "word": "привыкать",
+    "display": "пр_выкать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_069",
+    "word": "пригласить",
+    "display": "пр_гласить",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_070",
+    "word": "пригодиться",
+    "display": "пр_годиться",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_071",
+    "word": "пригожий",
+    "display": "пр_гожий",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_072",
+    "word": "приготовить",
+    "display": "пр_готовить",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_073",
+    "word": "придираться",
+    "display": "пр_дираться",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_074",
+    "word": "придумать",
+    "display": "пр_думать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_075",
+    "word": "призвание",
+    "display": "пр_звание",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_076",
+    "word": "приказать",
+    "display": "пр_казать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_077",
+    "word": "приключение",
+    "display": "пр_ключение",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_078",
+    "word": "прилежный",
+    "display": "пр_лежный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_079",
+    "word": "приличный",
+    "display": "пр_личный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_080",
+    "word": "прилюдно",
+    "display": "пр_людно",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_081",
+    "word": "примадонна",
+    "display": "пр_мадонна",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_082",
+    "word": "пример",
+    "display": "пр_мер",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_083",
+    "word": "примитивный",
+    "display": "пр_митивный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_084",
+    "word": "принцип",
+    "display": "пр_нцип",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_085",
+    "word": "приемлемый",
+    "display": "пр_емлемый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_086",
+    "word": "приобрести",
+    "display": "пр_обрести",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_087",
+    "word": "приоритет",
+    "display": "пр_оритет",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_088",
+    "word": "прискорбный",
+    "display": "пр_скорбный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_089",
+    "word": "присмотреться",
+    "display": "пр_смотреться",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_090",
+    "word": "приспособить",
+    "display": "пр_способить",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_091",
+    "word": "пристрастный",
+    "display": "пр_страстный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_092",
+    "word": "причина",
+    "display": "пр_чина",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_093",
+    "word": "причудливый",
+    "display": "пр_чудливый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_094",
+    "word": "приютить",
+    "display": "пр_ютить",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_095",
+    "word": "приятель",
+    "display": "пр_ятель",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_096",
+    "word": "приятный",
+    "display": "пр_ятный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_097",
+    "word": "неприхотливый",
+    "display": "непр_хотливый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "словарное ПРИ-",
+    "category": "pri_words",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t10_098",
+    "word": "прообраз",
+    "display": "пр_образ",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "ПРА / ПРО (искл.)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_099",
+    "word": "провозвестник",
+    "display": "пр_возвестник",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "ПРА / ПРО (искл.)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_100",
+    "word": "прабабушка",
+    "display": "пр_бабушка",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "ПРА / ПРО (родство)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_101",
+    "word": "правнук",
+    "display": "пр_внук",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "ПРА / ПРО (родство)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_102",
+    "word": "праязык",
+    "display": "пр_язык",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "ПРА / ПРО (древний)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_103",
+    "word": "прародина",
+    "display": "пр_родина",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "ПРА / ПРО (древний)",
+    "category": "pra_pro",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_104",
+    "word": "взимать",
+    "display": "вз_мать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "Ы / И после приставки (искл.)",
+    "category": "y_i",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "взИмать — исключение! После русской приставки ВЗ- на согласную начальная И сохраняется (не переходит в Ы)."
+  },
+  {
+    "id": "t10_105",
+    "word": "изымать",
+    "display": "из_мать",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "и",
+    "isFrequentMistake": true,
+    "explanation": "изЫмать — после русской приставки на согласную (ИЗ-) начальная гласная И корня переходит в Ы."
+  },
+  {
+    "id": "t10_106",
+    "word": "подымать",
+    "display": "под_мать",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "подЫмать — после русской приставки на согласную (ПОД-) начальная гласная И корня переходит в Ы."
+  },
+  {
+    "id": "t10_107",
+    "word": "сызнова",
+    "display": "с_знова",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "сЫзнова — после русской приставки на согласную (С-) начальная гласная И корня переходит в Ы."
+  },
+  {
+    "id": "t10_108",
+    "word": "сызмала",
+    "display": "с_змала",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "сЫзмала — после русской приставки на согласную (С-) начальная гласная И корня переходит в Ы."
+  },
+  {
+    "id": "t10_109",
+    "word": "подытожить",
+    "display": "под_тожить",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t10_110",
+    "word": "безымянный",
+    "display": "без_мянный",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "Ы / И после приставки",
+    "category": "y_i",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t10_111",
+    "word": "сверхизысканный",
+    "display": "сверх_зысканный",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "Ы / И (после сверх- пишется И)",
+    "category": "y_i",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t10_112",
+    "word": "межинститутский",
+    "display": "меж_нститутский",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "Ы / И (после меж- пишется И)",
+    "category": "y_i",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t10_113",
+    "word": "подьячий",
+    "display": "под_ячий",
+    "correctLetter": "ь",
+    "wrongLetters": [
+      "ъ"
+    ],
+    "tag": "Разделительный Ь (искл.)",
+    "category": "signs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "подЬячий — пишется разделительный Ь (исторически от слова дьяк, корень -дьяч-, приставки ПОД- здесь нет)."
+  },
+  {
+    "id": "t10_114",
+    "word": "рьяный",
+    "display": "р_яный",
+    "correctLetter": "ь",
+    "wrongLetters": [
+      "ъ"
+    ],
+    "tag": "Разделительный Ь в корне",
+    "category": "signs",
+    "firstLetter": "р",
+    "isFrequentMistake": true,
+    "explanation": "рЬяный — пишется разделительный Ь внутри корня перед гласной Я (не после приставки)."
+  },
+  {
+    "id": "t10_115",
+    "word": "адъютант",
+    "display": "ад_ютант",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ (инояз.)",
+    "category": "signs",
+    "firstLetter": "а"
+  },
+  {
+    "id": "t10_116",
+    "word": "въедливый",
+    "display": "в_едливый",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ после приставки",
+    "category": "signs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t10_117",
+    "word": "изъян",
+    "display": "из_ян",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ",
+    "category": "signs",
+    "firstLetter": "и"
+  },
+  {
+    "id": "t10_118",
+    "word": "неотъемлемый",
+    "display": "неот_емлемый",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ",
+    "category": "signs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t10_119",
+    "word": "фельдъегерь",
+    "display": "фельд_егерь",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ",
+    "category": "signs",
+    "firstLetter": "ф"
+  },
+  {
+    "id": "t10_120",
+    "word": "двухэтажный",
+    "display": "двух_тажный",
+    "correctLetter": "э",
+    "wrongLetters": [
+      "ъэ"
+    ],
+    "tag": "Сложные слова без Ъ",
+    "category": "signs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t10_121",
+    "word": "трёхъязычный",
+    "display": "трёх_язычный",
+    "correctLetter": "ъ",
+    "wrongLetters": [
+      "ь"
+    ],
+    "tag": "Разделительный Ъ в сложных словах",
+    "category": "signs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t10_122",
+    "word": "придать форму",
+    "display": "пр_дать форму",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "придать форму (значение «изменить вид»)",
+    "category": "pri_words",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИдать (форму) — значение «добавить, изменить вид, прибавить свойство». Если бы было «выдать тайну друга», писали бы прЕдать."
+  },
+  {
+    "id": "t10_123",
+    "word": "присвоить",
+    "display": "пр_своить",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "присвоить (значение присоединения)",
+    "category": "pri_words",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИсвоить — значение присоединения (сделать своим собственным)."
+  },
+  {
+    "id": "t10_124",
+    "word": "приподнять",
+    "display": "пр_поднять",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "приподнять (неполнота действия)",
+    "category": "pri_words",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "прИподнять — значение неполноты действия (чуть-чуть поднять)."
+  },
+  {
+    "id": "t10_125",
+    "word": "чересчур",
+    "display": "чере_чур",
+    "correctLetter": "с",
+    "wrongLetters": [
+      "з"
+    ],
+    "tag": "запомнить: чересчур",
+    "category": "signs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t10_126",
+    "word": "дисбаланс",
+    "display": "ди_баланс",
+    "correctLetter": "с",
+    "wrongLetters": [
+      "з"
+    ],
+    "tag": "иноязычная приставка дис-",
+    "category": "signs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t10_127",
+    "word": "дисгармония",
+    "display": "ди_гармония",
+    "correctLetter": "с",
+    "wrongLetters": [
+      "з"
+    ],
+    "tag": "иноязычная приставка дис-",
+    "category": "signs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t10_128",
+    "word": "здесь",
+    "display": "_десь",
+    "correctLetter": "з",
+    "wrongLetters": [
+      "с"
+    ],
+    "tag": "корень здесь (з- часть корня)",
+    "category": "signs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t10_129",
+    "word": "расчёт",
+    "display": "ра_чёт",
+    "correctLetter": "с",
+    "wrongLetters": [
+      "сс"
+    ],
+    "tag": "расчёт (с одним С)",
+    "category": "signs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t10_130",
+    "word": "рассчитывать",
+    "display": "ра_считывать",
+    "correctLetter": "с",
+    "wrongLetters": [
+      "з"
+    ],
+    "tag": "рассчитывать (с двумя С)",
+    "category": "signs",
+    "firstLetter": "р"
+  }
+];
+
+const WORDS_TASK11 = [
+  {
+    "id": "t11_001",
+    "word": "милостивый",
+    "display": "милост_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение: -ИВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "м",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "милостИвый — исключение! В суффиксе -ИВ-/-ЕВ- без ударения пишется буква И (наряду со словом юродивый)."
+  },
+  {
+    "id": "t11_002",
+    "word": "юродивый",
+    "display": "юрод_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение: -ИВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "ю",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "юродИвый — исключение! В суффиксе -ИВ-/-ЕВ- без ударения пишется буква И."
+  },
+  {
+    "id": "t11_003",
+    "word": "красивый",
+    "display": "крас_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_004",
+    "word": "правдивый",
+    "display": "правд_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_005",
+    "word": "спесивый",
+    "display": "спес_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_006",
+    "word": "боевой",
+    "display": "бо_вой",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_007",
+    "word": "соевый",
+    "display": "со_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_008",
+    "word": "сиреневый",
+    "display": "сирен_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_009",
+    "word": "марлевый",
+    "display": "марл_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t11_010",
+    "word": "тюлевый",
+    "display": "тюл_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t11_011",
+    "word": "плюшевый",
+    "display": "плюш_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_012",
+    "word": "фасолевый",
+    "display": "фасол_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "ф"
+  },
+  {
+    "id": "t11_013",
+    "word": "эмалевый",
+    "display": "эмал_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "э"
+  },
+  {
+    "id": "t11_014",
+    "word": "дрожжевой",
+    "display": "дрожж_вой",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕВ- без ударения",
+    "category": "adjectives",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_015",
+    "word": "застенчивый",
+    "display": "застенч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_016",
+    "word": "доверчивый",
+    "display": "доверч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_017",
+    "word": "опрометчивый",
+    "display": "опрометч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "о"
+  },
+  {
+    "id": "t11_018",
+    "word": "усидчивый",
+    "display": "усидч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_019",
+    "word": "придирчивый",
+    "display": "придирч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_020",
+    "word": "навязчивый",
+    "display": "навязч_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЧИВ-",
+    "category": "adjectives",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_021",
+    "word": "заботливый",
+    "display": "заботл_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЛИВ-",
+    "category": "adjectives",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_022",
+    "word": "расчётливый",
+    "display": "расчётл_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЛИВ-",
+    "category": "adjectives",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_023",
+    "word": "приветливый",
+    "display": "приветл_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЛИВ-",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_024",
+    "word": "услужливый",
+    "display": "услужл_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЛИВ-",
+    "category": "adjectives",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_025",
+    "word": "причудливый",
+    "display": "причудл_вый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ЛИВ-",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_026",
+    "word": "ступенчатый",
+    "display": "ступенч_тый",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЧАТ-",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_027",
+    "word": "коленчатый",
+    "display": "коленч_тый",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЧАТ-",
+    "category": "adjectives",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_028",
+    "word": "решетчатый",
+    "display": "решетч_тый",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЧАТ-",
+    "category": "adjectives",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_029",
+    "word": "бревенчатый",
+    "display": "бревенч_тый",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЧАТ-",
+    "category": "adjectives",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_030",
+    "word": "глинистый",
+    "display": "глин_стый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИСТ-",
+    "category": "adjectives",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_031",
+    "word": "покладистый",
+    "display": "поклад_стый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИСТ-",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_032",
+    "word": "глянцевый",
+    "display": "глянц_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕВ- после Ц",
+    "category": "adjectives",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_033",
+    "word": "ситцевый",
+    "display": "ситц_вый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕВ- после Ц",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_034",
+    "word": "холщовый",
+    "display": "холщ_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "х"
+  },
+  {
+    "id": "t11_035",
+    "word": "кумачовый",
+    "display": "кумач_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_036",
+    "word": "парчовый",
+    "display": "парч_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_037",
+    "word": "грошовый",
+    "display": "грош_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_038",
+    "word": "камышовый",
+    "display": "камыш_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- под ударением",
+    "category": "adjectives",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_039",
+    "word": "свинцовый",
+    "display": "свинц_вый",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОВ- после Ц",
+    "category": "adjectives",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_040",
+    "word": "процентщик",
+    "display": "процент_ик",
+    "correctLetter": "щ",
+    "wrongLetters": [
+      "ч"
+    ],
+    "tag": "-ЩИК- после -НТ",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_041",
+    "word": "процентщица",
+    "display": "процент_ица",
+    "correctLetter": "щ",
+    "wrongLetters": [
+      "ч"
+    ],
+    "tag": "-ЩИЦ- после -НТ",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_042",
+    "word": "асфальтщик",
+    "display": "асфальт_ик",
+    "correctLetter": "щ",
+    "wrongLetters": [
+      "ч"
+    ],
+    "tag": "-ЩИК- после ЛЬ",
+    "category": "nouns",
+    "firstLetter": "а"
+  },
+  {
+    "id": "t11_043",
+    "word": "ремонтщик",
+    "display": "ремонт_ик",
+    "correctLetter": "щ",
+    "wrongLetters": [
+      "ч"
+    ],
+    "tag": "-ЩИК- после -НТ",
+    "category": "nouns",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_044",
+    "word": "смазчик",
+    "display": "смаз_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после З",
+    "category": "nouns",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_045",
+    "word": "перебежчик",
+    "display": "перебеж_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после Ж",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_046",
+    "word": "разносчик",
+    "display": "разнос_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после С",
+    "category": "nouns",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_047",
+    "word": "объездчик",
+    "display": "объезд_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после Д",
+    "category": "nouns",
+    "firstLetter": "о"
+  },
+  {
+    "id": "t11_048",
+    "word": "буфетчик",
+    "display": "буфет_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после Т",
+    "category": "nouns",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_049",
+    "word": "заказчик",
+    "display": "заказ_ик",
+    "correctLetter": "ч",
+    "wrongLetters": [
+      "щ"
+    ],
+    "tag": "-ЧИК- после З",
+    "category": "nouns",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_050",
+    "word": "стажёр",
+    "display": "стаж_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_051",
+    "word": "дирижёр",
+    "display": "дириж_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_052",
+    "word": "режиссёр",
+    "display": "режисс_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_053",
+    "word": "монтажёр",
+    "display": "монтаж_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t11_054",
+    "word": "тренажёр",
+    "display": "тренаж_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t11_055",
+    "word": "ухажёр",
+    "display": "ухаж_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_056",
+    "word": "ретушёр",
+    "display": "ретуш_р",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁР- в сущ.",
+    "category": "nouns",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_057",
+    "word": "мажор",
+    "display": "маж_р",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ё"
+    ],
+    "tag": "корень -МАЖОР- (не суффикс)",
+    "category": "nouns",
+    "firstLetter": "м",
+    "isException": true
+  },
+  {
+    "id": "t11_058",
+    "word": "берёзонька",
+    "display": "берёз_нька",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОНЬК- после твёрдых",
+    "category": "nouns",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_059",
+    "word": "лисонька",
+    "display": "лис_нька",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОНЬК- после твёрдых",
+    "category": "nouns",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t11_060",
+    "word": "полосонька",
+    "display": "полос_нька",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОНЬК- после твёрдых",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_061",
+    "word": "лапонька",
+    "display": "лап_нька",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ОНЬК- после твёрдых",
+    "category": "nouns",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t11_062",
+    "word": "тётенька",
+    "display": "тёт_нька",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕНЬК- после мягких",
+    "category": "nouns",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t11_063",
+    "word": "доченька",
+    "display": "доч_нька",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕНЬК- после шипящих",
+    "category": "nouns",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_064",
+    "word": "ноченька",
+    "display": "ноч_нька",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕНЬК- после шипящих",
+    "category": "nouns",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_065",
+    "word": "душенька",
+    "display": "душ_нька",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЕНЬК- после шипящих",
+    "category": "nouns",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_066",
+    "word": "заинька",
+    "display": "за_нька",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение: суффикс -ИНЬК-",
+    "category": "nouns",
+    "firstLetter": "з",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "заИнька — исключение! В уменьшительно-ласкательных пишется суффикс -ИНЬК- (наряду с паинька, баиньки)."
+  },
+  {
+    "id": "t11_067",
+    "word": "паинька",
+    "display": "па_нька",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение: суффикс -ИНЬК-",
+    "category": "nouns",
+    "firstLetter": "п",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "паИнька — исключение с суффиксом -ИНЬК-."
+  },
+  {
+    "id": "t11_068",
+    "word": "баиньки",
+    "display": "ба_ньки",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение: суффикс -ИНЬК-",
+    "category": "nouns",
+    "firstLetter": "б",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "баИньки — исключение с суффиксом -ИНЬК-."
+  },
+  {
+    "id": "t11_069",
+    "word": "ключик",
+    "display": "ключ_к",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИК- (ключика)",
+    "category": "nouns",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_070",
+    "word": "замочек",
+    "display": "замоч_к",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕК- (замочка)",
+    "category": "nouns",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_071",
+    "word": "мячик",
+    "display": "мяч_к",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИК- (мячика)",
+    "category": "nouns",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t11_072",
+    "word": "звоночек",
+    "display": "звоноч_к",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕК- (звоночка)",
+    "category": "nouns",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_073",
+    "word": "орешек",
+    "display": "ореш_к",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕК- (орешка)",
+    "category": "nouns",
+    "firstLetter": "о"
+  },
+  {
+    "id": "t11_074",
+    "word": "кустик",
+    "display": "куст_к",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИК- (кустика)",
+    "category": "nouns",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_075",
+    "word": "красавица",
+    "display": "красав_ца",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИЦ- в ж. роде",
+    "category": "nouns",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_076",
+    "word": "гвардеец",
+    "display": "гварде_ц",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЦ- в м. роде",
+    "category": "nouns",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_077",
+    "word": "платьице",
+    "display": "плать_це",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИЦ- в ср. роде",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_078",
+    "word": "пальтецо",
+    "display": "пальт_цо",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЦ- в ср. роде",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_079",
+    "word": "креслице",
+    "display": "кресл_це",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИЦ- в ср. роде",
+    "category": "nouns",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_080",
+    "word": "пуговичка",
+    "display": "пугов_чка",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИЧК- (пуговица)",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_081",
+    "word": "синичка",
+    "display": "син_чка",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИЧК- (синица)",
+    "category": "nouns",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_082",
+    "word": "семечко",
+    "display": "сем_чко",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЧК-",
+    "category": "nouns",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_083",
+    "word": "времечко",
+    "display": "врем_чко",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЧК- (время)",
+    "category": "nouns",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t11_084",
+    "word": "утречко",
+    "display": "утр_чко",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЧК-",
+    "category": "nouns",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_085",
+    "word": "троечка",
+    "display": "тро_чка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЧК- (тройка)",
+    "category": "nouns",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t11_086",
+    "word": "горошинка",
+    "display": "горош_нка",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИНК- (горошина)",
+    "category": "nouns",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_087",
+    "word": "соломинка",
+    "display": "солом_нка",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИНК- (соломина)",
+    "category": "nouns",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_088",
+    "word": "песенка",
+    "display": "пес_нка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕНК- (песня)",
+    "category": "nouns",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_089",
+    "word": "вишенка",
+    "display": "виш_нка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕНК- (вишня)",
+    "category": "nouns",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t11_090",
+    "word": "башенка",
+    "display": "баш_нка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕНК- (башня)",
+    "category": "nouns",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_091",
+    "word": "француженка",
+    "display": "француж_нка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕНК-",
+    "category": "nouns",
+    "firstLetter": "ф"
+  },
+  {
+    "id": "t11_092",
+    "word": "командовать",
+    "display": "команд_вать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "-ОВА- (я командую)",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_093",
+    "word": "заведовать",
+    "display": "завед_вать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "-ОВА- (я заведую)",
+    "category": "verbs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_094",
+    "word": "беседовать",
+    "display": "бесед_вать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "-ОВА- (я беседую)",
+    "category": "verbs",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t11_095",
+    "word": "ночевать",
+    "display": "ноч_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "-ЕВА- (я ночую)",
+    "category": "verbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_096",
+    "word": "горевать",
+    "display": "гор_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "-ЕВА- (я горюю)",
+    "category": "verbs",
+    "firstLetter": "г"
+  },
+  {
+    "id": "t11_097",
+    "word": "потчевать",
+    "display": "потч_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "-ЕВА- (я потчую)",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_098",
+    "word": "советовать",
+    "display": "совет_вать",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "ы"
+    ],
+    "tag": "-ОВА- (я советую)",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_099",
+    "word": "разглядывать",
+    "display": "разгляд_вать",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "-ЫВА- (я разглядываю)",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_100",
+    "word": "разведывать",
+    "display": "развед_вать",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "-ЫВА- (я разведываю)",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_101",
+    "word": "укачивать",
+    "display": "укач_вать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "-ИВА- (я укачиваю)",
+    "category": "verbs",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_102",
+    "word": "настаивать",
+    "display": "наста_вать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "-ИВА- (я настаиваю)",
+    "category": "verbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_103",
+    "word": "расспрашивать",
+    "display": "расспраш_вать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "-ИВА- (я расспрашиваю)",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_104",
+    "word": "успокаивать",
+    "display": "успока_вать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "-ИВА- (я успокаиваю)",
+    "category": "verbs",
+    "firstLetter": "у"
+  },
+  {
+    "id": "t11_105",
+    "word": "испытывать",
+    "display": "испыт_вать",
+    "correctLetter": "ы",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "-ЫВА- (я испытываю)",
+    "category": "verbs",
+    "firstLetter": "и"
+  },
+  {
+    "id": "t11_106",
+    "word": "прислушиваться",
+    "display": "прислуш_ваться",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "-ИВА- (я прислушиваюсь)",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_107",
+    "word": "затмевать",
+    "display": "затм_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "з",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "затмЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е, хотя в начальной форме затмить)."
+  },
+  {
+    "id": "t11_108",
+    "word": "застревать",
+    "display": "застр_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "з",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "застрЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_109",
+    "word": "разевать",
+    "display": "раз_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "р",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "разЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_110",
+    "word": "продлевать",
+    "display": "продл_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "п",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "продлЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_111",
+    "word": "увещевать",
+    "display": "увещ_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "у",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "увещЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_112",
+    "word": "встревать",
+    "display": "встр_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "в",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "встрЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_113",
+    "word": "намереваться",
+    "display": "намер_ваться",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "намерЕваться — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_114",
+    "word": "сомневаться",
+    "display": "сомн_ваться",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "с",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "сомнЕваться — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_115",
+    "word": "обуревать",
+    "display": "обур_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение перед ударным -ВА-",
+    "category": "verbs",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "обурЕвать — исключение перед ударным суффиксом -ВА- (пишется буква Е)."
+  },
+  {
+    "id": "t11_116",
+    "word": "преодолевать",
+    "display": "преодол_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "перед ударным -ВА- (преодолеть)",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_117",
+    "word": "повелевать",
+    "display": "повел_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "перед ударным -ВА- (повелеть)",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t11_118",
+    "word": "запевать",
+    "display": "зап_вать",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "перед ударным -ВА- (запеть)",
+    "category": "verbs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_119",
+    "word": "запивать",
+    "display": "зап_вать",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "перед ударным -ВА- (запить)",
+    "category": "verbs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_120",
+    "word": "выздороветь",
+    "display": "выздоров_ть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: выздороветь",
+    "category": "verbs",
+    "firstLetter": "в",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "выздоровЕть — запомнить: глагол I спряжения, перед -ТЬ пишется буква Е."
+  },
+  {
+    "id": "t11_121",
+    "word": "плесневеть",
+    "display": "плеснев_ть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: плесневеть",
+    "category": "verbs",
+    "firstLetter": "п",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "плесневЕть — запомнить: перед -ТЬ пишется буква Е."
+  },
+  {
+    "id": "t11_122",
+    "word": "опротиветь",
+    "display": "опротив_ть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: опротиветь",
+    "category": "verbs",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "опротивЕть — запомнить: перед -ТЬ пишется буква Е."
+  },
+  {
+    "id": "t11_123",
+    "word": "опостылеть",
+    "display": "опостыл_ть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: опостылеть",
+    "category": "verbs",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "опостылЕть — запомнить: перед -ТЬ пишется буква Е."
+  },
+  {
+    "id": "t11_124",
+    "word": "плешиветь",
+    "display": "плешив_ть",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "запомнить: плешиветь",
+    "category": "verbs",
+    "firstLetter": "п",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "плешивЕть — запомнить: перед -ТЬ пишется буква Е."
+  },
+  {
+    "id": "t11_125",
+    "word": "ворочаться",
+    "display": "вороч_ться",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "запомнить: ворочаться",
+    "category": "verbs",
+    "firstLetter": "в",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "ворочАться — запомнить: перед суффиксом -ТЬСЯ пишется буква А."
+  },
+  {
+    "id": "t11_126",
+    "word": "лаять",
+    "display": "ла_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t11_127",
+    "word": "таять",
+    "display": "та_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t11_128",
+    "word": "каяться",
+    "display": "ка_ться",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_129",
+    "word": "веять",
+    "display": "ве_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t11_130",
+    "word": "лелеять",
+    "display": "леле_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t11_131",
+    "word": "сеять",
+    "display": "се_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_132",
+    "word": "реять",
+    "display": "ре_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t11_133",
+    "word": "чуять",
+    "display": "чу_ть",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t11_134",
+    "word": "надеяться",
+    "display": "наде_ться",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_135",
+    "word": "клеить",
+    "display": "кле_ть",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "гласная перед -ТЬ",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t11_136",
+    "word": "издавна",
+    "display": "издавн_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка ИЗ-)",
+    "category": "adverbs",
+    "firstLetter": "и"
+  },
+  {
+    "id": "t11_137",
+    "word": "досуха",
+    "display": "досух_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка ДО-)",
+    "category": "adverbs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_138",
+    "word": "снова",
+    "display": "снов_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка С-)",
+    "category": "adverbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_139",
+    "word": "сызмала",
+    "display": "сызмал_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка С-)",
+    "category": "adverbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_140",
+    "word": "докрасна",
+    "display": "докрасн_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка ДО-)",
+    "category": "adverbs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_141",
+    "word": "сгоряча",
+    "display": "сгоряч_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка С-)",
+    "category": "adverbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t11_142",
+    "word": "добела",
+    "display": "добел_",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -А (приставка ДО-)",
+    "category": "adverbs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t11_143",
+    "word": "влево",
+    "display": "влев_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка В-)",
+    "category": "adverbs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t11_144",
+    "word": "наглухо",
+    "display": "наглух_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка НА-)",
+    "category": "adverbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_145",
+    "word": "засветло",
+    "display": "засветл_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка ЗА-)",
+    "category": "adverbs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_146",
+    "word": "запросто",
+    "display": "запрост_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка ЗА-)",
+    "category": "adverbs",
+    "firstLetter": "з"
+  },
+  {
+    "id": "t11_147",
+    "word": "насухо",
+    "display": "насух_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка НА-)",
+    "category": "adverbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t11_148",
+    "word": "вправо",
+    "display": "вправ_",
+    "correctLetter": "о",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "суффикс -О (приставка В-)",
+    "category": "adverbs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t11_149",
+    "word": "проржавить",
+    "display": "проржав_ть",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -И- в перех. глаголе",
+    "category": "verbs",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "проржавИть (железо) — суффикс -И- пишется в переходных глаголах (ср. железо само проржавело — непереходный глагол с -Е-)."
+  },
+  {
+    "id": "t11_150",
+    "word": "порывистый",
+    "display": "порыв_стый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "неизменяемый суффикс -ИСТ-",
+    "category": "adjectives",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "порывИстый — неизменяемый суффикс качественных прилагательных -ИСТ- (всегда с И)."
+  },
+  {
+    "id": "t11_151",
+    "word": "европеец",
+    "display": "европе_ц",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕЦ- в сущ. м.р.",
+    "category": "nouns",
+    "firstLetter": "е",
+    "isFrequentMistake": true,
+    "explanation": "европеЕц — в существительных мужского рода пишется суффикс -ЕЦ- (ср. красавица — женский род с -ИЦ-)."
+  },
+  {
+    "id": "t11_152",
+    "word": "хрущёвка",
+    "display": "хрущ_вка",
+    "correctLetter": "ё",
+    "wrongLetters": [
+      "о"
+    ],
+    "tag": "суффикс -ЁВК- в отглаг. сущ.",
+    "category": "nouns",
+    "firstLetter": "х",
+    "isFrequentMistake": true,
+    "explanation": "хрущЁвка — после шипящих под ударением в отглагольных существительных пишется буква Ё."
+  },
+  {
+    "id": "t11_153",
+    "word": "сердцевина",
+    "display": "сердц_вина",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "неизменяемый суффикс -ЕВИН-",
+    "category": "nouns",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "сердцЕвина — неизменяемый суффикс существительных -ЕВИН- (всегда с Е)."
+  },
+  {
+    "id": "t11_154",
+    "word": "новизна",
+    "display": "нов_зна",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "неизменяемый суффикс -ИЗН-",
+    "category": "nouns",
+    "firstLetter": "н",
+    "isFrequentMistake": true,
+    "explanation": "новИзна — неизменяемый суффикс существительных -ИЗН- (всегда с И)."
+  }
+];
+
+const WORDS_TASK12 = [
+  {
+    "id": "t12_001",
+    "word": "обессилевший",
+    "display": "обессил_вший",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обессилевший (от усталости) — перед -ВШ- сохраняется гласная инфинитива: обессилеть (непереходный глагол, значение: сам потерял силы)."
+  },
+  {
+    "id": "t12_002",
+    "word": "обессиливший",
+    "display": "обессил_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обессиливший (врага) — перед -ВШ- сохраняется гласная инфинитива: обессилить (переходный глагол, значение: лишил сил кого-либо)."
+  },
+  {
+    "id": "t12_003",
+    "word": "обескровевший",
+    "display": "обескров_вший",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обескровевший (от раны) — перед -ВШ- сохраняется гласная инфинитива: обескроветь (непереходный глагол, сам потерял кровь)."
+  },
+  {
+    "id": "t12_004",
+    "word": "обескровивший",
+    "display": "обескров_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Обескровивший (врага) — перед -ВШ- сохраняется гласная инфинитива: обескровить (переходный глагол, кого-либо лишил крови)."
+  },
+  {
+    "id": "t12_005",
+    "word": "брезжущий",
+    "display": "брезж_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "причастие от брезжить",
+    "category": "frequent_mistakes",
+    "firstLetter": "б",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: брезжущий (пишется суффикс -УЩ-)."
+  },
+  {
+    "id": "t12_006",
+    "word": "алчущий",
+    "display": "алч_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "причастие I спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "а",
+    "isFrequentMistake": true,
+    "explanation": "Алчущий — образовано от глагола I спряжения АЛКАТЬ (на -АТЬ), поэтому пишется суффикс -УЩ-."
+  },
+  {
+    "id": "t12_007",
+    "word": "всеобъемлющий",
+    "display": "всеобъемл_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Всеобъемлющий — от глагола I спряжения объемлить / обнимать, пишется суффикс -ЮЩ-."
+  },
+  {
+    "id": "t12_008",
+    "word": "скаченный с горы",
+    "display": "скач_нный с горы",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "а",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "Скаченный (с горы) — от глагола на -ИТЬ (скатить). Перед -НН- глагольное -ИТЬ переходит в суффикс -ЕНН- (только глаголы на -АТЬ/-ЯТЬ сохраняют А/Я)."
+  },
+  {
+    "id": "t12_009",
+    "word": "скачанный",
+    "display": "скач_нный",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "с",
+    "isFrequentMistake": true,
+    "explanation": "Скачанный (файл) — от глагола на -АТЬ (скачать), перед -НН- гласная инфинитива А сохраняется."
+  },
+  {
+    "id": "t12_010",
+    "word": "почитаемый",
+    "display": "почита_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "причастие I спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "Почитаемый — от глагола I спряжения ПОЧИТАТЬ, пишется суффикс -ЕМ-."
+  },
+  {
+    "id": "t12_011",
+    "word": "немыслимый",
+    "display": "немысл_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "причастие II спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isFrequentMistake": true,
+    "explanation": "Немыслимый — от глагола II спряжения МЫСЛИТЬ, пишется суффикс -ИМ-."
+  },
+  {
+    "id": "t12_012",
+    "word": "заметивший",
+    "display": "замет_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Заметивший (собаку) — перед суффиксом -ВШ- сохраняется гласная инфинитива: заметить -> заметивший."
+  },
+  {
+    "id": "t12_013",
+    "word": "калечишь",
+    "display": "калеч_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "к",
+    "isFrequentMistake": true,
+    "explanation": "Калечишь — глагол II спряжения (калечить — на -ИТЬ), пишется окончание -ИШЬ."
+  },
+  {
+    "id": "t12_014",
+    "word": "окончивший",
+    "display": "оконч_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isFrequentMistake": true,
+    "explanation": "Окончивший — перед суффиксом -ВШ- сохраняется гласная инфинитива: окончить -> окончивший."
+  },
+  {
+    "id": "t12_015",
+    "word": "беспокоишься",
+    "display": "беспоко_шься",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "б",
+    "isFrequentMistake": true,
+    "explanation": "Беспокоишься — глагол II спряжения (беспокоиться — на -ИТЬ), пишется окончание -ИШЬСЯ."
+  },
+  {
+    "id": "t12_016",
+    "word": "замешанный в преступлении",
+    "display": "замеш_нный в преступлении",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Замешанный (в преступлении) — от глагола ЗАМЕШАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива А."
+  },
+  {
+    "id": "t12_017",
+    "word": "повенчанный",
+    "display": "повенч_нный",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "п",
+    "isFrequentMistake": true,
+    "explanation": "Повенчанный — от глагола ПОВЕНЧАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива (А)."
+  },
+  {
+    "id": "t12_018",
+    "word": "достроенный",
+    "display": "достро_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "д",
+    "isFrequentMistake": true,
+    "explanation": "Достроенный — если инфинитив на -ИТЬ (достроить), то перед -НН- пишется Е (суффикс -ЕНН-)."
+  },
+  {
+    "id": "t12_019",
+    "word": "отгонишь",
+    "display": "отгон_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол-исключение II спр.",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Отгонишь — глагол II спряжения (исключение: гнать -> отогнать; наличие приставки не меняет спряжение)."
+  },
+  {
+    "id": "t12_020",
+    "word": "обидевшийся",
+    "display": "обид_вшийся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "о",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Обидевшийся — перед суффиксом -ВШ- сохраняется гласная инфинитива: обидеть (глагол-исключение на -ЕТЬ)."
+  },
+  {
+    "id": "t12_021",
+    "word": "выгоришь",
+    "display": "выгор_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол с приставкой ВЫ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Выгоришь — убираем ударную приставку ВЫ- -> горИшь (под ударением чётко слышна И)."
+  },
+  {
+    "id": "t12_022",
+    "word": "уверенный",
+    "display": "увер_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "у",
+    "isFrequentMistake": true,
+    "explanation": "Уверенный — если глагол на -ИТЬ (уверить), то перед -НН- пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_023",
+    "word": "неприемлемый",
+    "display": "неприемл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕМ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: неприемлемый (суффикс -ЕМ-, от глагола принять/приемлеть I спр.)."
+  },
+  {
+    "id": "t12_024",
+    "word": "неотъемлемый",
+    "display": "неотъемл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕМ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: неотъемлемый (суффикс -ЕМ-, от глагола отнять/отъемлеть I спр.)."
+  },
+  {
+    "id": "t12_025",
+    "word": "незыблемый",
+    "display": "незыбл_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "суффикс -ЕМ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "н",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: незыблемый (суффикс -ЕМ-, от глагола зыбить I спр.)."
+  },
+  {
+    "id": "t12_026",
+    "word": "движимый",
+    "display": "движ_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИМ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "д",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: движимый (суффикс -ИМ-, от устаревшего глагола движити)."
+  },
+  {
+    "id": "t12_027",
+    "word": "мучимый",
+    "display": "муч_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс -ИМ-",
+    "category": "frequent_mistakes",
+    "firstLetter": "м",
+    "isException": true,
+    "isFrequentMistake": true,
+    "explanation": "Запомнить: мучимый (суффикс -ИМ-, от глагола II спряжения мучить)."
+  },
+  {
+    "id": "t12_028",
+    "word": "застреленный",
+    "display": "застрел_нный",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "я",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Застреленный — от глагола на -ИТЬ (застрелить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_029",
+    "word": "расстрелянный",
+    "display": "расстрел_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "р",
+    "isFrequentMistake": true,
+    "explanation": "Расстрелянный — от глагола на -ЯТЬ (расстрелять), перед -НН- сохраняется Я."
+  },
+  {
+    "id": "t12_030",
+    "word": "вывалянный в пыли",
+    "display": "вывал_нный в пыли",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Вывалянный (в пыли) — от глагола на -ЯТЬ (вывалять), сохраняется Я перед -НН-."
+  },
+  {
+    "id": "t12_031",
+    "word": "вываленный из мешка",
+    "display": "вывал_нный из мешка",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "я",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "в",
+    "isFrequentMistake": true,
+    "explanation": "Вываленный (из мешка) — от глагола на -ИТЬ (вывалить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_032",
+    "word": "замешенное тесто",
+    "display": "замеш_нное тесто",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "а",
+      "и"
+    ],
+    "tag": "страдательное причастие",
+    "category": "frequent_mistakes",
+    "firstLetter": "з",
+    "isFrequentMistake": true,
+    "explanation": "Замешенное (тесто) — от глагола на -ИТЬ (замесить), пишется суффикс -ЕНН-."
+  },
+  {
+    "id": "t12_033",
+    "word": "бреешь",
+    "display": "бре_шь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "exceptions",
+    "firstLetter": "б",
+    "isException": true
+  },
+  {
+    "id": "t12_034",
+    "word": "стелешь",
+    "display": "стел_шь",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_035",
+    "word": "стелющийся",
+    "display": "стел_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "исключение I спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_036",
+    "word": "зиждется",
+    "display": "зижд_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_037",
+    "word": "зыблется",
+    "display": "зыбл_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_038",
+    "word": "гонишь",
+    "display": "гон_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "г",
+    "isException": true
+  },
+  {
+    "id": "t12_039",
+    "word": "держишь",
+    "display": "держ_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_040",
+    "word": "дышишь",
+    "display": "дыш_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_041",
+    "word": "дышащий",
+    "display": "дыш_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "д",
+    "isException": true
+  },
+  {
+    "id": "t12_042",
+    "word": "слышишь",
+    "display": "слыш_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_043",
+    "word": "слышащий",
+    "display": "слыш_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_044",
+    "word": "слышимый",
+    "display": "слыш_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_045",
+    "word": "смотришь",
+    "display": "смотр_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_046",
+    "word": "видишь",
+    "display": "вид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_047",
+    "word": "видимый",
+    "display": "вид_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_048",
+    "word": "ненавидишь",
+    "display": "ненавид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "н",
+    "isException": true
+  },
+  {
+    "id": "t12_049",
+    "word": "ненавидимый",
+    "display": "ненавид_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "н",
+    "isException": true
+  },
+  {
+    "id": "t12_050",
+    "word": "зависишь",
+    "display": "завис_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_051",
+    "word": "зависимый",
+    "display": "завис_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "з",
+    "isException": true
+  },
+  {
+    "id": "t12_052",
+    "word": "терпишь",
+    "display": "терп_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "т",
+    "isException": true
+  },
+  {
+    "id": "t12_053",
+    "word": "терпимый",
+    "display": "терп_мый",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "т",
+    "isException": true
+  },
+  {
+    "id": "t12_054",
+    "word": "обидишь",
+    "display": "обид_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "о",
+    "isException": true
+  },
+  {
+    "id": "t12_055",
+    "word": "вертишь",
+    "display": "верт_шь",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_056",
+    "word": "вертящий",
+    "display": "верт_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "исключение II спр.",
+    "category": "exceptions",
+    "firstLetter": "в",
+    "isException": true
+  },
+  {
+    "id": "t12_057",
+    "word": "тает",
+    "display": "та_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_058",
+    "word": "сеет",
+    "display": "се_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_059",
+    "word": "веет",
+    "display": "ве_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t12_060",
+    "word": "лает",
+    "display": "ла_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_061",
+    "word": "чует",
+    "display": "чу_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_062",
+    "word": "реет",
+    "display": "ре_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t12_063",
+    "word": "надеешься",
+    "display": "наде_шься",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t12_064",
+    "word": "лелеет",
+    "display": "леле_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_065",
+    "word": "клеит",
+    "display": "кле_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_066",
+    "word": "строит",
+    "display": "стро_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_067",
+    "word": "чистит",
+    "display": "чист_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_068",
+    "word": "колышется",
+    "display": "колыш_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_069",
+    "word": "дремлет",
+    "display": "дремл_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t12_070",
+    "word": "шепчет",
+    "display": "шепч_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "ш"
+  },
+  {
+    "id": "t12_071",
+    "word": "маячит",
+    "display": "маяч_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_072",
+    "word": "борется",
+    "display": "бор_тся",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t12_073",
+    "word": "колет",
+    "display": "кол_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_074",
+    "word": "стелет",
+    "display": "стел_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "verbs",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_075",
+    "word": "бреет",
+    "display": "бре_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "verbs",
+    "firstLetter": "б",
+    "isException": true
+  },
+  {
+    "id": "t12_076",
+    "word": "жалит",
+    "display": "жал_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "ж"
+  },
+  {
+    "id": "t12_077",
+    "word": "тащит",
+    "display": "тащ_т",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "глагол II спр.",
+    "category": "verbs",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_078",
+    "word": "машет",
+    "display": "маш_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_079",
+    "word": "стелешься",
+    "display": "стел_шься",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "исключение I спр.",
+    "category": "verbs",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_080",
+    "word": "плачет",
+    "display": "плач_т",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "глагол I спр.",
+    "category": "verbs",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t12_081",
+    "word": "тающий",
+    "display": "та_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "т"
+  },
+  {
+    "id": "t12_082",
+    "word": "сеющий",
+    "display": "се_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_083",
+    "word": "веющий",
+    "display": "ве_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "в"
+  },
+  {
+    "id": "t12_084",
+    "word": "чующий",
+    "display": "чу_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "ч"
+  },
+  {
+    "id": "t12_085",
+    "word": "реющий",
+    "display": "ре_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "р"
+  },
+  {
+    "id": "t12_086",
+    "word": "надеющийся",
+    "display": "наде_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "н"
+  },
+  {
+    "id": "t12_087",
+    "word": "лелеемый",
+    "display": "леле_мый",
+    "correctLetter": "е",
+    "wrongLetters": [
+      "и"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "л"
+  },
+  {
+    "id": "t12_088",
+    "word": "клеящий",
+    "display": "кле_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "причастие II спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_089",
+    "word": "клеивший",
+    "display": "кле_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_090",
+    "word": "строящий",
+    "display": "стро_щий",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "ю"
+    ],
+    "tag": "причастие II спр.",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_091",
+    "word": "строивший",
+    "display": "стро_вший",
+    "correctLetter": "и",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -ВШ-",
+    "category": "participles",
+    "firstLetter": "с"
+  },
+  {
+    "id": "t12_092",
+    "word": "колышущийся",
+    "display": "колыш_щийся",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_093",
+    "word": "дремлющий",
+    "display": "дремл_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "д"
+  },
+  {
+    "id": "t12_094",
+    "word": "шепчущий",
+    "display": "шепч_щий",
+    "correctLetter": "у",
+    "wrongLetters": [
+      "а"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "ш"
+  },
+  {
+    "id": "t12_095",
+    "word": "маячащий",
+    "display": "маяч_щий",
+    "correctLetter": "а",
+    "wrongLetters": [
+      "у"
+    ],
+    "tag": "причастие II спр.",
+    "category": "participles",
+    "firstLetter": "м"
+  },
+  {
+    "id": "t12_096",
+    "word": "борющийся",
+    "display": "бор_щийся",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "б"
+  },
+  {
+    "id": "t12_097",
+    "word": "колющий",
+    "display": "кол_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "причастие I спр.",
+    "category": "participles",
+    "firstLetter": "к"
+  },
+  {
+    "id": "t12_098",
+    "word": "стелющий",
+    "display": "стел_щий",
+    "correctLetter": "ю",
+    "wrongLetters": [
+      "я"
+    ],
+    "tag": "исключение I спр.",
+    "category": "participles",
+    "firstLetter": "с",
+    "isException": true
+  },
+  {
+    "id": "t12_099",
+    "word": "посеянный",
+    "display": "посе_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -НН-",
+    "category": "participles",
+    "firstLetter": "п"
+  },
+  {
+    "id": "t12_100",
+    "word": "развеянный",
+    "display": "разве_нный",
+    "correctLetter": "я",
+    "wrongLetters": [
+      "е"
+    ],
+    "tag": "суффикс перед -НН-",
+    "category": "participles",
+    "firstLetter": "р"
+  }
+];
 
 const WORDS_TASK4 = [
   {
@@ -8607,1624 +14142,5 @@ const WORDS_TASK4 = [
     ],
     "partOfSpeech": "существительное",
     "firstLetter": "э"
-  }
-];
-
-const WORDS_TASK10 = [
-  // 1. ПРЕ / ПРИ — смысловые пары и омонимы (контекстные значения)
-  { id: 't10_001', word: 'пребывать в городе', display: 'пр_бывать в городе', correctLetter: 'е', wrongLetters: ['и'], tag: 'пребывать (находиться)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_002', word: 'прибывать в город', display: 'пр_бывать в город', correctLetter: 'и', wrongLetters: ['е'], tag: 'прибывать (приезжать)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_003', word: 'предавать друга', display: 'пр_давать друга', correctLetter: 'е', wrongLetters: ['и'], tag: 'предавать (выдавать тайну)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_004', word: 'придавать значение', display: 'пр_давать значение', correctLetter: 'и', wrongLetters: ['е'], tag: 'придавать (прибавлять)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_005', word: 'предел терпения', display: 'пр_дел терпения', correctLetter: 'е', wrongLetters: ['и'], tag: 'предел (граница)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_006', word: 'церковный придел', display: 'церковный пр_дел', correctLetter: 'и', wrongLetters: ['е'], tag: 'придел (пристройка в храме)', category: 'pre_pri_pairs', firstLetter: 'ц' },
-  { id: 't10_007', word: 'преемник президента', display: 'пр_емник президента', correctLetter: 'е', wrongLetters: ['и'], tag: 'преемник (продолжатель)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_008', word: 'включить приёмник', display: 'включить пр_ёмник', correctLetter: 'и', wrongLetters: ['е'], tag: 'приёмник (аппарат/радио)', category: 'pre_pri_pairs', firstLetter: 'в' },
-  { id: 't10_009', word: 'презирать трусов', display: 'пр_зирать трусов', correctLetter: 'е', wrongLetters: ['и'], tag: 'презирать (без уважения)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_010', word: 'призреть сироту', display: 'пр_зреть сироту', correctLetter: 'и', wrongLetters: ['е'], tag: 'призреть (дать приют/заботу)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_011', word: 'прекрасный день', display: 'пр_красный день', correctLetter: 'е', wrongLetters: ['и'], tag: 'прекрасный (очень красивый)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_012', word: 'преступить закон', display: 'пр_ступить закон', correctLetter: 'е', wrongLetters: ['и'], tag: 'преступить (нарушить)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_013', word: 'приступить к сочинению', display: 'пр_ступить к сочинению', correctLetter: 'и', wrongLetters: ['е'], tag: 'приступить (начать)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_014', word: 'претворить мечту в жизнь', display: 'пр_творить мечту в жизнь', correctLetter: 'е', wrongLetters: ['и'], tag: 'претворить (осуществить)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_015', word: 'претвориться в жизнь', display: 'пр_твориться в жизнь', correctLetter: 'е', wrongLetters: ['и'], tag: 'претвориться (осуществиться)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_016', word: 'притворить дверь', display: 'пр_творить дверь', correctLetter: 'и', wrongLetters: ['е'], tag: 'притворить (прикрыть)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_017', word: 'притвориться спящим', display: 'пр_твориться спящим', correctLetter: 'и', wrongLetters: ['е'], tag: 'притвориться (принять иной вид)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_018', word: 'преклониться перед талантом', display: 'пр_клониться перед талантом', correctLetter: 'е', wrongLetters: ['и'], tag: 'преклониться (выразить почтение)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_019', word: 'приклониться к земле', display: 'пр_клониться к земле', correctLetter: 'и', wrongLetters: ['е'], tag: 'приклониться (наклониться)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_020', word: 'превратный смысл', display: 'пр_вратный смысл', correctLetter: 'е', wrongLetters: ['и'], tag: 'превратный (извращённый)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_021', word: 'старый привратник', display: 'старый пр_вратник', correctLetter: 'и', wrongLetters: ['е'], tag: 'привратник (сторож у ворот)', category: 'pre_pri_pairs', firstLetter: 'с' },
-  { id: 't10_022', word: 'претерпеть невзгоды', display: 'пр_терпеть невзгоды', correctLetter: 'е', wrongLetters: ['и'], tag: 'претерпеть (пережить)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_023', word: 'притерпеться к невзгодам', display: 'пр_терпеться к невзгодам', correctLetter: 'и', wrongLetters: ['е'], tag: 'притерпеться (привыкнуть)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_024', word: 'преходящий успех', display: 'пр_ходящий успех', correctLetter: 'е', wrongLetters: ['и'], tag: 'преходящий (временный)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_025', word: 'приходящая няня', display: 'пр_ходящая няня', correctLetter: 'и', wrongLetters: ['е'], tag: 'приходящая (на время)', category: 'pre_pri_pairs', firstLetter: 'п' },
-  { id: 't10_026', word: 'приукрасить достижения', display: 'пр_украсить достижения', correctLetter: 'и', wrongLetters: ['е'], tag: 'приукрасить (неполнота действия)', category: 'pre_pri_pairs', firstLetter: 'п' },
-
-  // 2. Словарные слова на ПРЕ-
-  { id: 't10_027', word: 'преамбула', display: 'пр_амбула', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_028', word: 'превалировать', display: 'пр_валировать', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_029', word: 'превзойти', display: 'пр_взойти', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_030', word: 'превозмочь', display: 'пр_возмочь', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_031', word: 'превозносить', display: 'пр_возносить', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_032', word: 'превратить', display: 'пр_вратить', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_033', word: 'презент', display: 'пр_зент', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_034', word: 'президент', display: 'пр_зидент', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_035', word: 'президиум', display: 'пр_зидиум', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_036', word: 'преимущество', display: 'пр_имущество', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_037', word: 'прекратить', display: 'пр_кратить', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_038', word: 'прелюдия', display: 'пр_людия', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_039', word: 'премировать', display: 'пр_мировать', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_040', word: 'премьера', display: 'пр_мьера', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_041', word: 'пренебрежение', display: 'пр_небрежение', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_042', word: 'преобразовать', display: 'пр_образовать', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_043', word: 'преодолеть', display: 'пр_одолеть', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_044', word: 'времяпрепровождение', display: 'времяпр_провождение', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'в' },
-  { id: 't10_045', word: 'знаки препинания', display: 'знаки пр_пинания', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'з' },
-  { id: 't10_046', word: 'препираться', display: 'пр_пираться', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_047', word: 'преподаватель', display: 'пр_подаватель', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_048', word: 'препятствие', display: 'пр_пятствие', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_049', word: 'пререкаться', display: 'пр_рекаться', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_050', word: 'прерогатива', display: 'пр_рогатива', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_051', word: 'преследовать', display: 'пр_следовать', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_052', word: 'пресловутый', display: 'пр_словутый', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_053', word: 'пресмыкающийся', display: 'пр_смыкающийся', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_054', word: 'престиж', display: 'пр_стиж', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_055', word: 'претендент', display: 'пр_тендент', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_056', word: 'камень преткновения', display: 'камень пр_ткновения', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'к' },
-  { id: 't10_057', word: 'преуспевать', display: 'пр_успевать', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_058', word: 'префект', display: 'пр_фект', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_059', word: 'преферанс', display: 'пр_феранс', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_060', word: 'прецедент', display: 'пр_цедент', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'п' },
-  { id: 't10_061', word: 'беспрекословный', display: 'беспр_кословный', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'б' },
-  { id: 't10_062', word: 'непрестанный', display: 'непр_станный', correctLetter: 'е', wrongLetters: ['и'], tag: 'словарное ПРЕ-', category: 'pre_words', firstLetter: 'н' },
-
-  // 3. Словарные слова на ПРИ-
-  { id: 't10_063', word: 'прибор', display: 'пр_бор', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_064', word: 'приватизация', display: 'пр_ватизация', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_065', word: 'привередливый', display: 'пр_вередливый', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_066', word: 'привет', display: 'пр_вет', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_067', word: 'привилегия', display: 'пр_вилегия', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_068', word: 'привыкать', display: 'пр_выкать', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_069', word: 'пригласить', display: 'пр_гласить', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_070', word: 'пригодиться', display: 'пр_годиться', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_071', word: 'пригожий', display: 'пр_гожий', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_072', word: 'приготовить', display: 'пр_готовить', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_073', word: 'придираться', display: 'пр_дираться', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_074', word: 'придумать', display: 'пр_думать', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_075', word: 'призвание', display: 'пр_звание', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_076', word: 'приказать', display: 'пр_казать', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_077', word: 'приключение', display: 'пр_ключение', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_078', word: 'прилежный', display: 'пр_лежный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_079', word: 'приличный', display: 'пр_личный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_080', word: 'прилюдно', display: 'пр_людно', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_081', word: 'примадонна', display: 'пр_мадонна', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_082', word: 'пример', display: 'пр_мер', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_083', word: 'примитивный', display: 'пр_митивный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_084', word: 'принцип', display: 'пр_нцип', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_085', word: 'приемлемый', display: 'пр_емлемый', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_086', word: 'приобрести', display: 'пр_обрести', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_087', word: 'приоритет', display: 'пр_оритет', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_088', word: 'прискорбный', display: 'пр_скорбный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_089', word: 'присмотреться', display: 'пр_смотреться', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_090', word: 'приспособить', display: 'пр_способить', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_091', word: 'пристрастный', display: 'пр_страстный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_092', word: 'причина', display: 'пр_чина', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_093', word: 'причудливый', display: 'пр_чудливый', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_094', word: 'приютить', display: 'пр_ютить', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_095', word: 'приятель', display: 'пр_ятель', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_096', word: 'приятный', display: 'пр_ятный', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_097', word: 'неприхотливый', display: 'непр_хотливый', correctLetter: 'и', wrongLetters: ['е'], tag: 'словарное ПРИ-', category: 'pri_words', firstLetter: 'н' },
-
-  // 4. Приставки ПРА- / ПРО- (Image 1)
-  { id: 't10_098', word: 'прообраз', display: 'пр_образ', correctLetter: 'о', wrongLetters: ['а'], tag: 'ПРА / ПРО (искл.)', category: 'pra_pro', firstLetter: 'п' },
-  { id: 't10_099', word: 'провозвестник', display: 'пр_возвестник', correctLetter: 'о', wrongLetters: ['а'], tag: 'ПРА / ПРО (искл.)', category: 'pra_pro', firstLetter: 'п' },
-  { id: 't10_100', word: 'прабабушка', display: 'пр_бабушка', correctLetter: 'а', wrongLetters: ['о'], tag: 'ПРА / ПРО (родство)', category: 'pra_pro', firstLetter: 'п' },
-  { id: 't10_101', word: 'правнук', display: 'пр_внук', correctLetter: 'а', wrongLetters: ['о'], tag: 'ПРА / ПРО (родство)', category: 'pra_pro', firstLetter: 'п' },
-  { id: 't10_102', word: 'праязык', display: 'пр_язык', correctLetter: 'а', wrongLetters: ['о'], tag: 'ПРА / ПРО (древний)', category: 'pra_pro', firstLetter: 'п' },
-  { id: 't10_103', word: 'прародина', display: 'пр_родина', correctLetter: 'а', wrongLetters: ['о'], tag: 'ПРА / ПРО (древний)', category: 'pra_pro', firstLetter: 'п' },
-
-  // 5. И / Ы после приставок на согласную (Image 2)
-  { id: 't10_104', word: 'взимать', display: 'вз_мать', correctLetter: 'и', wrongLetters: ['ы'], tag: 'Ы / И после приставки (искл.)', category: 'y_i', firstLetter: 'в' },
-  { id: 't10_105', word: 'изымать', display: 'из_мать', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'и' },
-  { id: 't10_106', word: 'подымать', display: 'под_мать', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'п' },
-  { id: 't10_107', word: 'сызнова', display: 'с_знова', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'с' },
-  { id: 't10_108', word: 'сызмала', display: 'с_змала', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'с' },
-  { id: 't10_109', word: 'подытожить', display: 'под_тожить', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'п' },
-  { id: 't10_110', word: 'безымянный', display: 'без_мянный', correctLetter: 'ы', wrongLetters: ['и'], tag: 'Ы / И после приставки', category: 'y_i', firstLetter: 'б' },
-  { id: 't10_111', word: 'сверхизысканный', display: 'сверх_зысканный', correctLetter: 'и', wrongLetters: ['ы'], tag: 'Ы / И (после сверх- пишется И)', category: 'y_i', firstLetter: 'с' },
-  { id: 't10_112', word: 'межинститутский', display: 'меж_нститутский', correctLetter: 'и', wrongLetters: ['ы'], tag: 'Ы / И (после меж- пишется И)', category: 'y_i', firstLetter: 'м' },
-
-  // 6. Разделительные Ъ / Ь (Images 3, 4, 5)
-  { id: 't10_113', word: 'подьячий', display: 'под_ячий', correctLetter: 'ь', wrongLetters: ['ъ'], tag: 'Разделительный Ь (искл.)', category: 'signs', firstLetter: 'п' },
-  { id: 't10_114', word: 'рьяный', display: 'р_яный', correctLetter: 'ь', wrongLetters: ['ъ'], tag: 'Разделительный Ь в корне', category: 'signs', firstLetter: 'р' },
-  { id: 't10_115', word: 'адъютант', display: 'ад_ютант', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ (инояз.)', category: 'signs', firstLetter: 'а' },
-  { id: 't10_116', word: 'въедливый', display: 'в_едливый', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ после приставки', category: 'signs', firstLetter: 'в' },
-  { id: 't10_117', word: 'изъян', display: 'из_ян', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ', category: 'signs', firstLetter: 'и' },
-  { id: 't10_118', word: 'неотъемлемый', display: 'неот_емлемый', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ', category: 'signs', firstLetter: 'н' },
-  { id: 't10_119', word: 'фельдъегерь', display: 'фельд_егерь', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ', category: 'signs', firstLetter: 'ф' },
-  { id: 't10_120', word: 'двухэтажный', display: 'двух_тажный', correctLetter: 'э', wrongLetters: ['ъэ'], tag: 'Сложные слова без Ъ', category: 'signs', firstLetter: 'д' },
-  { id: 't10_121', word: 'трёхъязычный', display: 'трёх_язычный', correctLetter: 'ъ', wrongLetters: ['ь'], tag: 'Разделительный Ъ в сложных словах', category: 'signs', firstLetter: 'т' },
-  { id: 't10_122', word: 'придать форму', display: 'пр_дать форму', correctLetter: 'и', wrongLetters: ['е'], tag: 'придать форму (значение «изменить вид»)', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_123', word: 'присвоить', display: 'пр_своить', correctLetter: 'и', wrongLetters: ['е'], tag: 'присвоить (значение присоединения)', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_124', word: 'приподнять', display: 'пр_поднять', correctLetter: 'и', wrongLetters: ['е'], tag: 'приподнять (неполнота действия)', category: 'pri_words', firstLetter: 'п' },
-  { id: 't10_125', word: 'чересчур', display: 'чере_чур', correctLetter: 'с', wrongLetters: ['з'], tag: 'запомнить: чересчур', category: 'signs', firstLetter: 'ч' },
-  { id: 't10_126', word: 'дисбаланс', display: 'ди_баланс', correctLetter: 'с', wrongLetters: ['з'], tag: 'иноязычная приставка дис-', category: 'signs', firstLetter: 'д' },
-  { id: 't10_127', word: 'дисгармония', display: 'ди_гармония', correctLetter: 'с', wrongLetters: ['з'], tag: 'иноязычная приставка дис-', category: 'signs', firstLetter: 'д' },
-  { id: 't10_128', word: 'здесь', display: '_десь', correctLetter: 'з', wrongLetters: ['с'], tag: 'корень здесь (з- часть корня)', category: 'signs', firstLetter: 'з' },
-  { id: 't10_129', word: 'расчёт', display: 'ра_чёт', correctLetter: 'с', wrongLetters: ['сс'], tag: 'расчёт (с одним С)', category: 'signs', firstLetter: 'р' },
-  { id: 't10_130', word: 'рассчитывать', display: 'ра_считывать', correctLetter: 'с', wrongLetters: ['з'], tag: 'рассчитывать (с двумя С)', category: 'signs', firstLetter: 'р' }
-];
-
-const WORDS_TASK11 = [
-  // === 1. ПРИЛАГАТЕЛЬНЫЕ: суффиксы -ИВ-/-ЕВ-, -ЧИВ-/-ЛИВ-, -ЧАТ-, -ИСТ-, -ОВ-/-ЕВ- ===
-  { id: 't11_001', word: 'милостивый', display: 'милост_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'исключение: -ИВ- без ударения', category: 'adjectives', firstLetter: 'м', isException: true },
-  { id: 't11_002', word: 'юродивый', display: 'юрод_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'исключение: -ИВ- без ударения', category: 'adjectives', firstLetter: 'ю', isException: true },
-  { id: 't11_003', word: 'красивый', display: 'крас_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИВ- под ударением', category: 'adjectives', firstLetter: 'к' },
-  { id: 't11_004', word: 'правдивый', display: 'правд_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИВ- под ударением', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_005', word: 'спесивый', display: 'спес_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИВ- под ударением', category: 'adjectives', firstLetter: 'с' },
-  { id: 't11_006', word: 'боевой', display: 'бо_вой', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'б' },
-  { id: 't11_007', word: 'соевый', display: 'со_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'с' },
-  { id: 't11_008', word: 'сиреневый', display: 'сирен_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'с' },
-  { id: 't11_009', word: 'марлевый', display: 'марл_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'м' },
-  { id: 't11_010', word: 'тюлевый', display: 'тюл_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'т' },
-  { id: 't11_011', word: 'плюшевый', display: 'плюш_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_012', word: 'фасолевый', display: 'фасол_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'ф' },
-  { id: 't11_013', word: 'эмалевый', display: 'эмал_вый', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'э' },
-  { id: 't11_014', word: 'дрожжевой', display: 'дрожж_вой', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕВ- без ударения', category: 'adjectives', firstLetter: 'д' },
-  { id: 't11_015', word: 'застенчивый', display: 'застенч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'з' },
-  { id: 't11_016', word: 'доверчивый', display: 'доверч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'д' },
-  { id: 't11_017', word: 'опрометчивый', display: 'опрометч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'о' },
-  { id: 't11_018', word: 'усидчивый', display: 'усидч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'у' },
-  { id: 't11_019', word: 'придирчивый', display: 'придирч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_020', word: 'навязчивый', display: 'навязч_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЧИВ-', category: 'adjectives', firstLetter: 'н' },
-  { id: 't11_021', word: 'заботливый', display: 'заботл_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЛИВ-', category: 'adjectives', firstLetter: 'з' },
-  { id: 't11_022', word: 'расчётливый', display: 'расчётл_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЛИВ-', category: 'adjectives', firstLetter: 'р' },
-  { id: 't11_023', word: 'приветливый', display: 'приветл_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЛИВ-', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_024', word: 'услужливый', display: 'услужл_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЛИВ-', category: 'adjectives', firstLetter: 'у' },
-  { id: 't11_025', word: 'причудливый', display: 'причудл_вый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ЛИВ-', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_026', word: 'ступенчатый', display: 'ступенч_тый', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -ЧАТ-', category: 'adjectives', firstLetter: 'с' },
-  { id: 't11_027', word: 'коленчатый', display: 'коленч_тый', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -ЧАТ-', category: 'adjectives', firstLetter: 'к' },
-  { id: 't11_028', word: 'решетчатый', display: 'решетч_тый', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -ЧАТ-', category: 'adjectives', firstLetter: 'р' },
-  { id: 't11_029', word: 'бревенчатый', display: 'бревенч_тый', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -ЧАТ-', category: 'adjectives', firstLetter: 'б' },
-  { id: 't11_030', word: 'глинистый', display: 'глин_стый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИСТ-', category: 'adjectives', firstLetter: 'г' },
-  { id: 't11_031', word: 'покладистый', display: 'поклад_стый', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИСТ-', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_032', word: 'глянцевый', display: 'глянц_вый', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕВ- после Ц', category: 'adjectives', firstLetter: 'г' },
-  { id: 't11_033', word: 'ситцевый', display: 'ситц_вый', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕВ- после Ц', category: 'adjectives', firstLetter: 'с' },
-  { id: 't11_034', word: 'холщовый', display: 'холщ_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- под ударением', category: 'adjectives', firstLetter: 'х' },
-  { id: 't11_035', word: 'кумачовый', display: 'кумач_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- под ударением', category: 'adjectives', firstLetter: 'к' },
-  { id: 't11_036', word: 'парчовый', display: 'парч_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- под ударением', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_037', word: 'грошовый', display: 'грош_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- под ударением', category: 'adjectives', firstLetter: 'г' },
-  { id: 't11_038', word: 'камышовый', display: 'камыш_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- под ударением', category: 'adjectives', firstLetter: 'к' },
-  { id: 't11_039', word: 'свинцовый', display: 'свинц_вый', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОВ- после Ц', category: 'adjectives', firstLetter: 'с' },
-
-  // === 2. СУЩЕСТВИТЕЛЬНЫЕ: -ЧИК-/-ЩИК-, -ЁР-/-ОР-, -ОНЬК-/-ЕНЬК-/-ИНЬК-, -ИК-/-ЕК-, -ИЦ-/-ЕЦ-, -ИЧК-/-ЕЧК-, -ИНК-/-ЕНК- ===
-  { id: 't11_040', word: 'процентщик', display: 'процент_ик', correctLetter: 'щ', wrongLetters: ['ч'], tag: '-ЩИК- после -НТ', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_041', word: 'процентщица', display: 'процент_ица', correctLetter: 'щ', wrongLetters: ['ч'], tag: '-ЩИЦ- после -НТ', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_042', word: 'асфальтщик', display: 'асфальт_ик', correctLetter: 'щ', wrongLetters: ['ч'], tag: '-ЩИК- после ЛЬ', category: 'nouns', firstLetter: 'а' },
-  { id: 't11_043', word: 'ремонтщик', display: 'ремонт_ик', correctLetter: 'щ', wrongLetters: ['ч'], tag: '-ЩИК- после -НТ', category: 'nouns', firstLetter: 'р' },
-  { id: 't11_044', word: 'смазчик', display: 'смаз_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после З', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_045', word: 'перебежчик', display: 'перебеж_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после Ж', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_046', word: 'разносчик', display: 'разнос_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после С', category: 'nouns', firstLetter: 'р' },
-  { id: 't11_047', word: 'объездчик', display: 'объезд_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после Д', category: 'nouns', firstLetter: 'о' },
-  { id: 't11_048', word: 'буфетчик', display: 'буфет_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после Т', category: 'nouns', firstLetter: 'б' },
-  { id: 't11_049', word: 'заказчик', display: 'заказ_ик', correctLetter: 'ч', wrongLetters: ['щ'], tag: '-ЧИК- после З', category: 'nouns', firstLetter: 'з' },
-  { id: 't11_050', word: 'стажёр', display: 'стаж_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_051', word: 'дирижёр', display: 'дириж_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'д' },
-  { id: 't11_052', word: 'режиссёр', display: 'режисс_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'р' },
-  { id: 't11_053', word: 'монтажёр', display: 'монтаж_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'м' },
-  { id: 't11_054', word: 'тренажёр', display: 'тренаж_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'т' },
-  { id: 't11_055', word: 'ухажёр', display: 'ухаж_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'у' },
-  { id: 't11_056', word: 'ретушёр', display: 'ретуш_р', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁР- в сущ.', category: 'nouns', firstLetter: 'р' },
-  { id: 't11_057', word: 'мажор', display: 'маж_р', correctLetter: 'о', wrongLetters: ['ё'], tag: 'корень -МАЖОР- (не суффикс)', category: 'nouns', firstLetter: 'м', isException: true },
-  { id: 't11_058', word: 'берёзонька', display: 'берёз_нька', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОНЬК- после твёрдых', category: 'nouns', firstLetter: 'б' },
-  { id: 't11_059', word: 'лисонька', display: 'лис_нька', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОНЬК- после твёрдых', category: 'nouns', firstLetter: 'л' },
-  { id: 't11_060', word: 'полосонька', display: 'полос_нька', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОНЬК- после твёрдых', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_061', word: 'лапонька', display: 'лап_нька', correctLetter: 'о', wrongLetters: ['е'], tag: 'суффикс -ОНЬК- после твёрдых', category: 'nouns', firstLetter: 'л' },
-  { id: 't11_062', word: 'тётенька', display: 'тёт_нька', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕНЬК- после мягких', category: 'nouns', firstLetter: 'т' },
-  { id: 't11_063', word: 'доченька', display: 'доч_нька', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕНЬК- после шипящих', category: 'nouns', firstLetter: 'д' },
-  { id: 't11_064', word: 'ноченька', display: 'ноч_нька', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕНЬК- после шипящих', category: 'nouns', firstLetter: 'н' },
-  { id: 't11_065', word: 'душенька', display: 'душ_нька', correctLetter: 'е', wrongLetters: ['о'], tag: 'суффикс -ЕНЬК- после шипящих', category: 'nouns', firstLetter: 'д' },
-  { id: 't11_066', word: 'заинька', display: 'за_нька', correctLetter: 'и', wrongLetters: ['е'], tag: 'исключение: суффикс -ИНЬК-', category: 'nouns', firstLetter: 'з', isException: true },
-  { id: 't11_067', word: 'паинька', display: 'па_нька', correctLetter: 'и', wrongLetters: ['е'], tag: 'исключение: суффикс -ИНЬК-', category: 'nouns', firstLetter: 'п', isException: true },
-  { id: 't11_068', word: 'баиньки', display: 'ба_ньки', correctLetter: 'и', wrongLetters: ['е'], tag: 'исключение: суффикс -ИНЬК-', category: 'nouns', firstLetter: 'б', isException: true },
-  { id: 't11_069', word: 'ключик', display: 'ключ_к', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИК- (ключика)', category: 'nouns', firstLetter: 'к' },
-  { id: 't11_070', word: 'замочек', display: 'замоч_к', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕК- (замочка)', category: 'nouns', firstLetter: 'з' },
-  { id: 't11_071', word: 'мячик', display: 'мяч_к', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИК- (мячика)', category: 'nouns', firstLetter: 'м' },
-  { id: 't11_072', word: 'звоночек', display: 'звоноч_к', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕК- (звоночка)', category: 'nouns', firstLetter: 'з' },
-  { id: 't11_073', word: 'орешек', display: 'ореш_к', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕК- (орешка)', category: 'nouns', firstLetter: 'о' },
-  { id: 't11_074', word: 'кустик', display: 'куст_к', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИК- (кустика)', category: 'nouns', firstLetter: 'к' },
-  { id: 't11_075', word: 'красавица', display: 'красав_ца', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИЦ- в ж. роде', category: 'nouns', firstLetter: 'к' },
-  { id: 't11_076', word: 'гвардеец', display: 'гварде_ц', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЦ- в м. роде', category: 'nouns', firstLetter: 'г' },
-  { id: 't11_077', word: 'платьице', display: 'плать_це', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИЦ- в ср. роде', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_078', word: 'пальтецо', display: 'пальт_цо', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЦ- в ср. роде', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_079', word: 'креслице', display: 'кресл_це', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИЦ- в ср. роде', category: 'nouns', firstLetter: 'к' },
-  { id: 't11_080', word: 'пуговичка', display: 'пугов_чка', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИЧК- (пуговица)', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_081', word: 'синичка', display: 'син_чка', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИЧК- (синица)', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_082', word: 'семечко', display: 'сем_чко', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЧК-', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_083', word: 'времечко', display: 'врем_чко', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЧК- (время)', category: 'nouns', firstLetter: 'в' },
-  { id: 't11_084', word: 'утречко', display: 'утр_чко', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЧК-', category: 'nouns', firstLetter: 'у' },
-  { id: 't11_085', word: 'троечка', display: 'тро_чка', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЧК- (тройка)', category: 'nouns', firstLetter: 'т' },
-  { id: 't11_086', word: 'горошинка', display: 'горош_нка', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИНК- (горошина)', category: 'nouns', firstLetter: 'г' },
-  { id: 't11_087', word: 'соломинка', display: 'солом_нка', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -ИНК- (соломина)', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_088', word: 'песенка', display: 'пес_нка', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕНК- (песня)', category: 'nouns', firstLetter: 'п' },
-  { id: 't11_089', word: 'вишенка', display: 'виш_нка', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕНК- (вишня)', category: 'nouns', firstLetter: 'в' },
-  { id: 't11_090', word: 'башенка', display: 'баш_нка', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕНК- (башня)', category: 'nouns', firstLetter: 'б' },
-  { id: 't11_091', word: 'француженка', display: 'француж_нка', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕНК-', category: 'nouns', firstLetter: 'ф' },
-
-  // === 3. ГЛАГОЛЫ: -ОВА-/-ЕВА-, -ЫВА-/-ИВА-, исключения перед ударным -ВА-, гласная перед -ТЬ ===
-  { id: 't11_092', word: 'командовать', display: 'команд_вать', correctLetter: 'о', wrongLetters: ['ы'], tag: '-ОВА- (я командую)', category: 'verbs', firstLetter: 'к' },
-  { id: 't11_093', word: 'заведовать', display: 'завед_вать', correctLetter: 'о', wrongLetters: ['ы'], tag: '-ОВА- (я заведую)', category: 'verbs', firstLetter: 'з' },
-  { id: 't11_094', word: 'беседовать', display: 'бесед_вать', correctLetter: 'о', wrongLetters: ['ы'], tag: '-ОВА- (я беседую)', category: 'verbs', firstLetter: 'б' },
-  { id: 't11_095', word: 'ночевать', display: 'ноч_вать', correctLetter: 'е', wrongLetters: ['и'], tag: '-ЕВА- (я ночую)', category: 'verbs', firstLetter: 'н' },
-  { id: 't11_096', word: 'горевать', display: 'гор_вать', correctLetter: 'е', wrongLetters: ['и'], tag: '-ЕВА- (я горюю)', category: 'verbs', firstLetter: 'г' },
-  { id: 't11_097', word: 'потчевать', display: 'потч_вать', correctLetter: 'е', wrongLetters: ['и'], tag: '-ЕВА- (я потчую)', category: 'verbs', firstLetter: 'п' },
-  { id: 't11_098', word: 'советовать', display: 'совет_вать', correctLetter: 'о', wrongLetters: ['ы'], tag: '-ОВА- (я советую)', category: 'verbs', firstLetter: 'с' },
-  { id: 't11_099', word: 'разглядывать', display: 'разгляд_вать', correctLetter: 'ы', wrongLetters: ['о'], tag: '-ЫВА- (я разглядываю)', category: 'verbs', firstLetter: 'р' },
-  { id: 't11_100', word: 'разведывать', display: 'развед_вать', correctLetter: 'ы', wrongLetters: ['о'], tag: '-ЫВА- (я разведываю)', category: 'verbs', firstLetter: 'р' },
-  { id: 't11_101', word: 'укачивать', display: 'укач_вать', correctLetter: 'и', wrongLetters: ['е'], tag: '-ИВА- (я укачиваю)', category: 'verbs', firstLetter: 'у' },
-  { id: 't11_102', word: 'настаивать', display: 'наста_вать', correctLetter: 'и', wrongLetters: ['е'], tag: '-ИВА- (я настаиваю)', category: 'verbs', firstLetter: 'н' },
-  { id: 't11_103', word: 'расспрашивать', display: 'расспраш_вать', correctLetter: 'и', wrongLetters: ['е'], tag: '-ИВА- (я расспрашиваю)', category: 'verbs', firstLetter: 'р' },
-  { id: 't11_104', word: 'успокаивать', display: 'успока_вать', correctLetter: 'и', wrongLetters: ['е'], tag: '-ИВА- (я успокаиваю)', category: 'verbs', firstLetter: 'у' },
-  { id: 't11_105', word: 'испытывать', display: 'испыт_вать', correctLetter: 'ы', wrongLetters: ['о'], tag: '-ЫВА- (я испытываю)', category: 'verbs', firstLetter: 'и' },
-  { id: 't11_106', word: 'прислушиваться', display: 'прислуш_ваться', correctLetter: 'и', wrongLetters: ['е'], tag: '-ИВА- (я прислушиваюсь)', category: 'verbs', firstLetter: 'п' },
-  { id: 't11_107', word: 'затмевать', display: 'затм_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'з', isException: true },
-  { id: 't11_108', word: 'застревать', display: 'застр_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'з', isException: true },
-  { id: 't11_109', word: 'разевать', display: 'раз_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'р', isException: true },
-  { id: 't11_110', word: 'продлевать', display: 'продл_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'п', isException: true },
-  { id: 't11_111', word: 'увещевать', display: 'увещ_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'у', isException: true },
-  { id: 't11_112', word: 'встревать', display: 'встр_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'в', isException: true },
-  { id: 't11_113', word: 'намереваться', display: 'намер_ваться', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'н', isException: true },
-  { id: 't11_114', word: 'сомневаться', display: 'сомн_ваться', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'с', isException: true },
-  { id: 't11_115', word: 'обуревать', display: 'обур_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'исключение перед ударным -ВА-', category: 'verbs', firstLetter: 'о', isException: true },
-  { id: 't11_116', word: 'преодолевать', display: 'преодол_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'перед ударным -ВА- (преодолеть)', category: 'verbs', firstLetter: 'п' },
-  { id: 't11_117', word: 'повелевать', display: 'повел_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'перед ударным -ВА- (повелеть)', category: 'verbs', firstLetter: 'п' },
-  { id: 't11_118', word: 'запевать', display: 'зап_вать', correctLetter: 'е', wrongLetters: ['и'], tag: 'перед ударным -ВА- (запеть)', category: 'verbs', firstLetter: 'з' },
-  { id: 't11_119', word: 'запивать', display: 'зап_вать', correctLetter: 'и', wrongLetters: ['е'], tag: 'перед ударным -ВА- (запить)', category: 'verbs', firstLetter: 'з' },
-  { id: 't11_120', word: 'выздороветь', display: 'выздоров_ть', correctLetter: 'е', wrongLetters: ['и'], tag: 'запомнить: выздороветь', category: 'verbs', firstLetter: 'в', isException: true },
-  { id: 't11_121', word: 'плесневеть', display: 'плеснев_ть', correctLetter: 'е', wrongLetters: ['и'], tag: 'запомнить: плесневеть', category: 'verbs', firstLetter: 'п', isException: true },
-  { id: 't11_122', word: 'опротиветь', display: 'опротив_ть', correctLetter: 'е', wrongLetters: ['и'], tag: 'запомнить: опротиветь', category: 'verbs', firstLetter: 'о', isException: true },
-  { id: 't11_123', word: 'опостылеть', display: 'опостыл_ть', correctLetter: 'е', wrongLetters: ['и'], tag: 'запомнить: опостылеть', category: 'verbs', firstLetter: 'о', isException: true },
-  { id: 't11_124', word: 'плешиветь', display: 'плешив_ть', correctLetter: 'е', wrongLetters: ['и'], tag: 'запомнить: плешиветь', category: 'verbs', firstLetter: 'п', isException: true },
-  { id: 't11_125', word: 'ворочаться', display: 'вороч_ться', correctLetter: 'а', wrongLetters: ['о'], tag: 'запомнить: ворочаться', category: 'verbs', firstLetter: 'в', isException: true },
-  { id: 't11_126', word: 'лаять', display: 'ла_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'л' },
-  { id: 't11_127', word: 'таять', display: 'та_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'т' },
-  { id: 't11_128', word: 'каяться', display: 'ка_ться', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'к' },
-  { id: 't11_129', word: 'веять', display: 'ве_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'в' },
-  { id: 't11_130', word: 'лелеять', display: 'леле_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'л' },
-  { id: 't11_131', word: 'сеять', display: 'се_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'с' },
-  { id: 't11_132', word: 'реять', display: 'ре_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'р' },
-  { id: 't11_133', word: 'чуять', display: 'чу_ть', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'ч' },
-  { id: 't11_134', word: 'надеяться', display: 'наде_ться', correctLetter: 'я', wrongLetters: ['и'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'н' },
-  { id: 't11_135', word: 'клеить', display: 'кле_ть', correctLetter: 'и', wrongLetters: ['е'], tag: 'гласная перед -ТЬ', category: 'verbs', firstLetter: 'к' },
-
-  // === 4. НАРЕЧИЯ: суффиксы -А/-О ===
-  { id: 't11_136', word: 'издавна', display: 'издавн_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка ИЗ-)', category: 'adverbs', firstLetter: 'и' },
-  { id: 't11_137', word: 'досуха', display: 'досух_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка ДО-)', category: 'adverbs', firstLetter: 'д' },
-  { id: 't11_138', word: 'снова', display: 'снов_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка С-)', category: 'adverbs', firstLetter: 'с' },
-  { id: 't11_139', word: 'сызмала', display: 'сызмал_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка С-)', category: 'adverbs', firstLetter: 'с' },
-  { id: 't11_140', word: 'докрасна', display: 'докрасн_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка ДО-)', category: 'adverbs', firstLetter: 'д' },
-  { id: 't11_141', word: 'сгоряча', display: 'сгоряч_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка С-)', category: 'adverbs', firstLetter: 'с' },
-  { id: 't11_142', word: 'добела', display: 'добел_', correctLetter: 'а', wrongLetters: ['о'], tag: 'суффикс -А (приставка ДО-)', category: 'adverbs', firstLetter: 'д' },
-  { id: 't11_143', word: 'влево', display: 'влев_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка В-)', category: 'adverbs', firstLetter: 'в' },
-  { id: 't11_144', word: 'наглухо', display: 'наглух_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка НА-)', category: 'adverbs', firstLetter: 'н' },
-  { id: 't11_145', word: 'засветло', display: 'засветл_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка ЗА-)', category: 'adverbs', firstLetter: 'з' },
-  { id: 't11_146', word: 'запросто', display: 'запрост_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка ЗА-)', category: 'adverbs', firstLetter: 'з' },
-  { id: 't11_147', word: 'насухо', display: 'насух_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка НА-)', category: 'adverbs', firstLetter: 'н' },
-  { id: 't11_148', word: 'вправо', display: 'вправ_', correctLetter: 'о', wrongLetters: ['а'], tag: 'суффикс -О (приставка В-)', category: 'adverbs', firstLetter: 'в' },
-  { id: 't11_149', word: 'проржавить', display: 'проржав_ть', correctLetter: 'и', wrongLetters: ['е'], tag: 'суффикс -И- в перех. глаголе', category: 'verbs', firstLetter: 'п' },
-  { id: 't11_150', word: 'порывистый', display: 'порыв_стый', correctLetter: 'и', wrongLetters: ['е'], tag: 'неизменяемый суффикс -ИСТ-', category: 'adjectives', firstLetter: 'п' },
-  { id: 't11_151', word: 'европеец', display: 'европе_ц', correctLetter: 'е', wrongLetters: ['и'], tag: 'суффикс -ЕЦ- в сущ. м.р.', category: 'nouns', firstLetter: 'е' },
-  { id: 't11_152', word: 'хрущёвка', display: 'хрущ_вка', correctLetter: 'ё', wrongLetters: ['о'], tag: 'суффикс -ЁВК- в отглаг. сущ.', category: 'nouns', firstLetter: 'х' },
-  { id: 't11_153', word: 'сердцевина', display: 'сердц_вина', correctLetter: 'е', wrongLetters: ['и'], tag: 'неизменяемый суффикс -ЕВИН-', category: 'nouns', firstLetter: 'с' },
-  { id: 't11_154', word: 'новизна', display: 'нов_зна', correctLetter: 'и', wrongLetters: ['е'], tag: 'неизменяемый суффикс -ИЗН-', category: 'nouns', firstLetter: 'н' }
-];
-
-
-const WORDS_TASK12 = [
-  {
-    "id": "t12_001",
-    "word": "обессилевший",
-    "display": "обессил_вший",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "обессилевший (сам лишился сил)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isFrequentMistake": true,
-    "explanation": "Обессилевший (от усталости) — перед -ВШ- сохраняется гласная инфинитива: обессилеть (непереходный глагол, значение: сам потерял силы)."
-  },
-  {
-    "id": "t12_002",
-    "word": "обессиливший",
-    "display": "обессил_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "обессиливший (лишивший сил кого-то)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isFrequentMistake": true,
-    "explanation": "Обессиливший (врага) — перед -ВШ- сохраняется гласная инфинитива: обессилить (переходный глагол, значение: лишил сил кого-либо)."
-  },
-  {
-    "id": "t12_003",
-    "word": "обескровевший",
-    "display": "обескров_вший",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "обескровевший (сам потерял кровь)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isFrequentMistake": true,
-    "explanation": "Обескровевший (от раны) — перед -ВШ- сохраняется гласная инфинитива: обескроветь (непереходный глагол, сам потерял кровь)."
-  },
-  {
-    "id": "t12_004",
-    "word": "обескровивший",
-    "display": "обескров_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "обескровивший (лишивший крови кого-то)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isFrequentMistake": true,
-    "explanation": "Обескровивший (врага) — перед -ВШ- сохраняется гласная инфинитива: обескровить (переходный глагол, кого-либо лишил крови)."
-  },
-  {
-    "id": "t12_005",
-    "word": "брезжущий",
-    "display": "брезж_щий",
-    "correctLetter": "у",
-    "wrongLetters": [
-      "а"
-    ],
-    "tag": "запомнить: брезжущий",
-    "category": "frequent_mistakes",
-    "firstLetter": "б",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: брезжущий (пишется суффикс -УЩ-)."
-  },
-  {
-    "id": "t12_006",
-    "word": "алчущий",
-    "display": "алч_щий",
-    "correctLetter": "у",
-    "wrongLetters": [
-      "а"
-    ],
-    "tag": "алчущий (от алкать I спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "а",
-    "isFrequentMistake": true,
-    "explanation": "Алчущий — образовано от глагола I спряжения АЛКАТЬ (на -АТЬ), поэтому пишется суффикс -УЩ-."
-  },
-  {
-    "id": "t12_007",
-    "word": "всеобъемлющий",
-    "display": "всеобъемл_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "всеобъемлющий (от объемлить I спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "в",
-    "isFrequentMistake": true,
-    "explanation": "Всеобъемлющий — от глагола I спряжения объемлить / обнимать, пишется суффикс -ЮЩ-."
-  },
-  {
-    "id": "t12_008",
-    "word": "скаченный с горы",
-    "display": "скач_нный с горы",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "а",
-      "и"
-    ],
-    "tag": "скаченный с горы (от скатить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "с",
-    "isFrequentMistake": true,
-    "explanation": "Скаченный (с горы) — от глагола на -ИТЬ (скатить). Перед -НН- глагольное -ИТЬ переходит в суффикс -ЕНН- (только глаголы на -АТЬ/-ЯТЬ сохраняют А/Я)."
-  },
-  {
-    "id": "t12_009",
-    "word": "скачанный",
-    "display": "скач_нный",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "скачанный файл (от скачать)",
-    "category": "frequent_mistakes",
-    "firstLetter": "с",
-    "isFrequentMistake": true,
-    "explanation": "Скачанный (файл) — от глагола на -АТЬ (скачать), перед -НН- гласная инфинитива А сохраняется."
-  },
-  {
-    "id": "t12_010",
-    "word": "почитаемый",
-    "display": "почита_мый",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "почитаемый (от почитать I спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "п",
-    "isFrequentMistake": true,
-    "explanation": "Почитаемый — от глагола I спряжения ПОЧИТАТЬ, пишется суффикс -ЕМ-."
-  },
-  {
-    "id": "t12_011",
-    "word": "немыслимый",
-    "display": "немысл_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "немыслимый (от мыслить II спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "н",
-    "isFrequentMistake": true,
-    "explanation": "Немыслимый — от глагола II спряжения МЫСЛИТЬ, пишется суффикс -ИМ-."
-  },
-  {
-    "id": "t12_012",
-    "word": "заметивший",
-    "display": "замет_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "заметивший (от заметить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "з",
-    "isFrequentMistake": true,
-    "explanation": "Заметивший (собаку) — перед суффиксом -ВШ- сохраняется гласная инфинитива: заметить -> заметивший."
-  },
-  {
-    "id": "t12_013",
-    "word": "калечишь",
-    "display": "калеч_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "калечишь (калечить — II спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "к",
-    "isFrequentMistake": true,
-    "explanation": "Калечишь — глагол II спряжения (калечить — на -ИТЬ), пишется окончание -ИШЬ."
-  },
-  {
-    "id": "t12_014",
-    "word": "окончивший",
-    "display": "оконч_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "окончивший (от окончить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isFrequentMistake": true,
-    "explanation": "Окончивший — перед суффиксом -ВШ- сохраняется гласная инфинитива: окончить -> окончивший."
-  },
-  {
-    "id": "t12_015",
-    "word": "беспокоишься",
-    "display": "беспоко_шься",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "беспокоишься (беспокоиться — II спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "б",
-    "isFrequentMistake": true,
-    "explanation": "Беспокоишься — глагол II спряжения (беспокоиться — на -ИТЬ), пишется окончание -ИШЬСЯ."
-  },
-  {
-    "id": "t12_016",
-    "word": "замешанный в преступлении",
-    "display": "замеш_нный в преступлении",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "е",
-      "и"
-    ],
-    "tag": "замешанный в преступлении (от замешать)",
-    "category": "frequent_mistakes",
-    "firstLetter": "з",
-    "isFrequentMistake": true,
-    "explanation": "Замешанный (в преступлении) — от глагола ЗАМЕШАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива А."
-  },
-  {
-    "id": "t12_017",
-    "word": "повенчанный",
-    "display": "повенч_нный",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "повенчанный (от повенчать)",
-    "category": "frequent_mistakes",
-    "firstLetter": "п",
-    "isFrequentMistake": true,
-    "explanation": "Повенчанный — от глагола ПОВЕНЧАТЬ (на -АТЬ), перед -НН- сохраняется гласная инфинитива (А)."
-  },
-  {
-    "id": "t12_018",
-    "word": "достроенный",
-    "display": "достро_нный",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "достроенный (от достроить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "д",
-    "isFrequentMistake": true,
-    "explanation": "Достроенный — если инфинитив на -ИТЬ (достроить), то перед -НН- пишется Е (суффикс -ЕНН-)."
-  },
-  {
-    "id": "t12_019",
-    "word": "отгонишь",
-    "display": "отгон_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "отгонишь (исключение гнать — II спр.)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Отгонишь — глагол II спряжения (исключение: гнать -> отогнать; наличие приставки не меняет спряжение)."
-  },
-  {
-    "id": "t12_020",
-    "word": "обидевшийся",
-    "display": "обид_вшийся",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "обидевшийся (от обидеть)",
-    "category": "frequent_mistakes",
-    "firstLetter": "о",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Обидевшийся — перед суффиксом -ВШ- сохраняется гласная инфинитива: обидеть (глагол-исключение на -ЕТЬ)."
-  },
-  {
-    "id": "t12_021",
-    "word": "выгоришь",
-    "display": "выгор_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "выгоришь (убираем приставку ВЫ-)",
-    "category": "frequent_mistakes",
-    "firstLetter": "в",
-    "isFrequentMistake": true,
-    "explanation": "Выгоришь — убираем ударную приставку ВЫ- -> горИшь (под ударением чётко слышна И)."
-  },
-  {
-    "id": "t12_022",
-    "word": "уверенный",
-    "display": "увер_нный",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "уверенный (от уверить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "у",
-    "isFrequentMistake": true,
-    "explanation": "Уверенный — если глагол на -ИТЬ (уверить), то перед -НН- пишется суффикс -ЕНН-."
-  },
-  {
-    "id": "t12_023",
-    "word": "неприемлемый",
-    "display": "неприемл_мый",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "запомнить: неприемлемый",
-    "category": "frequent_mistakes",
-    "firstLetter": "н",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: неприемлемый (суффикс -ЕМ-, от глагола принять/приемлеть I спр.)."
-  },
-  {
-    "id": "t12_024",
-    "word": "неотъемлемый",
-    "display": "неотъемл_мый",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "запомнить: неотъемлемый",
-    "category": "frequent_mistakes",
-    "firstLetter": "н",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: неотъемлемый (суффикс -ЕМ-, от глагола отнять/отъемлеть I спр.)."
-  },
-  {
-    "id": "t12_025",
-    "word": "незыблемый",
-    "display": "незыбл_мый",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "запомнить: незыблемый",
-    "category": "frequent_mistakes",
-    "firstLetter": "н",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: незыблемый (суффикс -ЕМ-, от глагола зыбить I спр.)."
-  },
-  {
-    "id": "t12_026",
-    "word": "движимый",
-    "display": "движ_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "запомнить: движимый",
-    "category": "frequent_mistakes",
-    "firstLetter": "д",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: движимый (суффикс -ИМ-, от устаревшего глагола движити)."
-  },
-  {
-    "id": "t12_027",
-    "word": "мучимый",
-    "display": "муч_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "запомнить: мучимый",
-    "category": "frequent_mistakes",
-    "firstLetter": "м",
-    "isException": true,
-    "isFrequentMistake": true,
-    "explanation": "Запомнить: мучимый (суффикс -ИМ-, от глагола II спряжения мучить)."
-  },
-  {
-    "id": "t12_028",
-    "word": "застреленный",
-    "display": "застрел_нный",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "я",
-      "и"
-    ],
-    "tag": "застреленный (от застрелить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "з",
-    "isFrequentMistake": true,
-    "explanation": "Застреленный — от глагола на -ИТЬ (застрелить), пишется суффикс -ЕНН-."
-  },
-  {
-    "id": "t12_029",
-    "word": "расстрелянный",
-    "display": "расстрел_нный",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "е",
-      "и"
-    ],
-    "tag": "расстрелянный (от расстрелять)",
-    "category": "frequent_mistakes",
-    "firstLetter": "р",
-    "isFrequentMistake": true,
-    "explanation": "Расстрелянный — от глагола на -ЯТЬ (расстрелять), перед -НН- сохраняется Я."
-  },
-  {
-    "id": "t12_030",
-    "word": "вывалянный в пыли",
-    "display": "вывал_нный в пыли",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "е",
-      "и"
-    ],
-    "tag": "вывалянный в пыли (от вывалять)",
-    "category": "frequent_mistakes",
-    "firstLetter": "в",
-    "isFrequentMistake": true,
-    "explanation": "Вывалянный (в пыли) — от глагола на -ЯТЬ (вывалять), сохраняется Я перед -НН-."
-  },
-  {
-    "id": "t12_031",
-    "word": "вываленный из мешка",
-    "display": "вывал_нный из мешка",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "я",
-      "и"
-    ],
-    "tag": "вываленный из мешка (от вывалить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "в",
-    "isFrequentMistake": true,
-    "explanation": "Вываленный (из мешка) — от глагола на -ИТЬ (вывалить), пишется суффикс -ЕНН-."
-  },
-  {
-    "id": "t12_032",
-    "word": "замешенное тесто",
-    "display": "замеш_нное тесто",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "а",
-      "и"
-    ],
-    "tag": "замешенное тесто (от замесить)",
-    "category": "frequent_mistakes",
-    "firstLetter": "з",
-    "isFrequentMistake": true,
-    "explanation": "Замешенное (тесто) — от глагола на -ИТЬ (замесить), пишется суффикс -ЕНН-."
-  },
-  {
-    "id": "t12_033",
-    "word": "бреешь",
-    "display": "бре_шь",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "исключение I спр. (брить)",
-    "category": "exceptions",
-    "firstLetter": "б",
-    "isException": true
-  },
-  {
-    "id": "t12_034",
-    "word": "стелешь",
-    "display": "стел_шь",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "исключение I спр. (стелить)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_035",
-    "word": "стелющийся",
-    "display": "стел_щийся",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "исключение I спр. (стелить)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_036",
-    "word": "зиждется",
-    "display": "зижд_тся",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "исключение I спр. (зиждиться)",
-    "category": "exceptions",
-    "firstLetter": "з",
-    "isException": true
-  },
-  {
-    "id": "t12_037",
-    "word": "зыблется",
-    "display": "зыбл_тся",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "исключение I спр. (зыбиться)",
-    "category": "exceptions",
-    "firstLetter": "з",
-    "isException": true
-  },
-  {
-    "id": "t12_038",
-    "word": "гонишь",
-    "display": "гон_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (гнать)",
-    "category": "exceptions",
-    "firstLetter": "г",
-    "isException": true
-  },
-  {
-    "id": "t12_039",
-    "word": "держишь",
-    "display": "держ_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (держать)",
-    "category": "exceptions",
-    "firstLetter": "д",
-    "isException": true
-  },
-  {
-    "id": "t12_040",
-    "word": "дышишь",
-    "display": "дыш_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (дышать)",
-    "category": "exceptions",
-    "firstLetter": "д",
-    "isException": true
-  },
-  {
-    "id": "t12_041",
-    "word": "дышащий",
-    "display": "дыш_щий",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "у"
-    ],
-    "tag": "исключение II спр. (дышать)",
-    "category": "exceptions",
-    "firstLetter": "д",
-    "isException": true
-  },
-  {
-    "id": "t12_042",
-    "word": "слышишь",
-    "display": "слыш_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (слышать)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_043",
-    "word": "слышащий",
-    "display": "слыш_щий",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "у"
-    ],
-    "tag": "исключение II спр. (слышать)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_044",
-    "word": "слышимый",
-    "display": "слыш_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (слышать)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_045",
-    "word": "смотришь",
-    "display": "смотр_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (смотреть)",
-    "category": "exceptions",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_046",
-    "word": "видишь",
-    "display": "вид_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (видеть)",
-    "category": "exceptions",
-    "firstLetter": "в",
-    "isException": true
-  },
-  {
-    "id": "t12_047",
-    "word": "видимый",
-    "display": "вид_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (видеть)",
-    "category": "exceptions",
-    "firstLetter": "в",
-    "isException": true
-  },
-  {
-    "id": "t12_048",
-    "word": "ненавидишь",
-    "display": "ненавид_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (ненавидеть)",
-    "category": "exceptions",
-    "firstLetter": "н",
-    "isException": true
-  },
-  {
-    "id": "t12_049",
-    "word": "ненавидимый",
-    "display": "ненавид_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (ненавидеть)",
-    "category": "exceptions",
-    "firstLetter": "н",
-    "isException": true
-  },
-  {
-    "id": "t12_050",
-    "word": "зависишь",
-    "display": "завис_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (зависеть)",
-    "category": "exceptions",
-    "firstLetter": "з",
-    "isException": true
-  },
-  {
-    "id": "t12_051",
-    "word": "зависимый",
-    "display": "завис_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (зависеть)",
-    "category": "exceptions",
-    "firstLetter": "з",
-    "isException": true
-  },
-  {
-    "id": "t12_052",
-    "word": "терпишь",
-    "display": "терп_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (терпеть)",
-    "category": "exceptions",
-    "firstLetter": "т",
-    "isException": true
-  },
-  {
-    "id": "t12_053",
-    "word": "терпимый",
-    "display": "терп_мый",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (терпеть)",
-    "category": "exceptions",
-    "firstLetter": "т",
-    "isException": true
-  },
-  {
-    "id": "t12_054",
-    "word": "обидишь",
-    "display": "обид_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (обидеть)",
-    "category": "exceptions",
-    "firstLetter": "о",
-    "isException": true
-  },
-  {
-    "id": "t12_055",
-    "word": "вертишь",
-    "display": "верт_шь",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "исключение II спр. (вертеть)",
-    "category": "exceptions",
-    "firstLetter": "в",
-    "isException": true
-  },
-  {
-    "id": "t12_056",
-    "word": "вертящий",
-    "display": "верт_щий",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "ю"
-    ],
-    "tag": "исключение II спр. (вертеть)",
-    "category": "exceptions",
-    "firstLetter": "в",
-    "isException": true
-  },
-  {
-    "id": "t12_057",
-    "word": "тает",
-    "display": "та_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "таять — I спр.",
-    "category": "verbs",
-    "firstLetter": "т"
-  },
-  {
-    "id": "t12_058",
-    "word": "сеет",
-    "display": "се_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "сеять — I спр.",
-    "category": "verbs",
-    "firstLetter": "с"
-  },
-  {
-    "id": "t12_059",
-    "word": "веет",
-    "display": "ве_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "веять — I спр.",
-    "category": "verbs",
-    "firstLetter": "в"
-  },
-  {
-    "id": "t12_060",
-    "word": "лает",
-    "display": "ла_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "лаять — I спр.",
-    "category": "verbs",
-    "firstLetter": "л"
-  },
-  {
-    "id": "t12_061",
-    "word": "чует",
-    "display": "чу_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "чуять — I спр.",
-    "category": "verbs",
-    "firstLetter": "ч"
-  },
-  {
-    "id": "t12_062",
-    "word": "реет",
-    "display": "ре_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "реять — I спр.",
-    "category": "verbs",
-    "firstLetter": "р"
-  },
-  {
-    "id": "t12_063",
-    "word": "надеешься",
-    "display": "наде_шься",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "надеяться — I спр.",
-    "category": "verbs",
-    "firstLetter": "н"
-  },
-  {
-    "id": "t12_064",
-    "word": "лелеет",
-    "display": "леле_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "лелеять — I спр.",
-    "category": "verbs",
-    "firstLetter": "л"
-  },
-  {
-    "id": "t12_065",
-    "word": "клеит",
-    "display": "кле_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "клеить — II спр.",
-    "category": "verbs",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_066",
-    "word": "строит",
-    "display": "стро_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "строить — II спр.",
-    "category": "verbs",
-    "firstLetter": "с"
-  },
-  {
-    "id": "t12_067",
-    "word": "чистит",
-    "display": "чист_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "чистить — II спр.",
-    "category": "verbs",
-    "firstLetter": "ч"
-  },
-  {
-    "id": "t12_068",
-    "word": "колышется",
-    "display": "колыш_тся",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "колыхать — I спр.",
-    "category": "verbs",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_069",
-    "word": "дремлет",
-    "display": "дремл_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "дремать — I спр.",
-    "category": "verbs",
-    "firstLetter": "д"
-  },
-  {
-    "id": "t12_070",
-    "word": "шепчет",
-    "display": "шепч_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "шептать — I спр.",
-    "category": "verbs",
-    "firstLetter": "ш"
-  },
-  {
-    "id": "t12_071",
-    "word": "маячит",
-    "display": "маяч_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "маячить — II спр.",
-    "category": "verbs",
-    "firstLetter": "м"
-  },
-  {
-    "id": "t12_072",
-    "word": "борется",
-    "display": "бор_тся",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "бороться — I спр.",
-    "category": "verbs",
-    "firstLetter": "б"
-  },
-  {
-    "id": "t12_073",
-    "word": "колет",
-    "display": "кол_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "колоть — I спр.",
-    "category": "verbs",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_074",
-    "word": "стелет",
-    "display": "стел_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "стелить — I спр. (искл.)",
-    "category": "verbs",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_075",
-    "word": "бреет",
-    "display": "бре_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "брить — I спр. (искл.)",
-    "category": "verbs",
-    "firstLetter": "б",
-    "isException": true
-  },
-  {
-    "id": "t12_076",
-    "word": "жалит",
-    "display": "жал_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "жалить — II спр.",
-    "category": "verbs",
-    "firstLetter": "ж"
-  },
-  {
-    "id": "t12_077",
-    "word": "тащит",
-    "display": "тащ_т",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "тащить — II спр.",
-    "category": "verbs",
-    "firstLetter": "т"
-  },
-  {
-    "id": "t12_078",
-    "word": "машет",
-    "display": "маш_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "махать — I спр.",
-    "category": "verbs",
-    "firstLetter": "м"
-  },
-  {
-    "id": "t12_079",
-    "word": "стелешься",
-    "display": "стел_шься",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "стелить — I спр. (искл.)",
-    "category": "verbs",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_080",
-    "word": "плачет",
-    "display": "плач_т",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "плакать — I спр.",
-    "category": "verbs",
-    "firstLetter": "п"
-  },
-  {
-    "id": "t12_081",
-    "word": "тающий",
-    "display": "та_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "таять — I спр.",
-    "category": "participles",
-    "firstLetter": "т"
-  },
-  {
-    "id": "t12_082",
-    "word": "сеющий",
-    "display": "се_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "сеять — I спр.",
-    "category": "participles",
-    "firstLetter": "с"
-  },
-  {
-    "id": "t12_083",
-    "word": "веющий",
-    "display": "ве_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "веять — I спр.",
-    "category": "participles",
-    "firstLetter": "в"
-  },
-  {
-    "id": "t12_084",
-    "word": "чующий",
-    "display": "чу_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "чуять — I спр.",
-    "category": "participles",
-    "firstLetter": "ч"
-  },
-  {
-    "id": "t12_085",
-    "word": "реющий",
-    "display": "ре_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "реять — I спр.",
-    "category": "participles",
-    "firstLetter": "р"
-  },
-  {
-    "id": "t12_086",
-    "word": "надеющийся",
-    "display": "наде_щийся",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "надеяться — I спр.",
-    "category": "participles",
-    "firstLetter": "н"
-  },
-  {
-    "id": "t12_087",
-    "word": "лелеемый",
-    "display": "леле_мый",
-    "correctLetter": "е",
-    "wrongLetters": [
-      "и"
-    ],
-    "tag": "лелеять — I спр.",
-    "category": "participles",
-    "firstLetter": "л"
-  },
-  {
-    "id": "t12_088",
-    "word": "клеящий",
-    "display": "кле_щий",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "ю"
-    ],
-    "tag": "клеить — II спр.",
-    "category": "participles",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_089",
-    "word": "клеивший",
-    "display": "кле_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "клеить (перед -ВШ- сохраняется И)",
-    "category": "participles",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_090",
-    "word": "строящий",
-    "display": "стро_щий",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "ю"
-    ],
-    "tag": "строить — II спр.",
-    "category": "participles",
-    "firstLetter": "с"
-  },
-  {
-    "id": "t12_091",
-    "word": "строивший",
-    "display": "стро_вший",
-    "correctLetter": "и",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "строить (перед -ВШ- сохраняется И)",
-    "category": "participles",
-    "firstLetter": "с"
-  },
-  {
-    "id": "t12_092",
-    "word": "колышущийся",
-    "display": "колыш_щийся",
-    "correctLetter": "у",
-    "wrongLetters": [
-      "а"
-    ],
-    "tag": "колыхать — I спр.",
-    "category": "participles",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_093",
-    "word": "дремлющий",
-    "display": "дремл_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "дремать — I спр.",
-    "category": "participles",
-    "firstLetter": "д"
-  },
-  {
-    "id": "t12_094",
-    "word": "шепчущий",
-    "display": "шепч_щий",
-    "correctLetter": "у",
-    "wrongLetters": [
-      "а"
-    ],
-    "tag": "шептать — I спр.",
-    "category": "participles",
-    "firstLetter": "ш"
-  },
-  {
-    "id": "t12_095",
-    "word": "маячащий",
-    "display": "маяч_щий",
-    "correctLetter": "а",
-    "wrongLetters": [
-      "у"
-    ],
-    "tag": "маячить — II спр.",
-    "category": "participles",
-    "firstLetter": "м"
-  },
-  {
-    "id": "t12_096",
-    "word": "борющийся",
-    "display": "бор_щийся",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "бороться — I спр.",
-    "category": "participles",
-    "firstLetter": "б"
-  },
-  {
-    "id": "t12_097",
-    "word": "колющий",
-    "display": "кол_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "колоть — I спр.",
-    "category": "participles",
-    "firstLetter": "к"
-  },
-  {
-    "id": "t12_098",
-    "word": "стелющий",
-    "display": "стел_щий",
-    "correctLetter": "ю",
-    "wrongLetters": [
-      "я"
-    ],
-    "tag": "стелить — I спр. (искл.)",
-    "category": "participles",
-    "firstLetter": "с",
-    "isException": true
-  },
-  {
-    "id": "t12_099",
-    "word": "посеянный",
-    "display": "посе_нный",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "посеять (перед -НН- сохраняется Я)",
-    "category": "participles",
-    "firstLetter": "п"
-  },
-  {
-    "id": "t12_100",
-    "word": "развеянный",
-    "display": "разве_нный",
-    "correctLetter": "я",
-    "wrongLetters": [
-      "е"
-    ],
-    "tag": "развеять (перед -НН- сохраняется Я)",
-    "category": "participles",
-    "firstLetter": "р"
   }
 ];

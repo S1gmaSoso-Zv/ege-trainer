@@ -465,6 +465,10 @@ const App = {
         this.startTask9Exceptions();
         break;
 
+      case 'start-task9-mistakes':
+        this.startTask9Mistakes();
+        break;
+
       case 'start-task9':
         this.startTask9();
         break;
@@ -745,12 +749,37 @@ const App = {
     this.startTraining('task9', words);
   },
 
+  startTask9Mistakes() {
+    const p = this.screenParams;
+    let words = WORDS_TASK9.filter(w => w.isFrequentMistake);
+
+    words = this.shuffleArray(words);
+
+    const len = p.sessionLength || 0;
+    if (len > 0 && words.length > len) {
+      words = words.slice(0, len);
+    }
+
+    if (words.length === 0) {
+      alert('Нет слов в категории частых ошибок');
+      return;
+    }
+
+    this.startTraining('task9', words, {
+      isFrequentMistakesMode: true,
+      manualAdvance: true
+    });
+  },
+
   startTask10() {
     const p = this.screenParams;
     const cat = p.task10Category || 'all';
     let words = typeof WORDS_TASK10 !== 'undefined' ? [...WORDS_TASK10] : [];
 
-    if (cat && cat !== 'all') {
+    let isFrequentMistakes = (cat === 'frequent_mistakes');
+    if (isFrequentMistakes) {
+      words = words.filter(w => w.isFrequentMistake);
+    } else if (cat && cat !== 'all') {
       words = words.filter(w => w.category === cat);
     }
 
@@ -766,7 +795,10 @@ const App = {
       return;
     }
 
-    this.startTraining('task10', words);
+    this.startTraining('task10', words, {
+      isFrequentMistakesMode: isFrequentMistakes,
+      manualAdvance: isFrequentMistakes
+    });
   },
 
   startTask11() {
@@ -774,7 +806,10 @@ const App = {
     const cat = p.task11Category || 'all';
     let words = typeof WORDS_TASK11 !== 'undefined' ? [...WORDS_TASK11] : [];
 
-    if (cat === 'exceptions') {
+    let isFrequentMistakes = (cat === 'frequent_mistakes');
+    if (isFrequentMistakes) {
+      words = words.filter(w => w.isFrequentMistake);
+    } else if (cat === 'exceptions') {
       words = words.filter(w => w.isException);
     } else if (cat && cat !== 'all') {
       words = words.filter(w => w.category === cat);
@@ -792,7 +827,10 @@ const App = {
       return;
     }
 
-    this.startTraining('task11', words);
+    this.startTraining('task11', words, {
+      isFrequentMistakesMode: isFrequentMistakes,
+      manualAdvance: isFrequentMistakes
+    });
   },
 
   startTask12() {
@@ -1257,13 +1295,65 @@ const App = {
   // ==================== ЭКРАН: ФИЛЬТР ЗАДАНИЕ №9 ====================
 
   renderTask9Filter() {
-    const subMode = this.screenParams.subMode || 'vocab'; // 'vocab' | 'exceptions'
+    const subMode = this.screenParams.subMode || 'vocab'; // 'vocab' | 'exceptions' | 'frequent_mistakes'
     const vocabWords = WORDS_TASK9.filter(w => !w.isException);
     const excList = typeof WORDS_TASK9_EXCEPTIONS !== 'undefined'
       ? WORDS_TASK9_EXCEPTIONS
       : WORDS_TASK9.filter(w => w.isException);
+    const mistakesList = WORDS_TASK9.filter(w => w.isFrequentMistake);
 
-    // 1. Режим: Исключения и ловушки
+    const submodeTabsHTML = `
+      <div class="task4-submode-tabs">
+        <button class="task4-submode-tab ${subMode === 'vocab' ? 'active' : ''}" data-task9-submode="vocab">
+          📖 Словарные (${vocabWords.length})
+        </button>
+        <button class="task4-submode-tab ${subMode === 'exceptions' ? 'active' : ''}" data-task9-submode="exceptions">
+          ⚡ Исключения (${excList.length})
+        </button>
+        <button class="task4-submode-tab ${subMode === 'frequent_mistakes' ? 'active' : ''}" data-task9-submode="frequent_mistakes" style="${subMode === 'frequent_mistakes' ? 'background:#EF4444;color:#fff;border-color:#EF4444;font-weight:700;' : 'color:#DC2626;font-weight:700;'}">
+          🔥 Частые ошибки (${mistakesList.length})
+        </button>
+      </div>
+    `;
+
+    // 1. Режим: Частые ошибки и ловушки
+    if (subMode === 'frequent_mistakes') {
+      const sessionLength = this.screenParams.sessionLength ?? 10;
+      const displayCount = (sessionLength > 0 && mistakesList.length > sessionLength) ? sessionLength : mistakesList.length;
+
+      return `
+        <div class="screen-header">
+          <button class="back-btn" data-action="back">←</button>
+          <h2 class="screen-title">Задание №9 — Частые ошибки</h2>
+        </div>
+
+        ${submodeTabsHTML}
+
+        <div class="ege-info-box">
+          <div class="ege-info-title">🔥 Слова, в которых чаще всего ошибаются</div>
+          <div class="ege-info-desc">
+            Словарные слова и корни с частыми ошибками: <i>утрамбовать, тротуар, стипендия, периодический, инициатива, шероховатый, кампания / компания</i> и корни-исключения. В тренировке включен подробный разбор правил с кнопкой «Следующее слово ➔»!
+          </div>
+        </div>
+
+        <div class="filter-section">
+          <div class="filter-label">Количество слов в сессии</div>
+          <div class="session-pills">
+            ${[10, 20, 30, 0].map(n => `
+              <button class="pill ${sessionLength === n ? 'active' : ''}" data-session-length="${n}">
+                ${n === 0 ? 'Все' : n}
+              </button>
+            `).join('')}
+          </div>
+        </div>
+
+        <button class="start-btn" data-action="start-task9-mistakes" ${mistakesList.length === 0 ? 'disabled' : ''}>
+          Начать тренировку (${displayCount} слов) 🚀
+        </button>
+      `;
+    }
+
+    // 2. Режим: Исключения и ловушки
     if (subMode === 'exceptions') {
       const excCat = this.screenParams.excCategory || 'all';
       const sessionLength = this.screenParams.sessionLength ?? 10;
@@ -1285,15 +1375,7 @@ const App = {
           <h2 class="screen-title">Задание №9 — Исключения</h2>
         </div>
 
-        <!-- Переключатель режима: Словарные слова vs Исключения -->
-        <div class="task4-submode-tabs">
-          <button class="task4-submode-tab" data-task9-submode="vocab">
-            📖 Словарные слова (${vocabWords.length})
-          </button>
-          <button class="task4-submode-tab active" data-task9-submode="exceptions">
-            ⚡ Исключения (${excList.length})
-          </button>
-        </div>
+        ${submodeTabsHTML}
 
         <div class="ege-info-box">
           <div class="ege-info-title">⚡ Исключения и ловушки корней ФИПИ</div>
@@ -1337,7 +1419,7 @@ const App = {
       `;
     }
 
-    // 2. Режим: Словарные слова (по умолчанию)
+    // 3. Режим: Словарные слова (по умолчанию)
     const letterMode = this.screenParams.letterMode || 'all';
     const selectedLetters = this.screenParams.selectedLetters || [];
     const sessionLength = this.screenParams.sessionLength ?? 10;
@@ -1371,15 +1453,7 @@ const App = {
         <h2 class="screen-title">Задание №9 — Словарные слова</h2>
       </div>
 
-      <!-- Переключатель режима: Словарные слова vs Исключения -->
-      <div class="task4-submode-tabs">
-        <button class="task4-submode-tab active" data-task9-submode="vocab">
-          📖 Словарные слова (${vocabWords.length})
-        </button>
-        <button class="task4-submode-tab" data-task9-submode="exceptions">
-          ⚡ Исключения (${excList.length})
-        </button>
-      </div>
+      ${submodeTabsHTML}
 
       <div class="filter-section">
         <div class="filter-label">Количество слов в сессии</div>
@@ -1457,13 +1531,18 @@ const App = {
     const sessionLength = this.screenParams.sessionLength ?? 10;
 
     let filtered = wordsList;
-    if (cat !== 'all') {
+    if (cat === 'frequent_mistakes') {
+      filtered = wordsList.filter(w => w.isFrequentMistake);
+    } else if (cat !== 'all') {
       filtered = wordsList.filter(w => w.category === cat);
     }
 
     const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
 
-    const countCat = (c) => wordsList.filter(w => w.category === c).length;
+    const countCat = (c) => {
+      if (c === 'frequent_mistakes') return wordsList.filter(w => w.isFrequentMistake).length;
+      return wordsList.filter(w => w.category === c).length;
+    };
 
     return `
       <div class="screen-header">
@@ -1474,7 +1553,7 @@ const App = {
       <div class="ege-info-box">
         <div class="ege-info-title">🧩 Правописание приставок и исключения ФИПИ</div>
         <div class="ege-info-desc">
-          Все каверзные правила задания №10: смысловые различия <b>ПРЕ- / ПРИ-</b> (<i>пребывать / прибывать</i>), словарные слова, <b>ПРА- / ПРО-</b> (<i>прообраз</i>), <b>Ы / И</b> после приставок (<i>взимать, сызнова</i>) и разделительные <b>Ъ / Ь</b> (<i>подьячий, адъютант, двухэтажный</i>).
+          Все каверзные правила задания №10: смысловые различия <b>ПРЕ- / ПРИ-</b> (<i>пребывать / прибывать, придать / предать</i>), <b>Ы / И</b> после приставок (<i>взимать, изымать, подымать, сызнова, сызмала</i>) и разделительные <b>Ъ / Ь</b> (<i>подьячий, рьяный, адъютант</i>).
         </div>
       </div>
 
@@ -1490,10 +1569,13 @@ const App = {
       </div>
 
       <div class="filter-section">
-        <div class="filter-label">Категория правил и исключений</div>
+        <div class="filter-label">Категория / Режим тренировки</div>
         <div class="problem-filter-pills" style="margin-bottom:8px;">
           <button class="problem-pill ${cat === 'all' ? 'active' : ''}" data-action="set-task10-cat" data-cat="all">
             Все (${wordsList.length})
+          </button>
+          <button class="problem-pill ${cat === 'frequent_mistakes' ? 'active' : ''}" data-action="set-task10-cat" data-cat="frequent_mistakes" style="border-color:#E53935;color:#D32F2F;font-weight:700;">
+            🔥 Частые ошибки и ловушки (${countCat('frequent_mistakes')})
           </button>
           <button class="problem-pill ${cat === 'pre_pri_pairs' ? 'active' : ''}" data-action="set-task10-cat" data-cat="pre_pri_pairs">
             ПРЕ / ПРИ (пары) (${countCat('pre_pri_pairs')})
@@ -1516,6 +1598,14 @@ const App = {
         </div>
       </div>
 
+      ${cat === 'frequent_mistakes' ? `
+        <div class="filter-section">
+          <div class="filter-hint" style="margin-top:0;background:rgba(211,47,47,0.06);border:1px solid rgba(211,47,47,0.2);padding:10px 12px;border-radius:10px;font-size:13px;color:var(--text-primary);">
+            💡 <b>Режим с разбором:</b> после каждого ответа можно открыть решение с подробным правилом, а переход дальше осуществляется кнопкой «Следующее слово».
+          </div>
+        </div>
+      ` : ''}
+
       <button class="start-btn" data-action="start-task10" ${filtered.length === 0 ? 'disabled' : ''}>
         Начать тренировку (${displayCount} слов) 🚀
       </button>
@@ -1530,7 +1620,9 @@ const App = {
     const sessionLength = this.screenParams.sessionLength ?? 10;
 
     let filtered = wordsList;
-    if (cat === 'exceptions') {
+    if (cat === 'frequent_mistakes') {
+      filtered = wordsList.filter(w => w.isFrequentMistake);
+    } else if (cat === 'exceptions') {
       filtered = wordsList.filter(w => w.isException);
     } else if (cat !== 'all') {
       filtered = wordsList.filter(w => w.category === cat);
@@ -1538,7 +1630,11 @@ const App = {
 
     const displayCount = (sessionLength > 0 && filtered.length > sessionLength) ? sessionLength : filtered.length;
 
-    const countCat = (c) => c === 'exceptions' ? wordsList.filter(w => w.isException).length : wordsList.filter(w => w.category === c).length;
+    const countCat = (c) => {
+      if (c === 'frequent_mistakes') return wordsList.filter(w => w.isFrequentMistake).length;
+      if (c === 'exceptions') return wordsList.filter(w => w.isException).length;
+      return wordsList.filter(w => w.category === c).length;
+    };
 
     return `
       <div class="screen-header">
@@ -1549,7 +1645,7 @@ const App = {
       <div class="ege-info-box">
         <div class="ege-info-title">✏️ Правописание суффиксов (кроме -Н-/-НН-)</div>
         <div class="ege-info-desc">
-          Суффиксы существительных (-чик/-щик, -ек/-ик, -оньк/-еньк), прилагательных (-лив/-чив, -ив/-ев, -чат, -ов), глаголов (-ова/-ева, -ыва/-ива, перед -ть) и наречий (-о/-а). Включая все исключения: <i>милостивый, юродивый, мажор, заинька, паинька, баиньки, затмевать, застревать, выздороветь...</i>
+          Суффиксы существительных (-чик/-щик, -ек/-ик, -оньк/-еньк), прилагательных (-лив/-чив, -ив/-ев, -чат, -ов), глаголов (-ова/-ева, -ыва/-ива, перед -ть) и наречий (-о/-а). Включая частые ошибки: <i>проржавить, порывистый, европеец, хрущёвка, сердцевина, новизна, милостивый, юродивый, затмевать...</i>
         </div>
       </div>
 
@@ -1565,10 +1661,13 @@ const App = {
       </div>
 
       <div class="filter-section">
-        <div class="filter-label">Категория / Часть речи</div>
+        <div class="filter-label">Категория / Режим тренировки</div>
         <div class="problem-filter-pills" style="margin-bottom:8px;">
           <button class="problem-pill ${cat === 'all' ? 'active' : ''}" data-action="set-task11-cat" data-cat="all">
             Все (${wordsList.length})
+          </button>
+          <button class="problem-pill ${cat === 'frequent_mistakes' ? 'active' : ''}" data-action="set-task11-cat" data-cat="frequent_mistakes" style="border-color:#E53935;color:#D32F2F;font-weight:700;">
+            🔥 Частые ошибки и ловушки (${countCat('frequent_mistakes')})
           </button>
           <button class="problem-pill ${cat === 'exceptions' ? 'active' : ''}" data-action="set-task11-cat" data-cat="exceptions" style="border-color:#F59E0B;color:#D97706;font-weight:700;">
             ⚡ Исключения (${countCat('exceptions')})
@@ -1587,6 +1686,14 @@ const App = {
           </button>
         </div>
       </div>
+
+      ${cat === 'frequent_mistakes' ? `
+        <div class="filter-section">
+          <div class="filter-hint" style="margin-top:0;background:rgba(211,47,47,0.06);border:1px solid rgba(211,47,47,0.2);padding:10px 12px;border-radius:10px;font-size:13px;color:var(--text-primary);">
+            💡 <b>Режим с разбором:</b> после каждого ответа можно открыть решение с подробным правилом, а переход дальше осуществляется кнопкой «Следующее слово».
+          </div>
+        </div>
+      ` : ''}
 
       <button class="start-btn" data-action="start-task11" ${filtered.length === 0 ? 'disabled' : ''}>
         Начать тренировку (${displayCount} слов) 🚀
@@ -1802,13 +1909,15 @@ const App = {
 
     if (t.taskType === 'task9' || t.taskType === 'task10' || t.taskType === 'task11' || t.taskType === 'task12') {
       questionText = word.display;
-      questionHint = t.taskType === 'task10'
-        ? (word.tag || 'Выберите правильную букву или приставку')
-        : (t.taskType === 'task11'
-          ? (word.tag || 'Выберите правильный суффикс')
-          : (t.taskType === 'task12'
-            ? (word.tag || 'Выберите правильную букву в окончании или суффиксе')
-            : 'Выберите правильное написание'));
+      if (t.taskType === 'task10') {
+        questionHint = 'Вставьте пропущенную букву в приставке';
+      } else if (t.taskType === 'task11') {
+        questionHint = 'Вставьте пропущенную букву в суффиксе';
+      } else if (t.taskType === 'task12') {
+        questionHint = 'Вставьте пропущенную букву в окончании или суффиксе';
+      } else {
+        questionHint = 'Вставьте пропущенную букву в корне слова';
+      }
     } else {
       questionText = word.word;
       questionHint = 'Выберите правильное ударение';
